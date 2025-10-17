@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -26,13 +27,14 @@ public class SosGui extends Application {
 	private ToggleGroup rbGroupGameMode, rbGroupBlue, rbGroupRed;
 	private TextField txtBoardSize;
 	
+	private static final int BOARD_SIZE = 500;
+	
 	private Square[][] board;
 
 	@Override
 	public void start(Stage primaryStage) {
 		
 		layout = new BorderPane();
-		layout.setPadding(new Insets(10, 20, 10, 20));
 		Scene scene = new Scene(layout);
 		
 		buildSettingsPane();
@@ -40,6 +42,7 @@ public class SosGui extends Application {
 		buildBoardPane();
 		
 		primaryStage.setTitle("SOS Game");
+		primaryStage.setFullScreen(true);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
@@ -48,6 +51,9 @@ public class SosGui extends Application {
 	public void buildSettingsPane() {
 		
 		GridPane settingsPane = new GridPane();
+		settingsPane.setStyle("-fx-border-color: black");
+		settingsPane.setPadding(new Insets(50, 0, 50, 0));
+		settingsPane.setAlignment(Pos.CENTER);
 		settingsPane.setHgap(10);
 		
 		RadioButton rbSimpleGame = new RadioButton("Simple Game");
@@ -73,6 +79,9 @@ public class SosGui extends Application {
 	public void buildPlayerPanes() {
 		
 		VBox bluePlayerPane = new VBox(15);
+		bluePlayerPane.setStyle("-fx-border-color: black");
+		bluePlayerPane.setPadding(new Insets(0, 100, 0, 100));
+		bluePlayerPane.setAlignment(Pos.CENTER);
 		rbGroupBlue = new ToggleGroup();
 		RadioButton rbBlueS = new RadioButton("S");
 		RadioButton rbBlueO = new RadioButton("O");
@@ -82,6 +91,9 @@ public class SosGui extends Application {
 		layout.setLeft(bluePlayerPane);
 		
 		VBox redPlayerPane = new VBox(15);
+		redPlayerPane.setStyle("-fx-border-color: black");
+		redPlayerPane.setPadding(new Insets(0, 100, 0, 100));
+		redPlayerPane.setAlignment(Pos.CENTER);
 		rbGroupRed = new ToggleGroup();
 		RadioButton rbRedS = new RadioButton("S");
 		RadioButton rbRedO = new RadioButton("O");
@@ -95,19 +107,20 @@ public class SosGui extends Application {
 	public void buildBoardPane() {
 		
 		//temp variable
-		int size = 3;
+		int size = 10;
 		
-		StackPane boardPane = new StackPane();
+		int width = BOARD_SIZE/size;
 		
+		GridPane boardPane = new GridPane();
+		boardPane.setStyle("-fx-border-color: black");
+		boardPane.setPadding(new Insets(30));
+		boardPane.setAlignment(Pos.CENTER);
 		
 		board = new Square[size][size];
-		for (int row = 0; row < 3; row++) {
-			for (int col = 0; col < 3; col++) {
-				Square square = new Square();
-				square.getSquare().setTranslateX((col * 100) - 100);
-				square.getSquare().setTranslateY((row * 100) - 100);
-				boardPane.getChildren().add(square.getSquare());
-				board[row][col] = square;
+		for (int row = 0; row < size; row++) {
+			for (int col = 0; col < size; col++) {
+				board[row][col] = new Square(width);
+				boardPane.add(board[row][col].getSquare(), col, row);
 			}
 		}
 		
@@ -119,14 +132,15 @@ public class SosGui extends Application {
 	private class Square {
 		
 		private StackPane square;
+		private Rectangle border;
 		private Label lblValue;
 		
-		public Square() {
+		public Square(int width) {
 			square = new StackPane();
 			
-			Rectangle border = new Rectangle();
-			border.setWidth(100);
-			border.setHeight(100);
+			border = new Rectangle();
+			border.setWidth(width);
+			border.setHeight(width);
 			border.setFill(Color.TRANSPARENT);
 			border.setStroke(Color.BLACK);
 			square.getChildren().add(border);
@@ -144,6 +158,10 @@ public class SosGui extends Application {
 		
 		public StackPane getSquare() {
 			return square;
+		}
+		
+		public Rectangle getBorder() {
+			return border;
 		}
 		
 		public String getValue() {
