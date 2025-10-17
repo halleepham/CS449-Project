@@ -9,12 +9,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class SosGui extends Application {
 
 	private BorderPane layout;
-	private RadioButton rbSimpleGame, rbGeneralGame;
+	//private RadioButton rbSimpleGame, rbGeneralGame, rbBlueS, rbBlueO, rbRedS, rbRedO;
+	private ToggleGroup rbGroupGameMode, rbGroupBlue, rbGroupRed;
 	private TextField txtBoardSize;
 	
 
@@ -26,7 +28,7 @@ public class SosGui extends Application {
 		Scene scene = new Scene(layout);
 		
 		buildSettingsPane();
-		
+		buildPlayerPanes();
 		
 		primaryStage.setTitle("SOS Game");
 		primaryStage.setScene(scene);
@@ -39,11 +41,11 @@ public class SosGui extends Application {
 		GridPane settingsPane = new GridPane();
 		settingsPane.setHgap(10);
 		
-		rbSimpleGame = new RadioButton("Simple Game");
-		rbGeneralGame = new RadioButton("General Game");
-		ToggleGroup rbGameModeGroup  = new ToggleGroup();
-		rbSimpleGame.setToggleGroup(rbGameModeGroup);
-		rbGeneralGame.setToggleGroup(rbGameModeGroup);
+		RadioButton rbSimpleGame = new RadioButton("Simple Game");
+		RadioButton rbGeneralGame = new RadioButton("General Game");
+		rbGroupGameMode  = new ToggleGroup();
+		rbSimpleGame.setToggleGroup(rbGroupGameMode);
+		rbGeneralGame.setToggleGroup(rbGroupGameMode);
 		
 		settingsPane.add(rbSimpleGame, 0, 0);
 		settingsPane.add(rbGeneralGame, 1, 0);
@@ -57,6 +59,33 @@ public class SosGui extends Application {
 		
 		layout.setTop(settingsPane);
 		
+	}
+	
+	public void buildBoardPane() {
+		
+		
+		
+	}
+	
+	public void buildPlayerPanes() {
+		
+		VBox bluePlayerPane = new VBox(15);
+		rbGroupBlue = new ToggleGroup();
+		RadioButton rbBlueS = new RadioButton("S");
+		RadioButton rbBlueO = new RadioButton("O");
+		rbBlueS.setToggleGroup(rbGroupBlue);
+		rbBlueO.setToggleGroup(rbGroupBlue);
+		bluePlayerPane.getChildren().addAll(new Label("Blue Player"), rbBlueS, rbBlueO);
+		layout.setLeft(bluePlayerPane);
+		
+		VBox redPlayerPane = new VBox(15);
+		rbGroupRed = new ToggleGroup();
+		RadioButton rbRedS = new RadioButton("S");
+		RadioButton rbRedO = new RadioButton("O");
+		rbRedS.setToggleGroup(rbGroupRed);
+		rbRedO.setToggleGroup(rbGroupRed);
+		redPlayerPane.getChildren().addAll(new Label("Red Player"), rbRedS, rbRedO);
+		layout.setRight(redPlayerPane);
 		
 	}
 	
