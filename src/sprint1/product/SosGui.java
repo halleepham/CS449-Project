@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -23,9 +24,9 @@ public class SosGui extends Application {
 	
 
 	private BorderPane layout;
-	//private RadioButton rbSimpleGame, rbGeneralGame, rbBlueS, rbBlueO, rbRedS, rbRedO;
-	private ToggleGroup rbGroupGameMode, rbGroupBlue, rbGroupRed;
+	private ToggleGroup rbGroupGameMode, rbGroupBlueType, rbGroupRedType, rbGroupBlueMoves, rbGroupRedMoves;
 	private TextField txtBoardSize;
+	private Label lblCurrentTurn;
 	
 	private static final int BOARD_SIZE = 500;
 	
@@ -40,6 +41,7 @@ public class SosGui extends Application {
 		buildSettingsPane();
 		buildPlayerPanes();
 		buildBoardPane();
+		buildInfoPane();
 		
 		primaryStage.setTitle("SOS Game");
 		primaryStage.setFullScreen(true);
@@ -50,11 +52,10 @@ public class SosGui extends Application {
 	
 	public void buildSettingsPane() {
 		
-		GridPane settingsPane = new GridPane();
+		HBox settingsPane = new HBox(20);
 		settingsPane.setStyle("-fx-border-color: black");
 		settingsPane.setPadding(new Insets(50, 0, 50, 0));
 		settingsPane.setAlignment(Pos.CENTER);
-		settingsPane.setHgap(10);
 		
 		RadioButton rbSimpleGame = new RadioButton("Simple Game");
 		RadioButton rbGeneralGame = new RadioButton("General Game");
@@ -62,15 +63,12 @@ public class SosGui extends Application {
 		rbSimpleGame.setToggleGroup(rbGroupGameMode);
 		rbGeneralGame.setToggleGroup(rbGroupGameMode);
 		
-		settingsPane.add(rbSimpleGame, 0, 0);
-		settingsPane.add(rbGeneralGame, 1, 0);
-		
 		Label lblBoardSize = new Label("Board size: ");
-		settingsPane.add(lblBoardSize, 2, 0);
 		
 		txtBoardSize = new TextField();
-		txtBoardSize.setMaxWidth(20);
-		settingsPane.add(txtBoardSize, 3, 0);
+		txtBoardSize.setMaxWidth(25);
+		
+		settingsPane.getChildren().addAll(rbSimpleGame, rbGeneralGame, lblBoardSize, txtBoardSize);
 		
 		layout.setTop(settingsPane);
 		
@@ -78,29 +76,72 @@ public class SosGui extends Application {
 	
 	public void buildPlayerPanes() {
 		
+		rbGroupBlueType = new ToggleGroup();
+		RadioButton rbBlueHuman = new RadioButton("Human");
+		RadioButton rbBlueComputer = new RadioButton("Computer");
+		rbBlueHuman.setSelected(true);
+		rbBlueHuman.setToggleGroup(rbGroupBlueType);
+		rbBlueComputer.setToggleGroup(rbGroupBlueType);
+		
 		VBox bluePlayerPane = new VBox(15);
 		bluePlayerPane.setStyle("-fx-border-color: black");
 		bluePlayerPane.setPadding(new Insets(0, 100, 0, 100));
 		bluePlayerPane.setAlignment(Pos.CENTER);
-		rbGroupBlue = new ToggleGroup();
+		rbGroupBlueMoves = new ToggleGroup();
 		RadioButton rbBlueS = new RadioButton("S");
 		RadioButton rbBlueO = new RadioButton("O");
-		rbBlueS.setToggleGroup(rbGroupBlue);
-		rbBlueO.setToggleGroup(rbGroupBlue);
-		bluePlayerPane.getChildren().addAll(new Label("Blue Player"), rbBlueS, rbBlueO);
+		rbBlueS.setToggleGroup(rbGroupBlueMoves);
+		rbBlueO.setToggleGroup(rbGroupBlueMoves);
+		rbBlueS.setSelected(true);
+		Label lblBlue = new Label("Blue Player");
+		lblBlue.setTextFill(Color.BLUE);
+		lblBlue.setFont(Font.font(24));
+		bluePlayerPane.getChildren().addAll(lblBlue, rbBlueHuman, rbBlueS, rbBlueO, rbBlueComputer);
 		layout.setLeft(bluePlayerPane);
+		
+		
+		rbGroupRedType = new ToggleGroup();
+		RadioButton rbRedHuman = new RadioButton("Human");
+		RadioButton rbRedComputer = new RadioButton("Computer");
+		rbRedHuman.setSelected(true);
+		rbRedHuman.setToggleGroup(rbGroupRedType);
+		rbRedComputer.setToggleGroup(rbGroupRedType);
 		
 		VBox redPlayerPane = new VBox(15);
 		redPlayerPane.setStyle("-fx-border-color: black");
 		redPlayerPane.setPadding(new Insets(0, 100, 0, 100));
 		redPlayerPane.setAlignment(Pos.CENTER);
-		rbGroupRed = new ToggleGroup();
+		rbGroupRedMoves = new ToggleGroup();
 		RadioButton rbRedS = new RadioButton("S");
 		RadioButton rbRedO = new RadioButton("O");
-		rbRedS.setToggleGroup(rbGroupRed);
-		rbRedO.setToggleGroup(rbGroupRed);
-		redPlayerPane.getChildren().addAll(new Label("Red Player"), rbRedS, rbRedO);
+		rbRedS.setToggleGroup(rbGroupRedMoves);
+		rbRedO.setToggleGroup(rbGroupRedMoves);
+		rbRedS.setSelected(true);
+		Label lblRed = new Label("Red Player");
+		lblRed.setTextFill(Color.RED);
+		lblRed.setFont(Font.font(24));
+		redPlayerPane.getChildren().addAll(lblRed, rbRedHuman, rbRedS, rbRedO, rbRedComputer);
 		layout.setRight(redPlayerPane);
+		
+	}
+	
+	public void buildInfoPane() {
+		
+		HBox infoPane = new HBox();
+		infoPane.setStyle("-fx-border-color: black");
+		infoPane.setPadding(new Insets(50, 0, 50, 0));
+		infoPane.setAlignment(Pos.CENTER);
+		
+		Label lblTurn = new Label("Current Turn: ");
+		lblTurn.setFont(Font.font(24));
+		lblCurrentTurn = new Label("Blue");
+		lblCurrentTurn.setFont(Font.font(24));
+		lblCurrentTurn.setTextFill(Color.BLUE);
+		
+		infoPane.getChildren().addAll(lblTurn, lblCurrentTurn);
+		
+		layout.setBottom(infoPane);
+		
 		
 	}
 	
@@ -160,10 +201,6 @@ public class SosGui extends Application {
 			return square;
 		}
 		
-		public Rectangle getBorder() {
-			return border;
-		}
-		
 		public String getValue() {
 			return lblValue.getText();
 		}
@@ -174,6 +211,7 @@ public class SosGui extends Application {
 		
 		
 	}
+	
 
 	
 	
