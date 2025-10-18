@@ -30,7 +30,7 @@ public class SosGui extends Application {
 	private Label lblCurrentTurn;
 	private Button btnStartGame;
 	
-	private static final int BOARD_SIZE = 500;
+	private static final int BOARD_PIXEL_SIZE = 500;
 	
 	private Square[][] board;
 	
@@ -44,7 +44,7 @@ public class SosGui extends Application {
 		
 		buildSettingsPane();
 		buildPlayerPanes();
-		buildBoardPane();
+		buildBoardPane(3);
 		buildInfoPane();
 		setUpActions();
 		
@@ -154,12 +154,10 @@ public class SosGui extends Application {
 		
 	}
 	
-	public void buildBoardPane() {
+	
+	public void buildBoardPane(int size) {
 		
-		//temp variable
-		int size = 10;
-		
-		int width = BOARD_SIZE/size;
+		int width = BOARD_PIXEL_SIZE/size;
 		
 		GridPane boardPane = new GridPane();
 		boardPane.setStyle("-fx-border-color: black");
@@ -260,6 +258,8 @@ public class SosGui extends Application {
 		game = new SosGame() {};
 		
 		game.setupNewGame(size, mode);
+		
+		buildBoardPane(size);
 		
 	}
 
