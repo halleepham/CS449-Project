@@ -225,33 +225,15 @@ public class SosGui extends Application {
 	}
 	
 	private void handleStartGame() {
-		String input = txtBoardSize.getText().trim();
 		
-		// Board size validation
-		int size;
-		try {
-			size = Integer.parseInt(input);
-			if (size < 3 || size > 10) {
-				showError("Please enter a valid board size between 3 and 9.");
-				return;
-			}
-		} catch (Exception e) {
-			showError("Invalid board size. Enter a number between 3 and 9.");
+		int size = validateBoardSize();
+		if (size == -1) {
 			return;
 		}
 		
-		// Game mode validation
-		RadioButton selectedMode = (RadioButton) rbGroupGameMode.getSelectedToggle();
-		if (selectedMode == null) {
-			showError("Please select game mode");
+		SosGame.GameMode mode = validateGameMode();
+		if (mode == null) {
 			return;
-		}
-		
-		SosGame.GameMode mode;
-		if (selectedMode == rbSimpleGame) {
-			mode = SosGame.GameMode.SIMPLE;
-		} else {
-			mode = SosGame.GameMode.GENERAL;
 		}
 		
 		// temp until subclasses implemented
@@ -262,8 +244,41 @@ public class SosGui extends Application {
 		buildBoardPane(size);
 		
 	}
-
 	
+	private int validateBoardSize() {
+		String input = txtBoardSize.getText().trim();
+
+		try {
+			int size = Integer.parseInt(input);
+			if (size >= 3 && size <= 10) {
+				return size;
+			}
+			else {
+				showError("Please enter a valid board size between 3 and 9.");
+				return -1;
+			}
+		} catch (Exception e) {
+			showError("Invalid board size. Enter a number between 3 and 9.");
+			return -1;
+		}
+	}
+
+	private SosGame.GameMode validateGameMode(){
+		RadioButton selectedMode = (RadioButton) rbGroupGameMode.getSelectedToggle();
+		if (selectedMode == null) {
+			showError("Please select game mode");
+			return null;
+		}
+
+		if (selectedMode == rbSimpleGame) {
+			return SosGame.GameMode.SIMPLE;
+		} else if (selectedMode == rbGeneralGame){
+			return SosGame.GameMode.GENERAL;
+		} else {
+			showError("Please select a game mode.");
+			return null;
+		}
+	}
 	private void showError(String message) {
 	    Alert alert = new Alert(Alert.AlertType.ERROR);
 	    alert.setTitle("Invalid Input");
