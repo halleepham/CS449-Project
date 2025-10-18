@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -24,6 +25,7 @@ public class SosGui extends Application {
 
 	private BorderPane layout;
 	private ToggleGroup rbGroupGameMode, rbGroupBlueType, rbGroupRedType, rbGroupBlueMoves, rbGroupRedMoves;
+	private RadioButton rbSimpleGame, rbGeneralGame, rbBlueS, rbBlueO, rbRedS, rbRedO;
 	private TextField txtBoardSize;
 	private Label lblCurrentTurn;
 	private Button btnStartGame;
@@ -31,6 +33,8 @@ public class SosGui extends Application {
 	private static final int BOARD_SIZE = 500;
 	
 	private Square[][] board;
+	
+	static private SosGame game;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -42,6 +46,7 @@ public class SosGui extends Application {
 		buildPlayerPanes();
 		buildBoardPane();
 		buildInfoPane();
+		setUpActions();
 		
 		primaryStage.setTitle("SOS Game");
 		primaryStage.setFullScreen(true);
@@ -58,8 +63,8 @@ public class SosGui extends Application {
 		settingsPane.setPadding(new Insets(50, 0, 50, 0));
 		settingsPane.setAlignment(Pos.CENTER);
 		
-		RadioButton rbSimpleGame = new RadioButton("Simple Game");
-		RadioButton rbGeneralGame = new RadioButton("General Game");
+		rbSimpleGame = new RadioButton("Simple Game");
+		rbGeneralGame = new RadioButton("General Game");
 		rbGroupGameMode  = new ToggleGroup();
 		rbSimpleGame.setSelected(true);
 		rbSimpleGame.setToggleGroup(rbGroupGameMode);
@@ -92,8 +97,8 @@ public class SosGui extends Application {
 		bluePlayerPane.setPadding(new Insets(0, 100, 0, 100));
 		bluePlayerPane.setAlignment(Pos.CENTER);
 		rbGroupBlueMoves = new ToggleGroup();
-		RadioButton rbBlueS = new RadioButton("S");
-		RadioButton rbBlueO = new RadioButton("O");
+		rbBlueS = new RadioButton("S");
+		rbBlueO = new RadioButton("O");
 		rbBlueS.setToggleGroup(rbGroupBlueMoves);
 		rbBlueO.setToggleGroup(rbGroupBlueMoves);
 		rbBlueS.setSelected(true);
@@ -116,8 +121,8 @@ public class SosGui extends Application {
 		redPlayerPane.setPadding(new Insets(0, 100, 0, 100));
 		redPlayerPane.setAlignment(Pos.CENTER);
 		rbGroupRedMoves = new ToggleGroup();
-		RadioButton rbRedS = new RadioButton("S");
-		RadioButton rbRedO = new RadioButton("O");
+		rbRedS = new RadioButton("S");
+		rbRedO = new RadioButton("O");
 		rbRedS.setToggleGroup(rbGroupRedMoves);
 		rbRedO.setToggleGroup(rbGroupRedMoves);
 		rbRedS.setSelected(true);
@@ -217,41 +222,56 @@ public class SosGui extends Application {
 	}
 	
 	
-	public ToggleGroup getRbGroupGameMode() {
-		return rbGroupGameMode;
-	}
-
-	public ToggleGroup getRbGroupBlueType() {
-		return rbGroupBlueType;
-	}
-
-	public ToggleGroup getRbGroupRedType() {
-		return rbGroupRedType;
-	}
-
-	public ToggleGroup getRbGroupBlueMoves() {
-		return rbGroupBlueMoves;
-	}
-
-	public ToggleGroup getRbGroupRedMoves() {
-		return rbGroupRedMoves;
-	}
-
-	public TextField getTxtBoardSize() {
-		return txtBoardSize;
-	}
-
-	public Label getLblCurrentTurn() {
-		return lblCurrentTurn;
-	}
-
-	public void setLblCurrentTurn(Label lblCurrentTurn) {
-		this.lblCurrentTurn = lblCurrentTurn;
+	public void setUpActions() {
+		btnStartGame.setOnAction(event -> handleStartGame());
 	}
 	
-	public Button getBtnStartGame() {
-		return btnStartGame;
+	private void handleStartGame() {
+		String input = txtBoardSize.getText().trim();
+		
+		// Board size validation
+		int size;
+		try {
+			size = Integer.parseInt(input);
+			if (size < 3 || size > 10) {
+				showError("Please enter a valid board size between 3 and 9.");
+				return;
+			}
+		} catch (Exception e) {
+			showError("Invalid board size. Enter a number between 3 and 9.");
+			return;
+		}
+		
+		// Game mode validation
+		RadioButton selectedMode = (RadioButton) rbGroupGameMode.getSelectedToggle();
+		if (selectedMode == null) {
+			showError("Please select game mode");
+			return;
+		}
+		
+		SosGame.GameMode mode;
+		if (selectedMode == rbSimpleGame) {
+			mode = SosGame.GameMode.SIMPLE;
+		} else {
+			mode = SosGame.GameMode.GENERAL;
+		}
+		
+		// temp until subclasses implemented
+		game = new SosGame() {};
+		
+		game.setupNewGame(size, mode);
+		
 	}
+
+	
+	private void showError(String message) {
+	    Alert alert = new Alert(Alert.AlertType.ERROR);
+	    alert.setTitle("Invalid Input");
+	    alert.setHeaderText(null);
+	    alert.setContentText(message);
+	    alert.showAndWait();
+	}
+	
 
 	public static void main(String[] args) {
 		launch(args);
