@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -20,13 +21,12 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class SosGui extends Application {
-	
-	
 
 	private BorderPane layout;
 	private ToggleGroup rbGroupGameMode, rbGroupBlueType, rbGroupRedType, rbGroupBlueMoves, rbGroupRedMoves;
 	private TextField txtBoardSize;
 	private Label lblCurrentTurn;
+	private Button btnStartGame;
 	
 	private static final int BOARD_SIZE = 500;
 	
@@ -50,6 +50,7 @@ public class SosGui extends Application {
 		
 	}
 	
+	
 	public void buildSettingsPane() {
 		
 		HBox settingsPane = new HBox(20);
@@ -60,6 +61,7 @@ public class SosGui extends Application {
 		RadioButton rbSimpleGame = new RadioButton("Simple Game");
 		RadioButton rbGeneralGame = new RadioButton("General Game");
 		rbGroupGameMode  = new ToggleGroup();
+		rbSimpleGame.setSelected(true);
 		rbSimpleGame.setToggleGroup(rbGroupGameMode);
 		rbGeneralGame.setToggleGroup(rbGroupGameMode);
 		
@@ -68,7 +70,9 @@ public class SosGui extends Application {
 		txtBoardSize = new TextField();
 		txtBoardSize.setMaxWidth(25);
 		
-		settingsPane.getChildren().addAll(rbSimpleGame, rbGeneralGame, lblBoardSize, txtBoardSize);
+		btnStartGame = new Button("Start Game");
+		
+		settingsPane.getChildren().addAll(rbSimpleGame, rbGeneralGame, lblBoardSize, txtBoardSize, btnStartGame);
 		
 		layout.setTop(settingsPane);
 		
@@ -170,7 +174,7 @@ public class SosGui extends Application {
 	}
 	
 	
-	private class Square {
+	public class Square {
 		
 		private StackPane square;
 		private Rectangle border;
@@ -212,11 +216,43 @@ public class SosGui extends Application {
 		
 	}
 	
+	
+	public ToggleGroup getRbGroupGameMode() {
+		return rbGroupGameMode;
+	}
 
+	public ToggleGroup getRbGroupBlueType() {
+		return rbGroupBlueType;
+	}
+
+	public ToggleGroup getRbGroupRedType() {
+		return rbGroupRedType;
+	}
+
+	public ToggleGroup getRbGroupBlueMoves() {
+		return rbGroupBlueMoves;
+	}
+
+	public ToggleGroup getRbGroupRedMoves() {
+		return rbGroupRedMoves;
+	}
+
+	public TextField getTxtBoardSize() {
+		return txtBoardSize;
+	}
+
+	public Label getLblCurrentTurn() {
+		return lblCurrentTurn;
+	}
+
+	public void setLblCurrentTurn(Label lblCurrentTurn) {
+		this.lblCurrentTurn = lblCurrentTurn;
+	}
 	
-	
-	
-	
+	public Button getBtnStartGame() {
+		return btnStartGame;
+	}
+
 	public static void main(String[] args) {
 		launch(args);
 	}
