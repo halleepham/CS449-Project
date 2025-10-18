@@ -174,6 +174,31 @@ public class SosGui extends Application {
 		
 		layout.setCenter(boardPane);
 		
+		drawBoard();
+		
+	}
+	
+	public void drawBoard() {
+		
+		if (game == null || game.grid == null) {
+			for (Square[] row : board) {
+				for (Square square : row) {
+					square.setValue("");
+				}
+			}
+			return;
+		}
+		
+		for (int row = 0; row < game.getTotalRows(); row++) {
+			for (int col = 0; col < game.getTotalColumns(); col ++) {
+				if (game.getCell(row, col) == SosGame.Cell.S) {
+					board[row][col].setValue("S");
+				} else if (game.getCell(row, col) == SosGame.Cell.O) {
+					board[row][col].setValue("O");
+				}
+			}
+		}
+		
 	}
 	
 	
@@ -217,8 +242,8 @@ public class SosGui extends Application {
 		}
 		
 		
-	}
-	
+	}	
+
 	
 	public void setUpActions() {
 		btnStartGame.setOnAction(event -> handleStartGame());

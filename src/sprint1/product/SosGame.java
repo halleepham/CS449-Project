@@ -43,6 +43,14 @@ abstract class SosGame {
 		
 	}
 	
+	public Cell getCell(int row, int col) {
+		if (row >= 0 && row < totalRows && col >= 0 && col < totalColumns) {
+			return grid[row][col];
+		} else {
+			return null;
+		}
+	}
+	
 	public GameState getGameState() {
 		return currentGameState;
 	}
@@ -59,6 +67,15 @@ abstract class SosGame {
 		currentGameMode = gameMode;
 	}
 	
+	
+	public int getTotalRows() {
+		return totalRows;
+	}
+
+	public int getTotalColumns() {
+		return totalColumns;
+	}
+
 	public void setSize(int size) {
 		totalRows = size;
 		totalColumns = size;
