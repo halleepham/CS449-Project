@@ -44,7 +44,7 @@ public class SosGui extends Application {
 		
 		buildSettingsPane();
 		buildPlayerPanes();
-		buildBoardPane(3);
+		//buildBoardPane(3);
 		buildInfoPane();
 		setUpActions();
 		
@@ -195,6 +195,8 @@ public class SosGui extends Application {
 					board[row][col].setValue("S");
 				} else if (game.getCell(row, col) == SosGame.Cell.O) {
 					board[row][col].setValue("O");
+				} else {
+					board[row][col].setValue("");
 				}
 			}
 		}
@@ -251,22 +253,32 @@ public class SosGui extends Application {
 	
 	private void handleStartGame() {
 		
-		int size = validateBoardSize();
-		if (size == -1) {
-			return;
+		try {
+			int size = validateBoardSize();
+			if (size == -1) {
+				return;
+			}
+			
+			//SosGame.GameMode mode = validateGameMode();
+//			if (mode == null) {
+//				return;
+//			}
+			
+			// temp until subclasses implemented
+			game = new SosGame() {};
+			
+//			game.setupNewGame(size, mode);
+			
+			buildBoardPane(size);
+			
+			
+		} catch (Exception e) {
+			
 		}
 		
-		SosGame.GameMode mode = validateGameMode();
-		if (mode == null) {
-			return;
-		}
 		
-		// temp until subclasses implemented
-		game = new SosGame() {};
 		
-		game.setupNewGame(size, mode);
 		
-		buildBoardPane(size);
 		
 	}
 	
@@ -279,31 +291,16 @@ public class SosGui extends Application {
 				return size;
 			}
 			else {
-				showError("Please enter a valid board size between 3 and 9.");
+				showError("Please enter a valid board size between 3 and 10.");
 				return -1;
 			}
 		} catch (Exception e) {
-			showError("Invalid board size. Enter a number between 3 and 9.");
+			showError("Invalid board size. Enter a number between 3 and 10.");
 			return -1;
 		}
 	}
-
-	private SosGame.GameMode validateGameMode(){
-		RadioButton selectedMode = (RadioButton) rbGroupGameMode.getSelectedToggle();
-		if (selectedMode == null) {
-			showError("Please select game mode");
-			return null;
-		}
-
-		if (selectedMode == rbSimpleGame) {
-			return SosGame.GameMode.SIMPLE;
-		} else if (selectedMode == rbGeneralGame){
-			return SosGame.GameMode.GENERAL;
-		} else {
-			showError("Please select a game mode.");
-			return null;
-		}
-	}
+	
+	
 	private void showError(String message) {
 	    Alert alert = new Alert(Alert.AlertType.ERROR);
 	    alert.setTitle("Invalid Input");

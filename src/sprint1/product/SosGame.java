@@ -26,8 +26,12 @@ abstract class SosGame {
 		
 	}
 	
-	public void setupNewGame(int size, GameMode mode) {
-		this.totalRows = size;
+	public void setupNewGame(int size, GameMode mode) throws Exception {
+		if (size < 3 || size > 10) {
+			throw new Exception("Invalid board size");
+		}
+		
+		this.totalColumns = size;
 		this.totalColumns = size;
 		this.currentGameMode = mode;
 		this.grid = new Cell[size][size];
