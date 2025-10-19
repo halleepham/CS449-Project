@@ -2,9 +2,6 @@ package sprint1.product;
 
 abstract class SosGame {
 	
-	public enum GameMode{
-		SIMPLE, GENERAL;
-	}
 	public enum Cell{
 		EMPTY, S, O
 	}
@@ -19,21 +16,19 @@ abstract class SosGame {
 	protected String turn;
 
 	protected GameState currentGameState;
-	protected GameMode currentGameMode;
 	
 	
 	public SosGame() {
 		
 	}
 	
-	public void setupNewGame(int size, GameMode mode) throws Exception {
+	public void setupNewGame(int size) throws Exception {
 		if (size < 3 || size > 10) {
 			throw new Exception("Invalid board size");
 		}
 		
 		this.totalColumns = size;
 		this.totalColumns = size;
-		this.currentGameMode = mode;
 		this.grid = new Cell[size][size];
 		
 		for (int i = 0; i < size; i++) {
@@ -62,15 +57,6 @@ abstract class SosGame {
 	public void setGameState(GameState gameState) {
 		currentGameState = gameState;
 	}
-	
-	public GameMode getGameMode() {
-		return currentGameMode;
-	}
-	
-	public void setGameMode(GameMode gameMode) {
-		currentGameMode = gameMode;
-	}
-	
 	
 	public int getTotalRows() {
 		return totalRows;

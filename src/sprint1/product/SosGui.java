@@ -30,7 +30,7 @@ public class SosGui extends Application {
 	private Label lblCurrentTurn;
 	private Button btnStartGame;
 	
-	private static final int BOARD_PIXEL_SIZE = 500;
+	private static final int BOARD_PIXEL_SIZE = 450;
 	
 	private Square[][] board;
 	
@@ -44,12 +44,16 @@ public class SosGui extends Application {
 		
 		buildSettingsPane();
 		buildPlayerPanes();
-		//buildBoardPane(3);
 		buildInfoPane();
+		layout.setCenter(new GridPane());
 		setUpActions();
 		
+		
+		
 		primaryStage.setTitle("SOS Game");
-		primaryStage.setFullScreen(true);
+		primaryStage.setMaximized(true);
+		primaryStage.setMinHeight(720);
+		primaryStage.setMinWidth(1280);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
@@ -60,7 +64,7 @@ public class SosGui extends Application {
 		
 		HBox settingsPane = new HBox(20);
 		settingsPane.setStyle("-fx-border-color: black");
-		settingsPane.setPadding(new Insets(50, 0, 50, 0));
+		settingsPane.setPadding(new Insets(20, 0, 20, 0));
 		settingsPane.setAlignment(Pos.CENTER);
 		
 		rbSimpleGame = new RadioButton("Simple Game");
@@ -155,7 +159,7 @@ public class SosGui extends Application {
 	}
 	
 	
-	public void buildBoardPane(int size) {
+	public void setUpBoard(int size) {
 		
 		int width = BOARD_PIXEL_SIZE/size;
 		
@@ -174,20 +178,18 @@ public class SosGui extends Application {
 		
 		layout.setCenter(boardPane);
 		
-		drawBoard();
-		
 	}
 	
 	public void drawBoard() {
 		
-		if (game == null || game.grid == null) {
-			for (Square[] row : board) {
-				for (Square square : row) {
-					square.setValue("");
-				}
-			}
-			return;
-		}
+//		if (game == null || game.grid == null) {
+//			for (Square[] row : board) {
+//				for (Square square : row) {
+//					square.setValue("");
+//				}
+//			}
+//			return;
+//		}
 		
 		for (int row = 0; row < game.getTotalRows(); row++) {
 			for (int col = 0; col < game.getTotalColumns(); col ++) {
@@ -252,57 +254,42 @@ public class SosGui extends Application {
 	}
 	
 	private void handleStartGame() {
-		
 		try {
-			int size = validateBoardSize();
-			if (size == -1) {
-				return;
+			if (getGameMode() == rbSimpleGame) {
+				game = new SosSimpleGame();
+			} else if (getGameMode() == rbGeneralGame) {
+				game = new SosGeneralGame();
 			}
-			
-			//SosGame.GameMode mode = validateGameMode();
-//			if (mode == null) {
-//				return;
-//			}
-			
-			// temp until subclasses implemented
-			game = new SosGame() {};
-			
-//			game.setupNewGame(size, mode);
-			
-			buildBoardPane(size);
-			
+			setUpBoard(getBoardSize());
 			
 		} catch (Exception e) {
-			
+			showError(e.getMessage());
 		}
-		
-		
-		
-		
 		
 	}
 	
-	private int validateBoardSize() {
+	private int getBoardSize() throws Exception {
 		String input = txtBoardSize.getText().trim();
 
-		try {
+
 			int size = Integer.parseInt(input);
 			if (size >= 3 && size <= 10) {
 				return size;
 			}
 			else {
-				showError("Please enter a valid board size between 3 and 10.");
-				return -1;
+				throw new Exception ("Please enter a valid board size between 3 and 10.");
 			}
-		} catch (Exception e) {
-			showError("Invalid board size. Enter a number between 3 and 10.");
-			return -1;
-		}
+
+	}
+	
+	private RadioButton getGameMode(){
+		return (RadioButton) rbGroupGameMode.getSelectedToggle();
 	}
 	
 	
 	private void showError(String message) {
 	    Alert alert = new Alert(Alert.AlertType.ERROR);
+	    //alert.initOwner(primaryStage);
 	    alert.setTitle("Invalid Input");
 	    alert.setHeaderText(null);
 	    alert.setContentText(message);
