@@ -182,15 +182,6 @@ public class SosGui extends Application {
 	
 	public void drawBoard() {
 		
-//		if (game == null || game.grid == null) {
-//			for (Square[] row : board) {
-//				for (Square square : row) {
-//					square.setValue("");
-//				}
-//			}
-//			return;
-//		}
-		
 		for (int row = 0; row < game.getTotalRows(); row++) {
 			for (int col = 0; col < game.getTotalColumns(); col ++) {
 				if (game.getCell(row, col) == SosGame.Cell.S) {
@@ -260,7 +251,9 @@ public class SosGui extends Application {
 			} else if (getGameMode() == rbGeneralGame) {
 				game = new SosGeneralGame();
 			}
-			setUpBoard(getBoardSize());
+			int size = getBoardSize();
+			setUpBoard(size);
+			game.setupNewGame(size);
 			
 		} catch (Exception e) {
 			showError(e.getMessage());
@@ -289,7 +282,6 @@ public class SosGui extends Application {
 	
 	private void showError(String message) {
 	    Alert alert = new Alert(Alert.AlertType.ERROR);
-	    //alert.initOwner(primaryStage);
 	    alert.setTitle("Invalid Input");
 	    alert.setHeaderText(null);
 	    alert.setContentText(message);

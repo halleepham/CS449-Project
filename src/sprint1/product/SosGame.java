@@ -65,9 +65,12 @@ abstract class SosGame {
 	public int getTotalColumns() {
 		return totalColumns;
 	}
-
-	public void setSize(int size) {
-		totalRows = size;
-		totalColumns = size;
+	
+	public String getTurn() {
+		return turn;
 	}
+	
+	
+
+	public abstract void makeMove();
 }
