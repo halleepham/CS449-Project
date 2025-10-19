@@ -1,6 +1,8 @@
 package sprint1.product;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -47,8 +50,6 @@ public class SosGui extends Application {
 		buildInfoPane();
 		layout.setCenter(new GridPane());
 		setUpActions();
-		
-		
 		
 		primaryStage.setTitle("SOS Game");
 		primaryStage.setMaximized(true);
@@ -103,6 +104,8 @@ public class SosGui extends Application {
 		rbGroupBlueMoves = new ToggleGroup();
 		rbBlueS = new RadioButton("S");
 		rbBlueO = new RadioButton("O");
+		rbBlueS.setUserData('S');
+		rbBlueO.setUserData('O');
 		rbBlueS.setToggleGroup(rbGroupBlueMoves);
 		rbBlueO.setToggleGroup(rbGroupBlueMoves);
 		rbBlueS.setSelected(true);
@@ -127,6 +130,8 @@ public class SosGui extends Application {
 		rbGroupRedMoves = new ToggleGroup();
 		rbRedS = new RadioButton("S");
 		rbRedO = new RadioButton("O");
+		rbRedS.setUserData('S');
+		rbRedO.setUserData('O');
 		rbRedS.setToggleGroup(rbGroupRedMoves);
 		rbRedO.setToggleGroup(rbGroupRedMoves);
 		rbRedS.setSelected(true);
@@ -171,7 +176,7 @@ public class SosGui extends Application {
 		board = new Square[size][size];
 		for (int row = 0; row < size; row++) {
 			for (int col = 0; col < size; col++) {
-				board[row][col] = new Square(width);
+				board[row][col] = new Square(width, row, col);
 				boardPane.add(board[row][col].getSquare(), col, row);
 			}
 		}
@@ -202,8 +207,12 @@ public class SosGui extends Application {
 		private StackPane square;
 		private Rectangle border;
 		private Label lblValue;
+		private int row;
+		private int column;
 		
-		public Square(int width) {
+		public Square(int width, int row, int col) {
+			this.row = row;
+			this.column = col;
 			square = new StackPane();
 			
 			border = new Rectangle();
@@ -218,9 +227,7 @@ public class SosGui extends Application {
 			lblValue.setFont(Font.font(24));
 			square.getChildren().add(lblValue);
 			
-			square.setOnMouseClicked(event -> {
-				System.out.println("Not implemented yet. Change to S or O.");
-			});
+			square.setOnMouseClicked(event -> handleMove(this));
 			
 		}
 		
@@ -236,12 +243,53 @@ public class SosGui extends Application {
 			lblValue.setText(value);
 		}
 		
+		public int getRow() {
+			return row;
+		}
 		
-	}	
+		public int getColumn() {
+			return column;
+		}
+		
+		
+	}
+	
+	public void handleMove(Square square) {
+		try {
+			if (game != null) {
+				game.makeMove(square.getRow(), square.getColumn());
+				drawBoard();
+				displayTurn();
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	
 	public void setUpActions() {
 		btnStartGame.setOnAction(event -> handleStartGame());
+		
+		rbGroupBlueMoves.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+			@Override
+			public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+	            if (newValue != null && game != null) { 
+	            	game.setBlueMove((char) newValue.getUserData());
+	            }
+	        }
+		});
+		
+		rbGroupRedMoves.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+			@Override
+			public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+	            if (newValue != null && game != null) { 
+	            	game.setRedMove((char)newValue.getUserData());
+	            }
+	        }
+		});
 	}
 	
 	private void handleStartGame() {
@@ -254,6 +302,11 @@ public class SosGui extends Application {
 			int size = getBoardSize();
 			setUpBoard(size);
 			game.setupNewGame(size);
+			rbSimpleGame.setDisable(true);
+			rbGeneralGame.setDisable(true);
+			txtBoardSize.setDisable(true);
+			btnStartGame.setDisable(true);
+			
 			
 		} catch (Exception e) {
 			showError(e.getMessage());
@@ -277,6 +330,18 @@ public class SosGui extends Application {
 	
 	private RadioButton getGameMode(){
 		return (RadioButton) rbGroupGameMode.getSelectedToggle();
+	}
+	
+	private void displayTurn() {
+		if (game.getGameState() == SosGame.GameState.PLAYING) {
+			if (game.getTurn() == "BLUE") {
+				lblCurrentTurn.setText("Blue");
+				lblCurrentTurn.setTextFill(Color.BLUE);
+			} else {
+				lblCurrentTurn.setText("Red");
+				lblCurrentTurn.setTextFill(Color.RED);
+			}
+		}
 	}
 	
 	

@@ -11,6 +11,9 @@ abstract class SosGame {
 	
 	private int totalRows;
 	private int totalColumns;
+	protected char blueMove;
+	protected char redMove;
+	
 	
 	protected Cell[][] grid;
 	protected String turn;
@@ -27,7 +30,7 @@ abstract class SosGame {
 			throw new Exception("Invalid board size");
 		}
 		
-		this.totalColumns = size;
+		this.totalRows = size;
 		this.totalColumns = size;
 		this.grid = new Cell[size][size];
 		
@@ -38,6 +41,8 @@ abstract class SosGame {
 		}
 		
 		this.currentGameState = GameState.PLAYING;
+		this.blueMove = 'S';
+		this.redMove = 'S';
 		this.turn = "BLUE";
 		
 	}
@@ -69,8 +74,25 @@ abstract class SosGame {
 	public String getTurn() {
 		return turn;
 	}
-	
-	
 
-	public abstract void makeMove();
+	public abstract void makeMove(int row, int col) throws Exception;
+	
+	public boolean isValidMove(int row, int col) throws Exception {
+		if (getCell(row, col) == Cell.EMPTY) {
+			return true;
+		}
+		else {
+			throw new Exception("Cell out of bounds");
+		}
+	}
+	
+	public void setBlueMove(char move) {
+		blueMove = move;
+	}
+	
+	public void setRedMove(char move) {
+		redMove = move;
+	}
+	
+	public abstract void updateGameState(String turn, int row, int column);
 }
