@@ -9,8 +9,8 @@ abstract class SosGame {
 		SETUP, PLAYING, DRAW, BLUE_WON, RED_WON
 	}
 	
-	private int totalRows;
-	private int totalColumns;
+	protected int totalRows;
+	protected int totalColumns;
 	protected char blueMove;
 	protected char redMove;
 	
@@ -95,4 +95,84 @@ abstract class SosGame {
 	}
 	
 	public abstract void updateGameState(String turn, int row, int column);
+	
+	public abstract boolean isDraw();
+
+	public boolean madeSos(String turn, int row, int col){
+		Cell move = grid[row][col];
+		// O move
+		if (move == Cell.O) {
+			// Horizontal
+			if (col > 0 && col < totalColumns - 1 &&
+					grid[row][col - 1] == Cell.S &&
+					grid[row][col + 1] == Cell.S) {
+				System.out.println("SOS made");
+				return true;
+			}
+			// Vertical
+			if (row > 0 && row < totalRows - 1 &&
+					grid[row-1][col] == Cell.S &&
+					grid[row+1][col] == Cell.S) {
+				return true;
+			}
+			// Diagonal
+			if (row > 0 && row < totalRows - 1 && col > 0 && col < totalColumns - 1 &&
+					(grid[row-1][col-1] == Cell.S && grid[row+1][col+1] == Cell.S) ||
+					(grid[row+1][col-1] == Cell.S && grid[row-1][col+1] == Cell.S)) {
+				return true;
+			}
+		// S move
+		} else if (move == Cell.S) {
+			// Horizontal right
+			if (col + 2 < totalColumns &&
+					grid[row][col + 1] == Cell.O &&
+					grid[row][col+2] == Cell.S) {
+				return true;
+			}
+			// Horizontal left
+			if (col - 2 >= 0 &&
+					grid[row][col-1] == Cell.O &&
+					grid[row][col - 2] == Cell.S) {
+				return true;
+			}
+			// Vertical down
+			if (row + 2 < totalRows &&
+					grid[row+1][col] == Cell.O &&
+					grid[row+2][col] == Cell.S) {
+				return true;
+			}
+			// Vertical up
+			if (row - 2 >= 0 &&
+					grid[row-1][col] == Cell.O &&
+					grid[row-2][col] == Cell.S) {
+				return true;
+			}
+			// Diagonal (top left to bottom right)
+			if (row + 2 < totalRows && col + 2 < totalColumns &&
+					grid[row+1][col+1] == Cell.O &&
+					grid[row+2][col+2] == Cell.S) {
+				return true;
+			}
+			// Diagonal (top right to bottom left)
+			if (row + 2 < totalRows && col - 2 >= 0 &&
+					grid[row+1][col-1] == Cell.O &&
+					grid[row+2][col-2] == Cell.S) {
+				return true;
+			}
+			// Diagonal (bottom left to top right)
+			if (row -2 >= 0 && col + 2 < totalColumns &&
+					grid[row-1][col+1] == Cell.O &&
+					grid[row-2][col+2] == Cell.S) {
+				return true;
+			}
+			// Diagonal (bottom right to top left)
+			if (row -2 >= 0 && col - 2 >= 0 &&
+					grid[row-1][col-1] == Cell.O &&
+					grid[row-2][col-2] == Cell.S) {
+				return true;
+			}
+		}
+		return false;
+		
+	}
 }

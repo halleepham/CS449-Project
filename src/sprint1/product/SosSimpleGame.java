@@ -6,7 +6,6 @@ public class SosSimpleGame extends SosGame {
 	public void makeMove(int row, int col) throws Exception {
 		if (isValidMove(row, col)) {
 			if (turn == "BLUE") {
-				System.out.println("Blue turn putting down " + blueMove + " on cell " + row + ", " + col);
 				if (blueMove == 'S') {
 					grid[row][col] = Cell.S;
 				}
@@ -14,7 +13,6 @@ public class SosSimpleGame extends SosGame {
 					grid[row][col] = Cell.O;
 				}
 			} else if (turn == "RED") {
-				System.out.println("Red turn putting down " + redMove + " on cell " + row + ", " + col);
 				if (redMove == 'S') {
 					grid[row][col] = Cell.S;
 				}
@@ -31,9 +29,27 @@ public class SosSimpleGame extends SosGame {
 
 	@Override
 	public void updateGameState(String turn, int row, int column) {
-		System.out.println();
+		if (madeSos(turn, row, column)) {
+			currentGameState = (turn == "BLUE") ? GameState.BLUE_WON : GameState.RED_WON;
+		} else if (isDraw()) {
+			currentGameState = GameState.DRAW;
+		}
 		
 	}
+
+	@Override
+	public boolean isDraw() {
+		for (int row = 0; row < totalRows; ++row) {
+			for (int col = 0; col < totalColumns; ++col) {
+				if (grid[row][col] == Cell.EMPTY) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	
 	
 	
 	
