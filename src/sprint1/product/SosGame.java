@@ -25,7 +25,7 @@ abstract class SosGame {
 	
 	public void setupNewGame(int size) throws Exception {
 		if (size < 3 || size > 10) {
-			throw new IllegalArgumentException("Invalid board size");
+			throw new IllegalArgumentException("Board size must be between 3 and 10");
 		}
 		
 		this.totalRows = size;
@@ -91,6 +91,7 @@ abstract class SosGame {
 	}
 	
 	public boolean madeSos(String turn, int row, int col) {
+		// TODO: When general game is implemented change to return int for number of SOSes made
 		Cell move = grid[row][col];
 		if (move == null || move == Cell.EMPTY) {
 			return false;
@@ -106,7 +107,6 @@ abstract class SosGame {
 	}
 	
 	public boolean checkOFormed(int row, int col) {
-		// TODO: When general game is implemented change to return int for number of SOSes made
 		// Horizontal
 		if (col > 0 && col < totalColumns - 1 
 				&& grid[row][col - 1] == Cell.S && grid[row][col + 1] == Cell.S) {

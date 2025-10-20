@@ -246,19 +246,26 @@ public class SosGui extends Application {
 			btnStartGame.setDisable(true);
 			
 		} catch (NumberFormatException e) {
-			showError("Board size must be a number between 3 and 10.");
+			showError("Please enter a valid integer for the board size.");
+		} catch (IllegalArgumentException e) {
+			showError(e.getMessage());
 		} catch (Exception e) {
 			showError("Unexpected error: " + e.getMessage());
 		}
 	}
 	
 	public void handleMove(Square square) {
+		if (game == null) {
+			return;
+		}
 		try {
-			if (game != null) {
-				game.makeMove(square.getRow(), square.getColumn());
-				drawBoard();
-				displayTurn();
-			}
+			game.makeMove(square.getRow(), square.getColumn());
+			drawBoard();
+			displayTurn();
+		} catch (IndexOutOfBoundsException e) {
+			showError("That move is outside the board.");
+		} catch (IllegalStateException e) {
+			showError(e.getMessage());
 		} catch (Exception e) {
 			showError("Unexpected error: " + e.getMessage());
 		}
@@ -267,15 +274,12 @@ public class SosGui extends Application {
 	
 	private int getBoardSize() throws Exception {
 		String input = txtBoardSize.getText().trim();
-
 			int size = Integer.parseInt(input);
-			if (size >= 3 && size <= 10) {
-				return size;
+			
+			if (size < 3 || size > 10) {
+				throw new IllegalArgumentException("Board size must be between 3 and 10");
 			}
-			else {
-				throw new Exception ("Please enter a valid board size between 3 and 10.");
-			}
-
+			return size;
 	}
 	
 	private void showError(String message) {
