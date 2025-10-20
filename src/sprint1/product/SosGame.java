@@ -25,7 +25,7 @@ abstract class SosGame {
 	
 	public void setupNewGame(int size) throws Exception {
 		if (size < 3 || size > 10) {
-			throw new Exception("Invalid board size");
+			throw new IllegalArgumentException("Invalid board size");
 		}
 		
 		this.totalRows = size;
@@ -42,16 +42,16 @@ abstract class SosGame {
 		this.blueMove = 'S';
 		this.redMove = 'S';
 		this.turn = "BLUE";
-		
 	}
 	
 	public boolean isValidMove(int row, int col) throws Exception {
-		if (getCell(row, col) == Cell.EMPTY) {
-			return true;
+		if (row < 0 || row >= totalRows || col < 0 || col >= totalColumns) {
+			throw new IndexOutOfBoundsException("Move is outside the board's boundaries.");
 		}
-		else {
-			throw new Exception("Cell out of bounds");
+		if (grid[row][col] != Cell.EMPTY) {
+			throw new IllegalStateException("Cell is already occupied.");
 		}
+		return true;
 	}
 	
 	public Cell getCell(int row, int col) {
@@ -89,88 +89,88 @@ abstract class SosGame {
 	public void setRedMove(char move) {
 		redMove = move;
 	}
-
-	public boolean madeSos(String turn, int row, int col){
+	
+	public boolean madeSos(String turn, int row, int col) {
 		Cell move = grid[row][col];
-		// O move
+		if (move == null || move == Cell.EMPTY) {
+			return false;
+		}
+		
+		// Check if O move made an SOS
 		if (move == Cell.O) {
-			// Horizontal
-			if (col > 0 && col < totalColumns - 1 &&
-					grid[row][col - 1] == Cell.S &&
-					grid[row][col + 1] == Cell.S) {
-				return true;
-			}
-			// Vertical
-			if (row > 0 && row < totalRows - 1 &&
-					grid[row-1][col] == Cell.S &&
-					grid[row+1][col] == Cell.S) {
-				return true;
-			}
-			// Diagonal (top left and bottom right)
-			if (row - 1 >= 0 && col - 1 >= 0 &&
-					row + 1 < totalRows && col + 1 < totalColumns &&
-					grid[row-1][col-1] == Cell.S && grid[row+1][col+1] == Cell.S){
-				return true;
-			}
-			// Diagonal (top right and bottom left)
-			if (row - 1 >= 0 && col + 1 < totalColumns && 
-					row + 1 < totalRows && col - 1 >= 0 &&
-					grid[row - 1][col + 1] == Cell.S && grid[row + 1][col - 1] == Cell.S) {
-				return true;
-			}
-			
-		// S move
-		} else if (move == Cell.S) {
-			// Horizontal right
-			if (col + 2 < totalColumns &&
-					grid[row][col+1] == Cell.O &&
-					grid[row][col+2] == Cell.S) {
-				return true;
-			}
-			// Horizontal left
-			if (col - 2 >= 0 &&
-					grid[row][col-1] == Cell.O &&
-					grid[row][col-2] == Cell.S) {
-				return true;
-			}
-			// Vertical down
-			if (row + 2 < totalRows &&
-					grid[row+1][col] == Cell.O &&
-					grid[row+2][col] == Cell.S) {
-				return true;
-			}
-			// Vertical up
-			if (row - 2 >= 0 &&
-					grid[row-1][col] == Cell.O &&
-					grid[row-2][col] == Cell.S) {
-				return true;
-			}
-			// Diagonal (top left to bottom right)
-			if (row + 2 < totalRows && col + 2 < totalColumns &&
-					grid[row+1][col+1] == Cell.O &&
-					grid[row+2][col+2] == Cell.S) {
-				return true;
-			}
-			// Diagonal (top right to bottom left)
-			if (row + 2 < totalRows && col - 2 >= 0 &&
-					grid[row+1][col-1] == Cell.O &&
-					grid[row+2][col-2] == Cell.S) {
-				return true;
-			}
-			// Diagonal (bottom left to top right)
-			if (row -2 >= 0 && col + 2 < totalColumns &&
-					grid[row-1][col+1] == Cell.O &&
-					grid[row-2][col+2] == Cell.S) {
-				return true;
-			}
-			// Diagonal (bottom right to top left)
-			if (row -2 >= 0 && col - 2 >= 0 &&
-					grid[row-1][col-1] == Cell.O &&
-					grid[row-2][col-2] == Cell.S) {
-				return true;
-			}
+			return checkOFormed(row, col);
+		}
+		
+		// Check if S move made an SOS
+		return checkSFormed(row, col);
+	}
+	
+	public boolean checkOFormed(int row, int col) {
+		// TODO: When general game is implemented change to return int for number of SOSes made
+		// Horizontal
+		if (col > 0 && col < totalColumns - 1 
+				&& grid[row][col - 1] == Cell.S && grid[row][col + 1] == Cell.S) {
+			return true;
+		}
+		// Vertical
+		if (row > 0 && row < totalRows - 1 
+				&& grid[row - 1][col] == Cell.S && grid[row + 1][col] == Cell.S) {
+			return true;
+		}
+		// Diagonal (top left to bottom right)
+		if (row - 1 >= 0 && col - 1 >= 0 && row + 1 < totalRows && col + 1 < totalColumns
+				&& grid[row - 1][col - 1] == Cell.S && grid[row + 1][col + 1] == Cell.S) {
+			return true;
+		}
+		// Diagonal (top right to bottom left)
+		if (row - 1 >= 0 && col + 1 < totalColumns && row + 1 < totalRows && col - 1 >= 0
+				&& grid[row - 1][col + 1] == Cell.S && grid[row + 1][col - 1] == Cell.S) {
+			return true;
 		}
 		return false;
-		
+	}
+	
+	public boolean checkSFormed(int row, int col) {
+		// Horizontal right
+		if (col + 2 < totalColumns 
+				&& grid[row][col + 1] == Cell.O && grid[row][col + 2] == Cell.S) {
+			return true;
+		}
+		// Horizontal left
+		if (col - 2 >= 0 
+				&& grid[row][col - 1] == Cell.O && grid[row][col - 2] == Cell.S) {
+			return true;
+		}
+		// Vertical down
+		if (row + 2 < totalRows 
+				&& grid[row + 1][col] == Cell.O && grid[row + 2][col] == Cell.S) {
+			return true;
+		}
+		// Vertical up
+		if (row - 2 >= 0 
+				&& grid[row - 1][col] == Cell.O && grid[row - 2][col] == Cell.S) {
+			return true;
+		}
+		// Diagonal (top left to bottom right)
+		if (row + 2 < totalRows && col + 2 < totalColumns 
+				&& grid[row + 1][col + 1] == Cell.O && grid[row + 2][col + 2] == Cell.S) {
+			return true;
+		}
+		// Diagonal (top right to bottom left)
+		if (row + 2 < totalRows && col - 2 >= 0 
+				&& grid[row + 1][col - 1] == Cell.O && grid[row + 2][col - 2] == Cell.S) {
+			return true;
+		}
+		// Diagonal (bottom left to top right)
+		if (row - 2 >= 0 && col + 2 < totalColumns 
+				&& grid[row - 1][col + 1] == Cell.O && grid[row - 2][col + 2] == Cell.S) {
+			return true;
+		}
+		// Diagonal (bottom right to top left)
+		if (row - 2 >= 0 && col - 2 >= 0 
+				&& grid[row - 1][col - 1] == Cell.O && grid[row - 2][col - 2] == Cell.S) {
+			return true;
+		}
+		return false;
 	}
 }
