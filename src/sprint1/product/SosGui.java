@@ -25,22 +25,28 @@ import javafx.stage.Stage;
 
 public class SosGui extends Application {
 
+	private static final int BOARD_PIXEL_SIZE = 450;
+	static private SosGame game;
+	
+	private Square[][] squares;
 	private BorderPane layout;
-	private ToggleGroup rbGroupGameMode, rbGroupBlueType, rbGroupRedType, rbGroupBlueMoves, rbGroupRedMoves;
-	private RadioButton rbSimpleGame, rbGeneralGame, rbBlueS, rbBlueO, rbRedS, rbRedO;
+	private ToggleGroup rbGroupGameMode;
+	private ToggleGroup rbGroupBlueType;
+	private ToggleGroup rbGroupRedType;
+	private ToggleGroup rbGroupBlueMoves;
+	private ToggleGroup rbGroupRedMoves;
+	private RadioButton rbSimpleGame;
+	private RadioButton rbGeneralGame;
+	private RadioButton rbBlueS;
+	private RadioButton rbBlueO;
+	private RadioButton rbRedS;
+	private RadioButton rbRedO;
 	private TextField txtBoardSize;
 	private Label lblCurrentTurn;
 	private Button btnStartGame;
-	
-	private static final int BOARD_PIXEL_SIZE = 450;
-	
-	private Square[][] board;
-	
-	static private SosGame game;
 
 	@Override
 	public void start(Stage primaryStage) {
-		
 		layout = new BorderPane();
 		Scene scene = new Scene(layout);
 		
@@ -56,12 +62,9 @@ public class SosGui extends Application {
 		primaryStage.setMinWidth(1280);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		
 	}
 	
-	
 	public void buildSettingsPane() {
-		
 		HBox settingsPane = new HBox(20);
 		settingsPane.setStyle("-fx-border-color: black");
 		settingsPane.setPadding(new Insets(20, 0, 20, 0));
@@ -70,36 +73,37 @@ public class SosGui extends Application {
 		rbSimpleGame = new RadioButton("Simple Game");
 		rbGeneralGame = new RadioButton("General Game");
 		rbGroupGameMode  = new ToggleGroup();
-		rbSimpleGame.setSelected(true);
 		rbSimpleGame.setToggleGroup(rbGroupGameMode);
 		rbGeneralGame.setToggleGroup(rbGroupGameMode);
+		rbSimpleGame.setSelected(true);
 		
 		Label lblBoardSize = new Label("Board size: ");
-		
 		txtBoardSize = new TextField();
-		txtBoardSize.setMaxWidth(25);
-		
+		txtBoardSize.setMaxWidth(50);
 		btnStartGame = new Button("Start Game");
 		
 		settingsPane.getChildren().addAll(rbSimpleGame, rbGeneralGame, lblBoardSize, txtBoardSize, btnStartGame);
-		
 		layout.setTop(settingsPane);
-		
 	}
 	
 	public void buildPlayerPanes() {
-		
-		rbGroupBlueType = new ToggleGroup();
-		RadioButton rbBlueHuman = new RadioButton("Human");
-		RadioButton rbBlueComputer = new RadioButton("Computer");
-		rbBlueHuman.setSelected(true);
-		rbBlueHuman.setToggleGroup(rbGroupBlueType);
-		rbBlueComputer.setToggleGroup(rbGroupBlueType);
-		
+		// Blue player pane
 		VBox bluePlayerPane = new VBox(15);
 		bluePlayerPane.setStyle("-fx-border-color: black");
 		bluePlayerPane.setPadding(new Insets(0, 100, 0, 100));
 		bluePlayerPane.setAlignment(Pos.CENTER);
+		
+		Label lblBlue = new Label("Blue Player");
+		lblBlue.setTextFill(Color.BLUE);
+		lblBlue.setFont(Font.font(24));
+		
+		rbGroupBlueType = new ToggleGroup();
+		RadioButton rbBlueHuman = new RadioButton("Human");
+		RadioButton rbBlueComputer = new RadioButton("Computer");
+		rbBlueHuman.setToggleGroup(rbGroupBlueType);
+		rbBlueComputer.setToggleGroup(rbGroupBlueType);
+		rbBlueHuman.setSelected(true);
+		
 		rbGroupBlueMoves = new ToggleGroup();
 		rbBlueS = new RadioButton("S");
 		rbBlueO = new RadioButton("O");
@@ -108,24 +112,27 @@ public class SosGui extends Application {
 		rbBlueS.setToggleGroup(rbGroupBlueMoves);
 		rbBlueO.setToggleGroup(rbGroupBlueMoves);
 		rbBlueS.setSelected(true);
-		Label lblBlue = new Label("Blue Player");
-		lblBlue.setTextFill(Color.BLUE);
-		lblBlue.setFont(Font.font(24));
+		
 		bluePlayerPane.getChildren().addAll(lblBlue, rbBlueHuman, rbBlueS, rbBlueO, rbBlueComputer);
 		layout.setLeft(bluePlayerPane);
 		
-		
-		rbGroupRedType = new ToggleGroup();
-		RadioButton rbRedHuman = new RadioButton("Human");
-		RadioButton rbRedComputer = new RadioButton("Computer");
-		rbRedHuman.setSelected(true);
-		rbRedHuman.setToggleGroup(rbGroupRedType);
-		rbRedComputer.setToggleGroup(rbGroupRedType);
-		
+		// Red player pane
 		VBox redPlayerPane = new VBox(15);
 		redPlayerPane.setStyle("-fx-border-color: black");
 		redPlayerPane.setPadding(new Insets(0, 100, 0, 100));
 		redPlayerPane.setAlignment(Pos.CENTER);
+		
+		Label lblRed = new Label("Red Player");
+		lblRed.setTextFill(Color.RED);
+		lblRed.setFont(Font.font(24));
+		
+		rbGroupRedType = new ToggleGroup();
+		RadioButton rbRedHuman = new RadioButton("Human");
+		RadioButton rbRedComputer = new RadioButton("Computer");
+		rbRedHuman.setToggleGroup(rbGroupRedType);
+		rbRedComputer.setToggleGroup(rbGroupRedType);
+		rbRedHuman.setSelected(true);
+		
 		rbGroupRedMoves = new ToggleGroup();
 		rbRedS = new RadioButton("S");
 		rbRedO = new RadioButton("O");
@@ -134,16 +141,12 @@ public class SosGui extends Application {
 		rbRedS.setToggleGroup(rbGroupRedMoves);
 		rbRedO.setToggleGroup(rbGroupRedMoves);
 		rbRedS.setSelected(true);
-		Label lblRed = new Label("Red Player");
-		lblRed.setTextFill(Color.RED);
-		lblRed.setFont(Font.font(24));
+		
 		redPlayerPane.getChildren().addAll(lblRed, rbRedHuman, rbRedS, rbRedO, rbRedComputer);
 		layout.setRight(redPlayerPane);
-		
 	}
 	
 	public void buildInfoPane() {
-		
 		HBox infoPane = new HBox();
 		infoPane.setStyle("-fx-border-color: black");
 		infoPane.setPadding(new Insets(50, 0, 50, 0));
@@ -156,119 +159,52 @@ public class SosGui extends Application {
 		lblCurrentTurn.setTextFill(Color.BLUE);
 		
 		infoPane.getChildren().addAll(lblTurn, lblCurrentTurn);
-		
 		layout.setBottom(infoPane);
-		
-		
 	}
 	
-	
 	public void setUpBoard(int size) {
-		
 		int width = BOARD_PIXEL_SIZE/size;
-		
 		GridPane boardPane = new GridPane();
 		boardPane.setStyle("-fx-border-color: black");
 		boardPane.setPadding(new Insets(30));
 		boardPane.setAlignment(Pos.CENTER);
 		
-		board = new Square[size][size];
+		squares = new Square[size][size];
 		for (int row = 0; row < size; row++) {
 			for (int col = 0; col < size; col++) {
-				board[row][col] = new Square(width, row, col);
-				boardPane.add(board[row][col].getSquare(), col, row);
+				squares[row][col] = new Square(width, row, col);
+				boardPane.add(squares[row][col].getSquare(), col, row);
 			}
 		}
-		
+
 		layout.setCenter(boardPane);
-		
 	}
 	
-	public void drawBoard() {
-		
+	private void drawBoard() {
 		for (int row = 0; row < game.getTotalRows(); row++) {
-			for (int col = 0; col < game.getTotalColumns(); col ++) {
+			for (int col = 0; col < game.getTotalColumns(); col++) {
 				if (game.getCell(row, col) == SosGame.Cell.S) {
-					board[row][col].setValue("S");
+					squares[row][col].setValue("S");
 				} else if (game.getCell(row, col) == SosGame.Cell.O) {
-					board[row][col].setValue("O");
-				} else {
-					board[row][col].setValue("");
+					squares[row][col].setValue("O");
 				}
 			}
 		}
-		
 	}
 	
-	
-	public class Square {
-		
-		private StackPane square;
-		private Rectangle border;
-		private Label lblValue;
-		private int row;
-		private int column;
-		
-		public Square(int width, int row, int col) {
-			this.row = row;
-			this.column = col;
-			square = new StackPane();
-			
-			border = new Rectangle();
-			border.setWidth(width);
-			border.setHeight(width);
-			border.setFill(Color.TRANSPARENT);
-			border.setStroke(Color.BLACK);
-			square.getChildren().add(border);
-			
-			lblValue = new Label("");
-			lblValue.setAlignment(Pos.CENTER);
-			lblValue.setFont(Font.font(24));
-			square.getChildren().add(lblValue);
-			
-			square.setOnMouseClicked(event -> handleMove(this));
-			
-		}
-		
-		public StackPane getSquare() {
-			return square;
-		}
-		
-		public String getValue() {
-			return lblValue.getText();
-		}
-		
-		public void setValue(String value) {
-			lblValue.setText(value);
-		}
-		
-		public int getRow() {
-			return row;
-		}
-		
-		public int getColumn() {
-			return column;
-		}
-		
-		
-	}
-	
-	public void handleMove(Square square) {
-		try {
-			if (game != null) {
-				game.makeMove(square.getRow(), square.getColumn());
-				drawBoard();
-				displayTurn();
+	private void displayTurn() {
+		if (game.getGameState() == SosGame.GameState.PLAYING) {
+			if (game.getTurn().equals("BLUE")) {
+				lblCurrentTurn.setText("Blue");
+				lblCurrentTurn.setTextFill(Color.BLUE);
+			} else {
+				lblCurrentTurn.setText("Red");
+				lblCurrentTurn.setTextFill(Color.RED);
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		
 	}
-
 	
-	public void setUpActions() {
+	private void setUpActions() {
 		btnStartGame.setOnAction(event -> handleStartGame());
 		
 		rbGroupBlueMoves.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
@@ -292,29 +228,45 @@ public class SosGui extends Application {
 	
 	private void handleStartGame() {
 		try {
-			if (getGameMode() == rbSimpleGame) {
+			int size = getBoardSize();
+			
+			if (rbSimpleGame.isSelected()) {
 				game = new SosSimpleGame();
-			} else if (getGameMode() == rbGeneralGame) {
+			} else {
 				game = new SosGeneralGame();
 			}
-			int size = getBoardSize();
-			setUpBoard(size);
+			
 			game.setupNewGame(size);
+			setUpBoard(size);
+			
+			// Disable controls in settings pane
 			rbSimpleGame.setDisable(true);
 			rbGeneralGame.setDisable(true);
 			txtBoardSize.setDisable(true);
 			btnStartGame.setDisable(true);
 			
-			
+		} catch (NumberFormatException e) {
+			showError("Board size must be a number between 3 and 10.");
 		} catch (Exception e) {
-			showError(e.getMessage());
+			showError("Unexpected error: " + e.getMessage());
+		}
+	}
+	
+	public void handleMove(Square square) {
+		try {
+			if (game != null) {
+				game.makeMove(square.getRow(), square.getColumn());
+				drawBoard();
+				displayTurn();
+			}
+		} catch (Exception e) {
+			showError("Unexpected error: " + e.getMessage());
 		}
 		
 	}
 	
 	private int getBoardSize() throws Exception {
 		String input = txtBoardSize.getText().trim();
-
 
 			int size = Integer.parseInt(input);
 			if (size >= 3 && size <= 10) {
@@ -326,23 +278,6 @@ public class SosGui extends Application {
 
 	}
 	
-	private RadioButton getGameMode(){
-		return (RadioButton) rbGroupGameMode.getSelectedToggle();
-	}
-	
-	private void displayTurn() {
-		if (game.getGameState() == SosGame.GameState.PLAYING) {
-			if (game.getTurn() == "BLUE") {
-				lblCurrentTurn.setText("Blue");
-				lblCurrentTurn.setTextFill(Color.BLUE);
-			} else {
-				lblCurrentTurn.setText("Red");
-				lblCurrentTurn.setTextFill(Color.RED);
-			}
-		}
-	}
-	
-	
 	private void showError(String message) {
 	    Alert alert = new Alert(Alert.AlertType.ERROR);
 	    alert.setTitle("Invalid Input");
@@ -351,7 +286,45 @@ public class SosGui extends Application {
 	    alert.showAndWait();
 	}
 	
-
+	public class Square {
+		
+		private StackPane square;
+		private Label lblValue;
+		private int row;
+		private int column;
+		
+		public Square(int width, int row, int col) {
+			this.row = row;
+			this.column = col;
+			
+			Rectangle border = new Rectangle(width, width);
+			border.setFill(Color.TRANSPARENT);
+			border.setStroke(Color.BLACK);
+			
+			lblValue = new Label("");
+			lblValue.setFont(Font.font(24));
+			
+			square = new StackPane(border, lblValue);
+			square.setOnMouseClicked(event -> handleMove(this));
+		}
+		
+		public StackPane getSquare() {
+			return square;
+		}
+		
+		public void setValue(String value) {
+			lblValue.setText(value);
+		}
+		
+		public int getRow() {
+			return row;
+		}
+		
+		public int getColumn() {
+			return column;
+		}
+	}
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
