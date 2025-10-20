@@ -1,41 +1,32 @@
 package sprint1.product;
 
+import sprint1.product.SosGame.Cell;
+import sprint1.product.SosGame.PlayerTurn;
+
 public class SosGeneralGame extends SosGame {
 
 	@Override
 	public void makeMove(int row, int col) throws Exception {
 		if (isValidMove(row, col)) {
-			if (turn == "BLUE") {
-				if (blueMove == 'S') {
-					grid[row][col] = Cell.S;
-				}
-				else if (blueMove == 'O'){
-					grid[row][col] = Cell.O;
-				}
-			} else if (turn == "RED") {
-				if (redMove == 'S') {
-					grid[row][col] = Cell.S;
-				}
-				else if (redMove == 'O') {
-					grid[row][col] = Cell.O;
-				}
-			}
-		}
-		//updateGameState(turn, row, col);
-		if (!madeSos(turn, row, col)) {
-			turn = (turn == "BLUE") ? "RED" : "BLUE";
+			char moveLetter = (turn == PlayerTurn.BLUE) ? blueMove : redMove;
+			Cell moveCell = (moveLetter == 'S') ? Cell.S : Cell.O;
+			grid[row][col] = moveCell;
 		}
 		
+		// updateGameState(turn, row, col);
+		if (!madeSos(turn, row, col)) {
+			turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
+		}
 	}
 
 	@Override
-	public void updateGameState(String turn, int row, int column) {
-		
+	public void updateGameState(PlayerTurn turn, int row, int column) {
+		// TODO: Implement game state update logic
 	}
 	
 	@Override
 	public boolean isDraw() {
-		// Not implemented yet
+		// TODO: Implement draw check
 		return false;
 	}
 	

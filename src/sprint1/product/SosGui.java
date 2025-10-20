@@ -194,7 +194,7 @@ public class SosGui extends Application {
 	
 	private void displayTurn() {
 		if (game.getGameState() == SosGame.GameState.PLAYING) {
-			if (game.getTurn().equals("BLUE")) {
+			if (game.getTurn() == SosGame.PlayerTurn.BLUE) {
 				lblCurrentTurn.setText("Blue");
 				lblCurrentTurn.setTextFill(Color.BLUE);
 			} else {

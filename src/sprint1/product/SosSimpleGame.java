@@ -5,37 +5,22 @@ public class SosSimpleGame extends SosGame {
 	@Override
 	public void makeMove(int row, int col) throws Exception {
 		if (isValidMove(row, col)) {
-			if (turn == "BLUE") {
-				if (blueMove == 'S') {
-					grid[row][col] = Cell.S;
-				}
-				else if (blueMove == 'O'){
-					grid[row][col] = Cell.O;
-				}
-			} else if (turn == "RED") {
-				if (redMove == 'S') {
-					grid[row][col] = Cell.S;
-				}
-				else if (redMove == 'O') {
-					grid[row][col] = Cell.O;
-				}
-			}
+			char moveLetter = (turn == PlayerTurn.BLUE) ? blueMove : redMove;
+			Cell moveCell = (moveLetter == 'S') ? Cell.S : Cell.O;
+			grid[row][col] = moveCell;
 		}
 		
 		updateGameState(turn, row, col);
-		turn = (turn == "BLUE") ? "RED" : "BLUE";
-		
-		
+		turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
 	}
 
 	@Override
-	public void updateGameState(String turn, int row, int column) {
+	public void updateGameState(PlayerTurn turn, int row, int column) {
 		if (madeSos(turn, row, column)) {
-			currentGameState = (turn == "BLUE") ? GameState.BLUE_WON : GameState.RED_WON;
+			currentGameState = (turn == PlayerTurn.BLUE) ? GameState.BLUE_WON : GameState.RED_WON;
 		} else if (isDraw()) {
 			currentGameState = GameState.DRAW;
 		}
-
 	}
 
 	@Override

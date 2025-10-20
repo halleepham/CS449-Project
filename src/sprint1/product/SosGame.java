@@ -8,18 +8,21 @@ abstract class SosGame {
 	public enum GameState {
 		SETUP, PLAYING, DRAW, BLUE_WON, RED_WON
 	}
+	public enum PlayerTurn {
+		BLUE, RED
+	}
 	
 	protected int totalRows;
 	protected int totalColumns;
 	protected char blueMove;
 	protected char redMove;
-	protected String turn;
+	protected PlayerTurn turn;
 	protected Cell[][] grid;
 	protected GameState currentGameState;
 	
 	public abstract void makeMove(int row, int col) throws Exception;
 	
-	public abstract void updateGameState(String turn, int row, int column);
+	public abstract void updateGameState(PlayerTurn turn, int row, int column);
 	
 	public abstract boolean isDraw();
 	
@@ -41,7 +44,7 @@ abstract class SosGame {
 		this.currentGameState = GameState.PLAYING;
 		this.blueMove = 'S';
 		this.redMove = 'S';
-		this.turn = "BLUE";
+		this.turn = PlayerTurn.BLUE;
 	}
 	
 	public boolean isValidMove(int row, int col) throws Exception {
@@ -78,7 +81,7 @@ abstract class SosGame {
 		return totalColumns;
 	}
 	
-	public String getTurn() {
+	public PlayerTurn getTurn() {
 		return turn;
 	}
 	
@@ -90,7 +93,7 @@ abstract class SosGame {
 		redMove = move;
 	}
 	
-	public boolean madeSos(String turn, int row, int col) {
+	public boolean madeSos(PlayerTurn turn, int row, int col) {
 		// TODO: When general game is implemented change to return int for number of SOSes made
 		Cell move = grid[row][col];
 		if (move == null || move == Cell.EMPTY) {
