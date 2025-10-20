@@ -1,7 +1,5 @@
 package sprint1.product;
 
-import sprint1.product.SosGame.Cell;
-
 public class SosGeneralGame extends SosGame {
 
 	@Override
@@ -23,14 +21,33 @@ public class SosGeneralGame extends SosGame {
 				}
 			}
 		}
-		
+		//updateGameState(turn, row, col);
+		if (!madeSos(turn, row, col)) {
+			turn = (turn == "BLUE") ? "RED" : "BLUE";
+		}
 		
 	}
 
 	@Override
 	public void updateGameState(String turn, int row, int column) {
-		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public boolean isDraw() {
+		// Not implemented yet
+		return false;
+	}
+	
+	public boolean boardFull() {
+		for (int row = 0; row < totalRows; ++row) {
+			for (int col = 0; col < totalColumns; ++col) {
+				if (grid[row][col] == Cell.EMPTY) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 }

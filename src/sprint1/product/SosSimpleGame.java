@@ -25,6 +25,7 @@ public class SosSimpleGame extends SosGame {
 		updateGameState(turn, row, col);
 		turn = (turn == "BLUE") ? "RED" : "BLUE";
 		
+		
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class SosSimpleGame extends SosGame {
 		} else if (isDraw()) {
 			currentGameState = GameState.DRAW;
 		}
-		
+
 	}
 
 	@Override

@@ -20,11 +20,6 @@ abstract class SosGame {
 
 	protected GameState currentGameState;
 	
-	
-	public SosGame() {
-		
-	}
-	
 	public void setupNewGame(int size) throws Exception {
 		if (size < 3 || size > 10) {
 			throw new Exception("Invalid board size");
@@ -106,7 +101,6 @@ abstract class SosGame {
 			if (col > 0 && col < totalColumns - 1 &&
 					grid[row][col - 1] == Cell.S &&
 					grid[row][col + 1] == Cell.S) {
-				System.out.println("SOS made");
 				return true;
 			}
 			// Vertical
@@ -115,24 +109,31 @@ abstract class SosGame {
 					grid[row+1][col] == Cell.S) {
 				return true;
 			}
-			// Diagonal
-			if (row > 0 && row < totalRows - 1 && col > 0 && col < totalColumns - 1 &&
-					(grid[row-1][col-1] == Cell.S && grid[row+1][col+1] == Cell.S) ||
-					(grid[row+1][col-1] == Cell.S && grid[row-1][col+1] == Cell.S)) {
+			// Diagonal (top left and bottom right)
+			if (row - 1 >= 0 && col - 1 >= 0 &&
+					row + 1 < totalRows && col + 1 < totalColumns &&
+					grid[row-1][col-1] == Cell.S && grid[row+1][col+1] == Cell.S){
 				return true;
 			}
+			// Diagonal (top right and bottom left)
+			if (row - 1 >= 0 && col + 1 < totalColumns && 
+					row + 1 < totalRows && col - 1 >= 0 &&
+					grid[row - 1][col + 1] == Cell.S && grid[row + 1][col - 1] == Cell.S) {
+				return true;
+			}
+			
 		// S move
 		} else if (move == Cell.S) {
 			// Horizontal right
 			if (col + 2 < totalColumns &&
-					grid[row][col + 1] == Cell.O &&
+					grid[row][col+1] == Cell.O &&
 					grid[row][col+2] == Cell.S) {
 				return true;
 			}
 			// Horizontal left
 			if (col - 2 >= 0 &&
 					grid[row][col-1] == Cell.O &&
-					grid[row][col - 2] == Cell.S) {
+					grid[row][col-2] == Cell.S) {
 				return true;
 			}
 			// Vertical down
