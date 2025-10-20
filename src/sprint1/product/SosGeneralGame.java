@@ -1,17 +1,13 @@
 package sprint1.product;
 
-import sprint1.product.SosGame.Cell;
-import sprint1.product.SosGame.PlayerTurn;
-
 public class SosGeneralGame extends SosGame {
 
 	@Override
-	public void makeMove(int row, int col) throws Exception {
-		if (isValidMove(row, col)) {
-			char moveLetter = (turn == PlayerTurn.BLUE) ? blueMove : redMove;
-			Cell moveCell = (moveLetter == 'S') ? Cell.S : Cell.O;
-			grid[row][col] = moveCell;
-		}
+	public void makeMove(int row, int col) {
+		validateMove(row, col);
+		char moveLetter = (turn == PlayerTurn.BLUE) ? blueMove : redMove;
+		Cell moveCell = (moveLetter == 'S') ? Cell.S : Cell.O;
+		grid[row][col] = moveCell;
 		
 		// updateGameState(turn, row, col);
 		if (!madeSos(turn, row, col)) {

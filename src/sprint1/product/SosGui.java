@@ -187,6 +187,8 @@ public class SosGui extends Application {
 					squares[row][col].setValue("S");
 				} else if (game.getCell(row, col) == SosGame.Cell.O) {
 					squares[row][col].setValue("O");
+				} else {
+					squares[row][col].setValue("");
 				}
 			}
 		}
@@ -236,7 +238,7 @@ public class SosGui extends Application {
 				game = new SosGeneralGame();
 			}
 			
-			game.setupNewGame(size);
+			game.setUpNewBoard(size);
 			setUpBoard(size);
 			
 			// Disable controls in settings pane
@@ -332,5 +334,4 @@ public class SosGui extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-
 }

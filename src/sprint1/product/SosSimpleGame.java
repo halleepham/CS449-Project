@@ -3,12 +3,11 @@ package sprint1.product;
 public class SosSimpleGame extends SosGame {
 
 	@Override
-	public void makeMove(int row, int col) throws Exception {
-		if (isValidMove(row, col)) {
-			char moveLetter = (turn == PlayerTurn.BLUE) ? blueMove : redMove;
-			Cell moveCell = (moveLetter == 'S') ? Cell.S : Cell.O;
-			grid[row][col] = moveCell;
-		}
+	public void makeMove(int row, int col) {
+		validateMove(row, col);
+		char moveLetter = (turn == PlayerTurn.BLUE) ? blueMove : redMove;
+		Cell moveCell = (moveLetter == 'S') ? Cell.S : Cell.O;
+		grid[row][col] = moveCell;
 		
 		updateGameState(turn, row, col);
 		turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
@@ -34,9 +33,5 @@ public class SosSimpleGame extends SosGame {
 		}
 		return true;
 	}
-	
-	
-	
-	
 	
 }

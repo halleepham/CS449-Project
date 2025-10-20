@@ -26,14 +26,21 @@ abstract class SosGame {
 	
 	public abstract boolean isDraw();
 	
-	public void setupNewGame(int size) throws Exception {
+	public SosGame() {
+		currentGameState = GameState.SETUP;
+		blueMove = 'S';
+		redMove = 'S';
+		turn = PlayerTurn.BLUE;
+	}
+	
+	public void setUpNewBoard(int size) {
 		if (size < 3 || size > 10) {
 			throw new IllegalArgumentException("Board size must be between 3 and 10");
 		}
 		
-		this.totalRows = size;
-		this.totalColumns = size;
-		this.grid = new Cell[size][size];
+		totalRows = size;
+		totalColumns = size;
+		grid = new Cell[size][size];
 		
 		for (int i = 0; i < size; i++) {
 			for(int j = 0; j < size; j++) {
@@ -41,20 +48,16 @@ abstract class SosGame {
 			}
 		}
 		
-		this.currentGameState = GameState.PLAYING;
-		this.blueMove = 'S';
-		this.redMove = 'S';
-		this.turn = PlayerTurn.BLUE;
+		currentGameState = GameState.PLAYING;
 	}
 	
-	public boolean isValidMove(int row, int col) throws Exception {
+	public void validateMove(int row, int col) {
 		if (row < 0 || row >= totalRows || col < 0 || col >= totalColumns) {
 			throw new IndexOutOfBoundsException("Move is outside the board's boundaries.");
 		}
 		if (grid[row][col] != Cell.EMPTY) {
 			throw new IllegalStateException("Cell is already occupied.");
 		}
-		return true;
 	}
 	
 	public Cell getCell(int row, int col) {
