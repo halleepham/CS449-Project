@@ -13,12 +13,15 @@ abstract class SosGame {
 	protected int totalColumns;
 	protected char blueMove;
 	protected char redMove;
-	
-	
-	protected Cell[][] grid;
 	protected String turn;
-
+	protected Cell[][] grid;
 	protected GameState currentGameState;
+	
+	public abstract void makeMove(int row, int col) throws Exception;
+	
+	public abstract void updateGameState(String turn, int row, int column);
+	
+	public abstract boolean isDraw();
 	
 	public void setupNewGame(int size) throws Exception {
 		if (size < 3 || size > 10) {
@@ -40,6 +43,15 @@ abstract class SosGame {
 		this.redMove = 'S';
 		this.turn = "BLUE";
 		
+	}
+	
+	public boolean isValidMove(int row, int col) throws Exception {
+		if (getCell(row, col) == Cell.EMPTY) {
+			return true;
+		}
+		else {
+			throw new Exception("Cell out of bounds");
+		}
 	}
 	
 	public Cell getCell(int row, int col) {
@@ -69,17 +81,6 @@ abstract class SosGame {
 	public String getTurn() {
 		return turn;
 	}
-
-	public abstract void makeMove(int row, int col) throws Exception;
-	
-	public boolean isValidMove(int row, int col) throws Exception {
-		if (getCell(row, col) == Cell.EMPTY) {
-			return true;
-		}
-		else {
-			throw new Exception("Cell out of bounds");
-		}
-	}
 	
 	public void setBlueMove(char move) {
 		blueMove = move;
@@ -88,10 +89,6 @@ abstract class SosGame {
 	public void setRedMove(char move) {
 		redMove = move;
 	}
-	
-	public abstract void updateGameState(String turn, int row, int column);
-	
-	public abstract boolean isDraw();
 
 	public boolean madeSos(String turn, int row, int col){
 		Cell move = grid[row][col];
