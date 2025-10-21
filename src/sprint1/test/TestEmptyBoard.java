@@ -24,7 +24,7 @@ public class TestEmptyBoard {
 	public void tearDown() throws Exception {
 	}
 	
-	// AC 3.3: Invalid row index referenced
+	
 	@Test
 	public void testEmptyBoard() {
 		for (int row = 0; row <3; row++) {
@@ -34,6 +34,7 @@ public class TestEmptyBoard {
 		}
 	}
 	
+	// AC 3.3: Invalid row index referenced
 	@Test
 	public void testInvalidRow_Fails() {
 		assertEquals(null, game.getCell(-1, 0));
@@ -46,7 +47,4 @@ public class TestEmptyBoard {
 		assertEquals(null, game.getCell(0, -1));
 		assertEquals(null, game.getCell(0, 4));
 	}
-	
-	
-
 }

@@ -97,7 +97,7 @@ public class TestGeneralMoves {
 	
 	// AC 6.6: Illegal move outside the board (general game)
 	@Test
-	public void testGeneralGame_MoveOutsideBoard_Rejected() {
+	public void testGeneralGame_MoveOutsideBoardRow_Rejected() {
 		assertEquals(SosGame.PlayerTurn.BLUE, generalGame.getTurn());
 		
 		try {
@@ -109,5 +109,17 @@ public class TestGeneralMoves {
 		
 		assertEquals(SosGame.PlayerTurn.BLUE, generalGame.getTurn());
 	}
+	
+	public void testGeneralGame_MoveOutsideBoardColumn_Rejected() {
+		assertEquals(SosGame.PlayerTurn.BLUE, generalGame.getTurn());
 
+		try {
+			generalGame.makeMove(0, 3);
+			fail("Expected IndexOutOfBoundsException for move outside the board");
+		} catch (IndexOutOfBoundsException e) {
+			// Expected
+		}
+
+		assertEquals(SosGame.PlayerTurn.BLUE, generalGame.getTurn());
+	}
 }

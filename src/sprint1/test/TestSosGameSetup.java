@@ -108,5 +108,4 @@ public class TestSosGameSetup {
 		
 		game.setUpNewBoard(-1);
 	}
-
 }

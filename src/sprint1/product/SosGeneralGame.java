@@ -36,5 +36,4 @@ public class SosGeneralGame extends SosGame {
 		}
 		return true;
 	}
-
 }
