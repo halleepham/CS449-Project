@@ -6,24 +6,47 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import sprint1.product.SosGame;
+import sprint1.product.SosGame.Cell;
+import sprint1.product.SosSimpleGame;
+
 public class TestEmptyBoard {
+	
+	SosGame game;
 
 	@Before
 	public void setUp() throws Exception {
+		game = new SosSimpleGame();
+		game.setUpNewBoard(4);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
-
+	
+	// AC 3.3: Invalid row index referenced
 	@Test
-	public void testInvalidRow_Fails() {
-		
+	public void testEmptyBoard() {
+		for (int row = 0; row <3; row++) {
+			for (int col = 0; col < 3; col++) {
+				assertEquals(Cell.EMPTY, game.getCell(row, col)); 
+			}
+		}
 	}
 	
 	@Test
-	public void testInvalidColumn_Fails() {
-		
+	public void testInvalidRow_Fails() {
+		assertEquals(null, game.getCell(-1, 0));
+		assertEquals(null, game.getCell(4, 0));
 	}
+	
+	// AC 3.4: Invalid column index referenced
+	@Test
+	public void testInvalidColumn_Fails() {
+		assertEquals(null, game.getCell(0, -1));
+		assertEquals(null, game.getCell(0, 4));
+	}
+	
+	
 
 }
