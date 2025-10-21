@@ -68,7 +68,8 @@ public class TestSosGameSetup {
 	public void testGeneralGameCreated_Succeeds() {
 		
 	}
-	// Successful start of new game
+	
+	// AC 3.1: Successful start of new game
 	@Test
 	public void testStartNewGame_Succeeds() {
 		
