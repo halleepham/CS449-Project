@@ -1,6 +1,6 @@
 package sprint1.product;
 
-abstract class SosGame {
+public abstract class SosGame {
 	
 	public enum Cell{
 		EMPTY, S, O

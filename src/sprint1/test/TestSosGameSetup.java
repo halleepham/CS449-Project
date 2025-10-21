@@ -31,6 +31,7 @@ public class TestSosGameSetup {
 	@Test
 	public void testBoardSize_3_Accepted() {
 		game.setUpNewBoard(3);
+		
 		assertEquals(3, game.getTotalRows());
 		assertEquals(3, game.getTotalColumns());
 	}
@@ -38,6 +39,7 @@ public class TestSosGameSetup {
 	@Test
 	public void testBoardSize_10_Accepted() {
 		game.setUpNewBoard(10);
+		
 		assertEquals(10, game.getTotalRows());
 		assertEquals(10, game.getTotalColumns());
 	}
@@ -45,6 +47,7 @@ public class TestSosGameSetup {
 	@Test
 	public void testBoardSize_5_Accepted() {
 		game.setUpNewBoard(5);
+		
 		assertEquals(5, game.getTotalRows());
 		assertEquals(5, game.getTotalColumns());
 	}
@@ -69,6 +72,7 @@ public class TestSosGameSetup {
 	@Test
 	public void testSimpleGameCreated_Succeeds() {
 		game = new SosSimpleGame();
+		
 		assertTrue(game instanceof SosSimpleGame);
 	}
 	
@@ -76,6 +80,7 @@ public class TestSosGameSetup {
 	@Test
 	public void testGeneralGameCreated_Succeeds() {
 		game = new SosGeneralGame();
+		
 		assertTrue(game instanceof SosGeneralGame);
 	}
 	
@@ -84,6 +89,7 @@ public class TestSosGameSetup {
 	public void testStartNewGame_Succeeds() {
 		game = new SosSimpleGame();
 		game.setUpNewBoard(4);
+		
 		assertEquals(GameState.PLAYING, game.getGameState());
 		assertEquals(4, game.getTotalRows());
 		assertEquals(4, game.getTotalColumns());
@@ -99,6 +105,7 @@ public class TestSosGameSetup {
 	@Test(expected = IllegalArgumentException.class)
 	public void testStartNewGame_InvalidBoard_Fails() {
 		game = new SosSimpleGame();
+		
 		game.setUpNewBoard(-1);
 	}
 

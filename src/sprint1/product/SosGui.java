@@ -231,13 +231,7 @@ public class SosGui extends Application {
 	private void handleStartGame() {
 		try {
 			int size = getBoardSize();
-			
-			if (rbSimpleGame.isSelected()) {
-				game = new SosSimpleGame();
-			} else {
-				game = new SosGeneralGame();
-			}
-			
+			setUpGameMode();
 			game.setUpNewBoard(size);
 			setUpBoard(size);
 			
@@ -274,7 +268,7 @@ public class SosGui extends Application {
 		
 	}
 	
-	private int getBoardSize() throws Exception {
+	private int getBoardSize() {
 		String input = txtBoardSize.getText().trim();
 			int size = Integer.parseInt(input);
 			
@@ -282,6 +276,14 @@ public class SosGui extends Application {
 				throw new IllegalArgumentException("Board size must be between 3 and 10");
 			}
 			return size;
+	}
+	
+	public void setUpGameMode() {
+		if (rbSimpleGame.isSelected()) {
+			game = new SosSimpleGame();
+		} else {
+			game = new SosGeneralGame();
+		}
 	}
 	
 	private void showError(String message) {
