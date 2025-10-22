@@ -27,7 +27,7 @@ public abstract class SosGame {
 	public abstract boolean isDraw();
 	
 	public SosGame() {
-		currentGameState = GameState.SETUP;
+	currentGameState = GameState.SETUP;
 		blueMove = 'S';
 		redMove = 'S';
 		turn = PlayerTurn.BLUE;

@@ -236,10 +236,10 @@ public class SosGui extends Application {
 			setUpBoard(size);
 			
 			// Disable controls in settings pane
-			rbSimpleGame.setDisable(true);
-			rbGeneralGame.setDisable(true);
-			txtBoardSize.setDisable(true);
-			btnStartGame.setDisable(true);
+//      rbSimpleGame.setDisable(true);
+//      rbGeneralGame.setDisable(true);
+//      txtBoardSize.setDisable(true);
+//      btnStartGame.setDisable(true);
 			
 		} catch (NumberFormatException e) {
 			showError("Please enter a valid integer for the board size.");

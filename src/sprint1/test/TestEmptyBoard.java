@@ -24,7 +24,6 @@ public class TestEmptyBoard {
 	public void tearDown() throws Exception {
 	}
 	
-	
 	@Test
 	public void testEmptyBoard() {
 		for (int row = 0; row <3; row++) {
