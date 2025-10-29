@@ -1,6 +1,9 @@
 package sprint3.product;
 
 public class SosGeneralGame extends SosGame {
+  
+  private int bluePoints;
+  private int redPoints;
 
 	@Override
 	public void makeMove(int row, int col) {
@@ -9,31 +12,42 @@ public class SosGeneralGame extends SosGame {
 		Cell moveCell = (moveLetter == 'S') ? Cell.S : Cell.O;
 		grid[row][col] = moveCell;
 		
-		// updateGameState(turn, row, col);
-		if (!madeSos(turn, row, col)) {
-			turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
+		updateGameState(turn, row, col);
+		if (madeSos(row, col) > 0) {
+			if (turn == PlayerTurn.BLUE) {
+			  bluePoints += madeSos(row, col);
+			} else {
+			  redPoints += madeSos(row, col);
+			}
+		} else {
+		  turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
 		}
 	}
 
 	@Override
 	public void updateGameState(PlayerTurn turn, int row, int column) {
-		// TODO: Implement game state update logic
+	  if (isBoardFull()) {
+	    if (isDraw()) {
+	      currentGameState = GameState.DRAW;
+	    } else if (hasWon(turn, row, column)) {
+	      currentGameState = (turn == PlayerTurn.BLUE) ? GameState.BLUE_WON : GameState.RED_WON;
+	    }
+	  }
 	}
 	
 	@Override
-	public boolean isDraw() {
-		// TODO: Implement draw check
-		return false;
-	}
+  public boolean hasWon(PlayerTurn turn, int row, int column) {
+    if (turn == PlayerTurn.BLUE && bluePoints > redPoints
+        || turn == PlayerTurn.RED && redPoints > bluePoints) {
+      return true;
+    }
+    return false;
+  }
 	
-	public boolean boardFull() {
-		for (int row = 0; row < totalRows; ++row) {
-			for (int col = 0; col < totalColumns; ++col) {
-				if (grid[row][col] == Cell.EMPTY) {
-					return false;
-				}
-			}
-		}
-		return true;
+	@Override
+	public boolean isDraw() {
+		return (bluePoints == redPoints);
 	}
+
+  
 }
