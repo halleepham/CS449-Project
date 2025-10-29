@@ -15,22 +15,20 @@ public class SosSimpleGame extends SosGame {
 
 	@Override
 	public void updateGameState(PlayerTurn turn, int row, int column) {
-		if (madeSos(turn, row, column)) {
+		if (hasWon(turn, row, column)) {
 			currentGameState = (turn == PlayerTurn.BLUE) ? GameState.BLUE_WON : GameState.RED_WON;
 		} else if (isDraw()) {
 			currentGameState = GameState.DRAW;
 		}
 	}
+	
+	@Override
+	public boolean hasWon(PlayerTurn turn, int row, int column) {
+	  return madeSos(row, column);
+	}
 
 	@Override
 	public boolean isDraw() {
-		for (int row = 0; row < totalRows; ++row) {
-			for (int col = 0; col < totalColumns; ++col) {
-				if (grid[row][col] == Cell.EMPTY) {
-					return false;
-				}
-			}
-		}
-		return true;
+		return isBoardFull();
 	}
 }

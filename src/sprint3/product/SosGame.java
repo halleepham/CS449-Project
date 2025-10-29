@@ -1,5 +1,7 @@
 package sprint3.product;
 
+import sprint3_2.product.TicTacToeGame.Cell;
+
 public abstract class SosGame {
 	
 	public enum Cell{
@@ -23,6 +25,8 @@ public abstract class SosGame {
 	public abstract void makeMove(int row, int col) throws Exception;
 	
 	public abstract void updateGameState(PlayerTurn turn, int row, int column);
+	
+	public abstract boolean hasWon(PlayerTurn turn, int row, int column);
 	
 	public abstract boolean isDraw();
 	
@@ -96,7 +100,7 @@ public abstract class SosGame {
 		redMove = move;
 	}
 	
-	public boolean madeSos(PlayerTurn turn, int row, int col) {
+	public boolean madeSos(int row, int col) {
 		// TODO: When general game is implemented change to return int for number of SOSes made
 		Cell move = grid[row][col];
 		if (move == null || move == Cell.EMPTY) {
@@ -178,5 +182,16 @@ public abstract class SosGame {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean isBoardFull() {
+	  for (int row = 0; row < totalRows; ++row) {
+      for (int col = 0; col < totalColumns; ++col) {
+        if (grid[row][col] == Cell.EMPTY) {
+          return false;
+        }
+      }
+    }
+    return true;
 	}
 }
