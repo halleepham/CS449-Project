@@ -1,4 +1,4 @@
-package sprint1.test;
+package sprint2.test;
 
 import static org.junit.Assert.*;
 
@@ -6,12 +6,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import sprint1.product.SosGeneralGame;
-import sprint1.product.SosSimpleGame;
-import sprint1.product.SosGame;
-import sprint1.product.SosGame.Cell;
-import sprint1.product.SosGame.GameState;
-import sprint1.product.SosGame.PlayerTurn;
+import sprint2.product.SosGame;
+import sprint2.product.SosGeneralGame;
+import sprint2.product.SosSimpleGame;
+import sprint2.product.SosGame.Cell;
+import sprint2.product.SosGame.GameState;
+import sprint2.product.SosGame.PlayerTurn;
 
 
 public class TestSosGameSetup {
