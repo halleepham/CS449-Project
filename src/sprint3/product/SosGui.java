@@ -50,11 +50,7 @@ public class SosGui extends Application {
 		layout = new BorderPane();
 		Scene scene = new Scene(layout);
 		
-		buildSettingsPane();
-		buildPlayerPanes();
-		buildInfoPane();
-		layout.setCenter(new GridPane());
-		setUpActions();
+		resetGame();
 		
 		primaryStage.setTitle("SOS Game");
 		primaryStage.setMaximized(true);
@@ -200,7 +196,7 @@ public class SosGui extends Application {
 		}
 	}
 	
-	private void displayTurn() {
+	private void displayGameStatus() {
 		if (game.getGameState() == SosGame.GameState.PLAYING) {
 			if (game.getTurn() == SosGame.PlayerTurn.BLUE) {
 				lblCurrentTurn.setText("Blue");
@@ -209,6 +205,15 @@ public class SosGui extends Application {
 				lblCurrentTurn.setText("Red");
 				lblCurrentTurn.setTextFill(Color.RED);
 			}
+		} else {
+		  if (game.getGameState() == SosGame.GameState.DRAW) {
+	      showGameResult("It's a draw!");
+	    } else if (game.getGameState() == SosGame.GameState.BLUE_WON) {
+	      showGameResult("Blue Player won!");
+	    } else if (game.getGameState() == SosGame.GameState.RED_WON) {
+	      showGameResult("Red Player won!");
+	    }
+		  resetGame();
 		}
 	}
 	
@@ -267,7 +272,7 @@ public class SosGui extends Application {
 		try {
 			game.makeMove(square.getRow(), square.getColumn());
 			drawBoard();
-			displayTurn();
+			displayGameStatus();
 		} catch (IndexOutOfBoundsException e) {
 			showError("That move is outside the board.");
 		} catch (IllegalStateException e) {
@@ -302,6 +307,24 @@ public class SosGui extends Application {
 	    alert.setHeaderText(null);
 	    alert.setContentText(message);
 	    alert.showAndWait();
+	}
+	
+	private void showGameResult(String message) {
+	  Alert gameResult = new Alert(Alert.AlertType.INFORMATION);
+	  gameResult.setTitle("Game Over");
+	  gameResult.setHeaderText(null);
+	  gameResult.setContentText(message);
+	  gameResult.setGraphic(null);
+	  gameResult.showAndWait();
+	}
+	
+	private void resetGame() {
+	  game = null;
+	  buildSettingsPane();
+    buildPlayerPanes();
+    buildInfoPane();
+    layout.setCenter(new GridPane());
+    setUpActions();
 	}
 	
 	public class Square {
