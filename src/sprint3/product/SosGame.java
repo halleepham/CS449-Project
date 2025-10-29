@@ -1,7 +1,5 @@
 package sprint3.product;
 
-import sprint3_2.product.TicTacToeGame.Cell;
-
 public abstract class SosGame {
 	
 	public enum Cell{
@@ -26,7 +24,7 @@ public abstract class SosGame {
 	
 	public abstract void updateGameState(PlayerTurn turn, int row, int column);
 	
-	public abstract boolean hasWon(int row, int column);
+	public abstract boolean hasWon(PlayerTurn turn, int row, int column);
 	
 	public abstract boolean isDraw();
 	

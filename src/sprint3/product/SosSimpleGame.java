@@ -15,7 +15,7 @@ public class SosSimpleGame extends SosGame {
 
 	@Override
 	public void updateGameState(PlayerTurn turn, int row, int column) {
-		if (hasWon(row, column)) {
+		if (hasWon(turn, row, column)) {
 			currentGameState = (turn == PlayerTurn.BLUE) ? GameState.BLUE_WON : GameState.RED_WON;
 		} else if (isDraw()) {
 			currentGameState = GameState.DRAW;
@@ -23,7 +23,7 @@ public class SosSimpleGame extends SosGame {
 	}
 	
 	@Override
-	public boolean hasWon(int row, int column) {
+	public boolean hasWon(PlayerTurn turn, int row, int column) {
 	  return (madeSos(row, column) > 0);
 	}
 
