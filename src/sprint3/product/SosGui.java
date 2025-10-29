@@ -100,6 +100,7 @@ public class SosGui extends Application {
 		rbGroupBlueType = new ToggleGroup();
 		RadioButton rbBlueHuman = new RadioButton("Human");
 		RadioButton rbBlueComputer = new RadioButton("Computer");
+		rbBlueComputer.setDisable(true);  // Disable Computer button for now
 		rbBlueHuman.setToggleGroup(rbGroupBlueType);
 		rbBlueComputer.setToggleGroup(rbGroupBlueType);
 		rbBlueHuman.setSelected(true);
@@ -107,6 +108,8 @@ public class SosGui extends Application {
 		rbGroupBlueMoves = new ToggleGroup();
 		rbBlueS = new RadioButton("S");
 		rbBlueO = new RadioButton("O");
+		rbBlueS.setDisable(true);
+		rbBlueO.setDisable(true);
 		rbBlueS.setUserData('S');
 		rbBlueO.setUserData('O');
 		rbBlueS.setToggleGroup(rbGroupBlueMoves);
@@ -129,6 +132,7 @@ public class SosGui extends Application {
 		rbGroupRedType = new ToggleGroup();
 		RadioButton rbRedHuman = new RadioButton("Human");
 		RadioButton rbRedComputer = new RadioButton("Computer");
+		rbRedComputer.setDisable(true);  // Disable Computer button for now
 		rbRedHuman.setToggleGroup(rbGroupRedType);
 		rbRedComputer.setToggleGroup(rbGroupRedType);
 		rbRedHuman.setSelected(true);
@@ -136,6 +140,8 @@ public class SosGui extends Application {
 		rbGroupRedMoves = new ToggleGroup();
 		rbRedS = new RadioButton("S");
 		rbRedO = new RadioButton("O");
+		rbRedS.setDisable(true);
+    rbRedO.setDisable(true);
 		rbRedS.setUserData('S');
 		rbRedO.setUserData('O');
 		rbRedS.setToggleGroup(rbGroupRedMoves);
@@ -240,6 +246,10 @@ public class SosGui extends Application {
 //      rbGeneralGame.setDisable(true);
 //      txtBoardSize.setDisable(true);
 //      btnStartGame.setDisable(true);
+			rbBlueS.setDisable(false);
+	    rbBlueO.setDisable(false);
+	    rbRedS.setDisable(false);
+      rbRedO.setDisable(false);
 			
 		} catch (NumberFormatException e) {
 			showError("Please enter a valid integer for the board size.");
