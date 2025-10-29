@@ -44,6 +44,7 @@ public class SosGui extends Application {
 	private TextField txtBoardSize;
 	private Label lblCurrentTurn;
 	private Button btnStartGame;
+	private Button btnNewGame;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -149,18 +150,27 @@ public class SosGui extends Application {
 	}
 	
 	public void buildInfoPane() {
-		HBox infoPane = new HBox();
+		BorderPane infoPane = new BorderPane();
 		infoPane.setStyle("-fx-border-color: black");
 		infoPane.setPadding(new Insets(50, 0, 50, 0));
-		infoPane.setAlignment(Pos.CENTER);
 		
+		HBox turnStatusPane = new HBox();
+		turnStatusPane.setAlignment(Pos.CENTER);
 		Label lblTurn = new Label("Current Turn: ");
 		lblTurn.setFont(Font.font(24));
 		lblCurrentTurn = new Label("Blue");
 		lblCurrentTurn.setFont(Font.font(24));
 		lblCurrentTurn.setTextFill(Color.BLUE);
+		turnStatusPane.getChildren().addAll(lblTurn, lblCurrentTurn);
+		infoPane.setCenter(turnStatusPane);
 		
-		infoPane.getChildren().addAll(lblTurn, lblCurrentTurn);
+		VBox gameButtonsPane = new VBox();
+		gameButtonsPane.setPadding(new Insets(0, 100, 0, 100));
+		gameButtonsPane.setAlignment(Pos.CENTER);
+		btnNewGame = new Button("New Game");
+		gameButtonsPane.getChildren().add(btnNewGame);
+		infoPane.setRight(gameButtonsPane);
+		
 		layout.setBottom(infoPane);
 	}
 	
@@ -219,6 +229,7 @@ public class SosGui extends Application {
 	
 	private void setUpActions() {
 		btnStartGame.setOnAction(event -> handleStartGame());
+		btnNewGame.setOnAction(event -> resetGame());
 		
 		rbGroupBlueMoves.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 			@Override
