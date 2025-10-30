@@ -1,5 +1,6 @@
 package sprint3.product;
 
+
 public abstract class SosGame {
 	
 	public enum Cell{
