@@ -19,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -29,6 +30,7 @@ public class SosGui extends Application {
 	static private SosGame game;
 	
 	private Square[][] squares;
+	private SosLine[] sosLines;
 	private BorderPane layout;
 	private VBox bluePlayerPane;
 	private VBox redPlayerPane;
@@ -363,8 +365,10 @@ public class SosGui extends Application {
 		private Label lblValue;
 		private int row;
 		private int column;
+		private int width;
 		
 		public Square(int width, int row, int col) {
+		  this.width = width;
 			this.row = row;
 			this.column = col;
 			
@@ -394,6 +398,37 @@ public class SosGui extends Application {
 		public int getColumn() {
 			return column;
 		}
+		
+		public int getWidth() {
+		  return width;
+		}
+	}
+	
+	public class SosLine {
+	  private Square sCell1;
+	  private Square oCell;
+	  private Square sCell2;
+	  private Line line;
+	  
+	  public SosLine(int[][] sosSequence) {
+	    this.sCell1 = squares[sosSequence[0][0]][sosSequence[0][1]];
+	    this.oCell = squares[sosSequence[1][0]][sosSequence[1][1]];
+	    this.sCell2 = squares[sosSequence[2][0]][sosSequence[2][1]];
+	    drawLine();
+	  }
+	  
+	  public void drawLine() {
+	    int squareWidth = sCell1.getWidth();
+	    line = new Line();
+	    line.setStartX(sCell1.getSquare().getLayoutX() + (squareWidth/2));
+	    line.setStartY(sCell1.getSquare().getLayoutY() + (squareWidth/2));
+	    line.setEndX(sCell2.getSquare().getLayoutX() + (squareWidth/2));
+	    line.setEndY(sCell2.getSquare().getLayoutY() + (squareWidth/2));
+	  }
+	  
+	  public Line getLine() {
+	    return line;
+	  }
 	}
 	
 	public static void main(String[] args) {
