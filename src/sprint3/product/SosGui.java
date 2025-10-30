@@ -16,6 +16,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -31,6 +32,7 @@ public class SosGui extends Application {
 	
 	private Square[][] squares;
 	private BorderPane layout;
+	private Pane lineOverlayPane;
 	private VBox bluePlayerPane;
 	private VBox redPlayerPane;
 	private ToggleGroup rbGroupGameMode;
@@ -201,8 +203,13 @@ public class SosGui extends Application {
 				boardPane.add(squares[row][col].getSquare(), col, row);
 			}
 		}
-
-		layout.setCenter(boardPane);
+		
+		lineOverlayPane = new Pane();
+		lineOverlayPane.setPickOnBounds(false);
+		lineOverlayPane.setMinSize(boardPane.getMinWidth(), boardPane.getMinHeight());
+		
+		StackPane boardStackPane = new StackPane(boardPane, lineOverlayPane);
+		layout.setCenter(boardStackPane);
 	}
 	
 	private void drawBoard() {
@@ -301,8 +308,10 @@ public class SosGui extends Application {
 		try {
 			game.makeMove(square.getRow(), square.getColumn());
 			drawBoard();
-			lblBluePoints.setText(String.valueOf(game.getBluePoints()));
-	    lblRedPoints.setText(String.valueOf(game.getRedPoints()));
+			if (rbGeneralGame.isSelected()) {
+			  lblBluePoints.setText(String.valueOf(game.getBluePoints()));
+	      lblRedPoints.setText(String.valueOf(game.getRedPoints()));
+			}
 			displayGameStatus();
 		} catch (IndexOutOfBoundsException e) {
 			showError("That move is outside the board.");
