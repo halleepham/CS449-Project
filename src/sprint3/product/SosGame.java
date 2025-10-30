@@ -19,6 +19,8 @@ public abstract class SosGame {
 	protected PlayerTurn turn;
 	protected Cell[][] grid;
 	protected GameState currentGameState;
+  protected int bluePoints;
+  protected int redPoints;
 	
 	public abstract void makeMove(int row, int col) throws Exception;
 	
@@ -98,10 +100,18 @@ public abstract class SosGame {
 		redMove = move;
 	}
 	
+	public int getBluePoints() {
+    return bluePoints;
+  }
+
+  public int getRedPoints() {
+    return redPoints;
+  }
+	
 	public int madeSos(int row, int col) {
 		Cell move = grid[row][col];
 		if (move == null || move == Cell.EMPTY) {
-			throw new IllegalStateException("Reference cell is empty");
+			throw new IllegalStateException("Referenced cell is empty");
 		}
 		
 		// Check if O move made an SOS

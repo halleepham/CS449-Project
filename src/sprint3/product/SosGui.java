@@ -30,6 +30,8 @@ public class SosGui extends Application {
 	
 	private Square[][] squares;
 	private BorderPane layout;
+	private VBox bluePlayerPane;
+	private VBox redPlayerPane;
 	private ToggleGroup rbGroupGameMode;
 	private ToggleGroup rbGroupBlueType;
 	private ToggleGroup rbGroupRedType;
@@ -43,6 +45,8 @@ public class SosGui extends Application {
 	private RadioButton rbRedO;
 	private TextField txtBoardSize;
 	private Label lblCurrentTurn;
+	private Label lblBluePoints;
+	private Label lblRedPoints;
 	private Button btnStartGame;
 	private Button btnNewGame;
 
@@ -85,7 +89,7 @@ public class SosGui extends Application {
 	
 	public void buildPlayerPanes() {
 		// Blue player pane
-		VBox bluePlayerPane = new VBox(15);
+		bluePlayerPane = new VBox(15);
 		bluePlayerPane.setStyle("-fx-border-color: black");
 		bluePlayerPane.setPadding(new Insets(0, 100, 0, 100));
 		bluePlayerPane.setAlignment(Pos.CENTER);
@@ -117,7 +121,7 @@ public class SosGui extends Application {
 		layout.setLeft(bluePlayerPane);
 		
 		// Red player pane
-		VBox redPlayerPane = new VBox(15);
+		redPlayerPane = new VBox(15);
 		redPlayerPane.setStyle("-fx-border-color: black");
 		redPlayerPane.setPadding(new Insets(0, 100, 0, 100));
 		redPlayerPane.setAlignment(Pos.CENTER);
@@ -172,6 +176,14 @@ public class SosGui extends Application {
 		infoPane.setRight(gameButtonsPane);
 		
 		layout.setBottom(infoPane);
+	}
+	
+	public void buildPointDisplays() {
+	  lblBluePoints = new Label("0");
+	  bluePlayerPane.getChildren().addAll(new Label("Points: "), lblBluePoints);
+	  
+	  lblRedPoints = new Label ("0");
+	  redPlayerPane.getChildren().addAll(new Label("Points: "), lblRedPoints);
 	}
 	
 	public void setUpBoard(int size) {
@@ -267,6 +279,10 @@ public class SosGui extends Application {
 	    rbBlueO.setDisable(false);
 	    rbRedS.setDisable(false);
       rbRedO.setDisable(false);
+      
+      if (rbGeneralGame.isSelected()) {
+        buildPointDisplays();
+      }
 			
 		} catch (NumberFormatException e) {
 			showError("Please enter a valid integer for the board size.");
@@ -284,6 +300,8 @@ public class SosGui extends Application {
 		try {
 			game.makeMove(square.getRow(), square.getColumn());
 			drawBoard();
+			lblBluePoints.setText(String.valueOf(game.getBluePoints()));
+	    lblRedPoints.setText(String.valueOf(game.getRedPoints()));
 			displayGameStatus();
 		} catch (IndexOutOfBoundsException e) {
 			showError("That move is outside the board.");

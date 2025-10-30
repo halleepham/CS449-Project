@@ -1,9 +1,6 @@
 package sprint3.product;
 
 public class SosGeneralGame extends SosGame {
-  
-  private int bluePoints;
-  private int redPoints;
 
 	@Override
 	public void makeMove(int row, int col) {
@@ -48,6 +45,5 @@ public class SosGeneralGame extends SosGame {
 	public boolean isDraw() {
 		return (bluePoints == redPoints);
 	}
-
   
 }
