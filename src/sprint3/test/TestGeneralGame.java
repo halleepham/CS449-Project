@@ -9,7 +9,7 @@ import org.junit.Test;
 import sprint2.product.SosGame;
 import sprint2.product.SosGeneralGame;
 
-public class TestGeneralMoves {
+public class TestGeneralGame {
 	
 	private SosGeneralGame generalGame;
 

@@ -9,7 +9,7 @@ import org.junit.Test;
 import sprint2.product.SosGame;
 import sprint2.product.SosSimpleGame;
 
-public class TestSimpleMoves {
+public class TestSimpleGame {
 	
 	private SosSimpleGame simpleGame;
 
@@ -94,5 +94,77 @@ public class TestSimpleMoves {
 	    }
 		
 		assertEquals(SosGame.PlayerTurn.BLUE, simpleGame.getTurn());
+	}
+	
+	// AC 5.1: A simple SOS game win by Blue Player
+	@Test
+	public void testSimpleGame_BlueFormsSOS_Wins() {
+	  simpleGame.makeMove(0, 0);
+	  simpleGame.makeMove(0, 1);
+	  assertEquals(SosGame.GameState.PLAYING, simpleGame.getGameState());
+	  
+	  // Blue forms SOS
+	  simpleGame.makeMove(0, 2);
+	  
+	  assertEquals(SosGame.GameState.BLUE_WON, simpleGame.getGameState());
+	}
+	
+	// AC 5.2: A simple SOS game win by Red Player
+	public void testSimpleGame_RedFormsSOS_Wins() {
+    simpleGame.makeMove(0, 0);
+    simpleGame.makeMove(1, 0);
+    simpleGame.setRedMove('S');
+    simpleGame.makeMove(0, 2);
+    assertEquals(SosGame.GameState.PLAYING, simpleGame.getGameState());
+    
+    // Red forms SOS
+    simpleGame.makeMove(0,  1);
+    
+    assertEquals(SosGame.GameState.RED_WON, simpleGame.getGameState());
+  }
+	
+	// AC 5.3: A draw game (simple game)
+	@Test
+	public void testSimpleGame_NoSOSLastMove_Draw() {
+	  simpleGame.setRedMove('S');
+	  simpleGame.makeMove(0, 0);
+	  simpleGame.makeMove(0, 1);
+	  simpleGame.makeMove(0, 2);
+	  simpleGame.makeMove(1, 0);
+	  simpleGame.makeMove(1, 1);
+	  simpleGame.makeMove(1, 2);
+	  simpleGame.makeMove(2, 0);
+	  simpleGame.makeMove(2, 1);
+	  assertEquals(SosGame.GameState.PLAYING, simpleGame.getGameState());
+	  assertEquals(SosGame.Cell.EMPTY, simpleGame.getCell(2, 2));
+	  
+	  simpleGame.makeMove(2, 2);
+	  
+	  assertEquals(SosGame.GameState.DRAW, simpleGame.getGameState());
+	}
+	
+	// AC 5.4: A continuing simple game after a Blue Player move
+	@Test
+	public void testSimpleGame_BlueMove_NonSOS_GameContinues() {
+	  assertEquals(SosGame.PlayerTurn.BLUE, simpleGame.getTurn());
+	  assertEquals(SosGame.GameState.PLAYING, simpleGame.getGameState());
+	  
+	  simpleGame.makeMove(1, 1);
+	  
+	  assertEquals(SosGame.GameState.PLAYING, simpleGame.getGameState());
+	  assertEquals(SosGame.PlayerTurn.RED, simpleGame.getTurn());
+	}
+	
+	
+	// AC 5.5: A continuing simple game after a Red Player move
+	@Test
+	public void testSimpleGame_RedMove_NonSOS_GameContinues() {
+	  simpleGame.makeMove(0, 0);
+	  assertEquals(SosGame.PlayerTurn.RED, simpleGame.getTurn());
+	  
+	  simpleGame.makeMove(1, 1);
+	  
+	  assertEquals(SosGame.GameState.PLAYING, simpleGame.getGameState());
+	  assertEquals(SosGame.PlayerTurn.BLUE, simpleGame.getTurn());
 	}
 }
