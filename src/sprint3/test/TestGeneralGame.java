@@ -134,10 +134,12 @@ public class TestGeneralGame {
 	  // Blue turn again
 	  generalGame.makeMove(0, 1);
 	  generalGame.makeMove(1, 1);
+	  // Blue forms SOS
 	  generalGame.makeMove(2, 1);
 	  generalGame.makeMove(0, 2);
 	  generalGame.makeMove(1, 2);
 	  
+	  assertEquals(SosGame.GameState.PLAYING, generalGame.getGameState());
 	  generalGame.makeMove(2, 2);
 	  
 	  assertTrue(generalGame.getBluePoints() > generalGame.getRedPoints());
@@ -152,12 +154,15 @@ public class TestGeneralGame {
 	  generalGame.makeMove(1, 0);
     generalGame.makeMove(0, 0);
     generalGame.makeMove(0, 1);
+    // Red makes SOS
     generalGame.makeMove(2, 0);
+    // Red makes SOS
     generalGame.makeMove(0, 2);
     generalGame.makeMove(1, 1);
     generalGame.makeMove(1, 2);
     generalGame.makeMove(2, 1);
     
+    assertEquals(SosGame.GameState.PLAYING, generalGame.getGameState());
     generalGame.makeMove(2, 2);
     
     assertTrue(generalGame.getRedPoints() > generalGame.getBluePoints());
@@ -173,15 +178,17 @@ public class TestGeneralGame {
 	  generalGame.makeMove(1, 0);
 	  generalGame.setRedMove('O');
 	  generalGame.makeMove(1, 2);
+	  // Blue makes SOS
 	  generalGame.makeMove(0, 2);
 	  generalGame.makeMove(2, 1);
+	  // Red makes SOS
 	  generalGame.makeMove(0, 1);
 	  generalGame.makeMove(2, 0);
 	  
+	  assertEquals(SosGame.GameState.PLAYING, generalGame.getGameState());
 	  generalGame.makeMove(1, 1);
 	  
 	  assertTrue(generalGame.getBluePoints() == generalGame.getRedPoints());
 	  assertEquals(SosGame.GameState.DRAW, generalGame.getGameState());
-	  
 	}
 }
