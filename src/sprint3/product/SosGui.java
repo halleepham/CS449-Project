@@ -432,7 +432,6 @@ public class SosGui extends Application {
 		  return width;
 		}
 	}
-
 	
 	public static void main(String[] args) {
 		launch(args);

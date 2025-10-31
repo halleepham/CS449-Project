@@ -45,5 +45,4 @@ public class SosGeneralGame extends SosGame {
 	public boolean isDraw() {
 		return (bluePoints == redPoints);
 	}
-  
 }
