@@ -8,17 +8,16 @@ public class SosGeneralGame extends SosGame {
 		char moveLetter = (turn == PlayerTurn.BLUE) ? blueMove : redMove;
 		Cell moveCell = (moveLetter == 'S') ? Cell.S : Cell.O;
 		grid[row][col] = moveCell;
-		
-		updateGameState(turn, row, col);
 		if (madeSos(row, col) > 0) {
-			if (turn == PlayerTurn.BLUE) {
-			  bluePoints += madeSos(row, col);
-			} else {
-			  redPoints += madeSos(row, col);
-			}
-		} else {
-		  turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
-		}
+      if (turn == PlayerTurn.BLUE) {
+        bluePoints += madeSos(row, col);
+      } else {
+        redPoints += madeSos(row, col);
+      }
+    } else {
+      turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
+    }
+		updateGameState(turn, row, col);
 	}
 
 	@Override
