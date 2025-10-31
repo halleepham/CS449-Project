@@ -6,8 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import sprint2.product.SosGame;
-import sprint2.product.SosGeneralGame;
+import sprint3.product.SosGame;
+import sprint3.product.SosGeneralGame;
 
 public class TestGeneralGame {
 	
