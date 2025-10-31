@@ -28,6 +28,8 @@ public class SosGeneralGame extends SosGame {
 	      currentGameState = GameState.DRAW;
 	    } else if (hasWon(turn, row, column)) {
 	      currentGameState = (turn == PlayerTurn.BLUE) ? GameState.BLUE_WON : GameState.RED_WON;
+	    } else if (!hasWon(turn, row, column)) {
+	      currentGameState = (turn == PlayerTurn.BLUE) ? GameState.RED_WON : GameState.BLUE_WON;
 	    }
 	  }
 	}
