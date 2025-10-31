@@ -206,7 +206,6 @@ public class SosGui extends Application {
 		
 		lineOverlayPane = new Pane();
 		lineOverlayPane.setPadding(new Insets(30));
-		lineOverlayPane.setStyle("-fx-border-color: red");
 		lineOverlayPane.setPickOnBounds(false);
 		lineOverlayPane.setMinSize(boardPane.getMinWidth(), boardPane.getMinHeight());
 		lineOverlayPane.setMaxSize(boardPane.getMaxWidth(), boardPane.getMaxHeight());
@@ -234,13 +233,13 @@ public class SosGui extends Application {
 	  int width = squares[0][0].getWidth();
 	  for (SosLine sos : game.getSosLines()) {
 	    Line line = new Line(
-	       squares[sos.startRow][sos.startColumn].getSquare().getLayoutX() + (width / 2),
-	       squares[sos.startRow][sos.startColumn].getSquare().getLayoutY() + (width / 2),
-	       squares[sos.endRow][sos.endColumn].getSquare().getLayoutX() + (width / 2),
-	       squares[sos.endRow][sos.endColumn].getSquare().getLayoutY() + (width / 2)
+	       squares[sos.getStartRow()][sos.getStartColumn()].getSquare().getLayoutX() + (width / 2),
+	       squares[sos.getStartRow()][sos.getStartColumn()].getSquare().getLayoutY() + (width / 2),
+	       squares[sos.getEndRow()][sos.getEndColumn()].getSquare().getLayoutX() + (width / 2),
+	       squares[sos.getEndRow()][sos.getEndColumn()].getSquare().getLayoutY() + (width / 2)
 	        );
 	    
-	    line.setStroke(sos.player == SosGame.PlayerTurn.BLUE ? Color.BLUE : Color.RED);
+	    line.setStroke(sos.getPlayer() == SosGame.PlayerTurn.BLUE ? Color.BLUE : Color.RED);
 	    line.setStrokeWidth(3);
 	    lineOverlayPane.getChildren().add(line);
 	  }
