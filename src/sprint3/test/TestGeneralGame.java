@@ -110,6 +110,7 @@ public class TestGeneralGame {
 		assertEquals(SosGame.PlayerTurn.BLUE, generalGame.getTurn());
 	}
 	
+	@Test
 	public void testGeneralGame_MoveOutsideBoardColumn_Rejected() {
 		assertEquals(SosGame.PlayerTurn.BLUE, generalGame.getTurn());
 
@@ -121,5 +122,66 @@ public class TestGeneralGame {
 		}
 
 		assertEquals(SosGame.PlayerTurn.BLUE, generalGame.getTurn());
+	}
+	
+	// AC 7.1: A general SOS game win by Blue Player
+	@Test
+	public void testGeneralGame_GameEndsWithMoreBluePoints_BlueWins() {
+	  generalGame.makeMove(0, 0);
+	  generalGame.makeMove(1, 0);
+	  //Blue forms SOS
+	  generalGame.makeMove(2, 0);
+	  // Blue turn again
+	  generalGame.makeMove(0, 1);
+	  generalGame.makeMove(1, 1);
+	  generalGame.makeMove(2, 1);
+	  generalGame.makeMove(0, 2);
+	  generalGame.makeMove(1, 2);
+	  
+	  generalGame.makeMove(2, 2);
+	  
+	  assertTrue(generalGame.getBluePoints() > generalGame.getRedPoints());
+	  assertEquals(SosGame.GameState.BLUE_WON, generalGame.getGameState());
+	}
+	
+	// AC 7.2: A general SOS game win by Red Player
+	@Test
+	public void testGeneralGame_GameEndsWithMoreRedPoints_RedWins() {
+	  generalGame.setBlueMove('O');
+	  generalGame.setRedMove('S');
+	  generalGame.makeMove(1, 0);
+    generalGame.makeMove(0, 0);
+    generalGame.makeMove(0, 1);
+    generalGame.makeMove(2, 0);
+    generalGame.makeMove(0, 2);
+    generalGame.makeMove(1, 1);
+    generalGame.makeMove(1, 2);
+    generalGame.makeMove(2, 1);
+    
+    generalGame.makeMove(2, 2);
+    
+    assertTrue(generalGame.getRedPoints() > generalGame.getBluePoints());
+    assertEquals(SosGame.GameState.RED_WON, generalGame.getGameState());
+	}
+	
+	// AC 7.5: A draw game (general game)
+	@Test
+	public void testGeneralGame_GameEndsWithEqualPoints_Draw() {
+	  generalGame.setRedMove('S');
+	  generalGame.makeMove(0, 0);
+	  generalGame.makeMove(2, 2);
+	  generalGame.makeMove(1, 0);
+	  generalGame.setRedMove('O');
+	  generalGame.makeMove(1, 2);
+	  generalGame.makeMove(0, 2);
+	  generalGame.makeMove(2, 1);
+	  generalGame.makeMove(0, 1);
+	  generalGame.makeMove(2, 0);
+	  
+	  generalGame.makeMove(1, 1);
+	  
+	  assertTrue(generalGame.getBluePoints() == generalGame.getRedPoints());
+	  assertEquals(SosGame.GameState.DRAW, generalGame.getGameState());
+	  
 	}
 }
