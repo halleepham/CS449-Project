@@ -111,6 +111,10 @@ public abstract class SosGame {
   public int getRedPoints() {
     return redPoints;
   }
+  
+  public ArrayList<SosLine> getSosLines(){
+    return sosLines;
+  }
 	
 	public int madeSos(int row, int col) {
 		Cell move = grid[row][col];

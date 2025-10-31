@@ -205,8 +205,11 @@ public class SosGui extends Application {
 		}
 		
 		lineOverlayPane = new Pane();
+		lineOverlayPane.setPadding(new Insets(30));
+		lineOverlayPane.setStyle("-fx-border-color: red");
 		lineOverlayPane.setPickOnBounds(false);
 		lineOverlayPane.setMinSize(boardPane.getMinWidth(), boardPane.getMinHeight());
+		lineOverlayPane.setMaxSize(boardPane.getMaxWidth(), boardPane.getMaxHeight());
 		
 		StackPane boardStackPane = new StackPane(boardPane, lineOverlayPane);
 		layout.setCenter(boardStackPane);
@@ -224,6 +227,23 @@ public class SosGui extends Application {
 				}
 			}
 		}
+	}
+	
+	private void drawLines() {
+	  lineOverlayPane.getChildren().clear();
+	  int width = squares[0][0].getWidth();
+	  for (SosLine sos : game.getSosLines()) {
+	    Line line = new Line(
+	       squares[sos.startRow][sos.startColumn].getSquare().getLayoutX() + (width / 2),
+	       squares[sos.startRow][sos.startColumn].getSquare().getLayoutY() + (width / 2),
+	       squares[sos.endRow][sos.endColumn].getSquare().getLayoutX() + (width / 2),
+	       squares[sos.endRow][sos.endColumn].getSquare().getLayoutY() + (width / 2)
+	        );
+	    
+	    line.setStroke(sos.player == SosGame.PlayerTurn.BLUE ? Color.BLUE : Color.RED);
+	    line.setStrokeWidth(3);
+	    lineOverlayPane.getChildren().add(line);
+	  }
 	}
 	
 	private void displayGameStatus() {
@@ -308,6 +328,7 @@ public class SosGui extends Application {
 		try {
 			game.makeMove(square.getRow(), square.getColumn());
 			drawBoard();
+			drawLines();
 			if (rbGeneralGame.isSelected()) {
 			  lblBluePoints.setText(String.valueOf(game.getBluePoints()));
 	      lblRedPoints.setText(String.valueOf(game.getRedPoints()));
