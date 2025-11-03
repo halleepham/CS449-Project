@@ -155,7 +155,6 @@ public class TestSimpleGame {
 	  assertEquals(SosGame.PlayerTurn.RED, simpleGame.getTurn());
 	}
 	
-	
 	// AC 5.5: A continuing simple game after a Red Player move
 	@Test
 	public void testSimpleGame_RedMove_NonSOS_GameContinues() {

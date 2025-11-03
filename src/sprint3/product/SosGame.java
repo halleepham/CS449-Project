@@ -34,7 +34,7 @@ public abstract class SosGame {
 	public abstract boolean isDraw();
 	
 	public SosGame() {
-	currentGameState = GameState.SETUP;
+	  currentGameState = GameState.SETUP;
 		blueMove = 'S';
 		redMove = 'S';
 		turn = PlayerTurn.BLUE;
@@ -183,10 +183,6 @@ public abstract class SosGame {
 	
 	public GameState getGameState() {
 		return currentGameState;
-	}
-	
-	public void setGameState(GameState gameState) {
-		currentGameState = gameState;
 	}
 	
 	public int getTotalRows() {

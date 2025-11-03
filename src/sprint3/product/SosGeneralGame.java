@@ -8,6 +8,7 @@ public class SosGeneralGame extends SosGame {
 		char moveLetter = (turn == PlayerTurn.BLUE) ? blueMove : redMove;
 		Cell moveCell = (moveLetter == 'S') ? Cell.S : Cell.O;
 		grid[row][col] = moveCell;
+		
 		if (madeSos(row, col) > 0) {
       if (turn == PlayerTurn.BLUE) {
         bluePoints += madeSos(row, col);

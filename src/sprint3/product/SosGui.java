@@ -388,7 +388,6 @@ public class SosGui extends Application {
 	}
 	
 	public class Square {
-		
 		private StackPane square;
 		private Label lblValue;
 		private int row;
