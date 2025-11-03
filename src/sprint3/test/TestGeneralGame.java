@@ -27,7 +27,7 @@ public class TestGeneralGame {
 
 	// AC 6.1: Blue Player valid move that forms an SOS
 	@Test
-	public void testGeneralGame_BlueValidMoveFormsSos_Accepted() {
+	public void testGeneralMove_BlueValidMoveFormsSos_Accepted() {
 		assertEquals(SosGame.PlayerTurn.BLUE, generalGame.getTurn());
 		// Blue places S
 		generalGame.makeMove(0, 0);
@@ -43,7 +43,7 @@ public class TestGeneralGame {
 	
 	// AC 6.2: Red Player valid move that forms an SOS
 	@Test
-	public void testGeneralGame_RedValidMoveFormsSos_Accepted() {
+	public void testGeneralMove_RedValidMoveFormsSos_Accepted() {
 		generalGame.makeMove(1, 0);
 		assertEquals(SosGame.PlayerTurn.RED, generalGame.getTurn());
 		generalGame.makeMove(0, 0);
@@ -58,7 +58,7 @@ public class TestGeneralGame {
 	
 	// AC 6.3: Blue Player valid move that doesn't form an SOS
 	@Test
-	public void testGeneralGame_BlueValidMoveNoSos_Accepted() {
+	public void testGeneralMove_BlueValidMoveNoSos_Accepted() {
 		assertEquals(SosGame.PlayerTurn.BLUE, generalGame.getTurn());
 		
 		generalGame.makeMove(0, 0);
@@ -69,7 +69,7 @@ public class TestGeneralGame {
 	
 	// AC 6.4: Red Player valid move that doesn't form an SOS
 	@Test
-	public void testGeneralGame_RedValidMoveNoSos_Accepted() {
+	public void testGeneralMove_RedValidMoveNoSos_Accepted() {
 		generalGame.makeMove(0, 0);
 		assertEquals(SosGame.PlayerTurn.RED, generalGame.getTurn());
 		
@@ -81,7 +81,7 @@ public class TestGeneralGame {
 	
 	// AC 6.5: Illegal move on occupied cell (general game)
 	@Test
-	public void testGeneralGame_MoveOnOccupiedCell_Rejected() {
+	public void testGeneralMove_MoveOnOccupiedCell_Rejected() {
 		generalGame.makeMove(0, 0);
 
         try {
@@ -97,7 +97,7 @@ public class TestGeneralGame {
 	
 	// AC 6.6: Illegal move outside the board (general game)
 	@Test
-	public void testGeneralGame_MoveOutsideBoardRow_Rejected() {
+	public void testGeneralMove_MoveOutsideBoardRow_Rejected() {
 		assertEquals(SosGame.PlayerTurn.BLUE, generalGame.getTurn());
 		
 		try {
@@ -111,7 +111,7 @@ public class TestGeneralGame {
 	}
 	
 	@Test
-	public void testGeneralGame_MoveOutsideBoardColumn_Rejected() {
+	public void testGeneralMove_MoveOutsideBoardColumn_Rejected() {
 		assertEquals(SosGame.PlayerTurn.BLUE, generalGame.getTurn());
 
 		try {

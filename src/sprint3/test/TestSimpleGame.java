@@ -27,7 +27,7 @@ public class TestSimpleGame {
 
 	// [GPT] AC 4.1: Blue Player valid move on empty cell (simple game)
 	@Test
-	public void testSimpleGame_BlueValidMove_Accepted() {
+	public void testSimpleMove_BlueValidMove_Accepted() {
 		assertEquals(SosGame.PlayerTurn.BLUE, simpleGame.getTurn());
 		assertEquals(SosGame.Cell.EMPTY, simpleGame.getCell(0, 0));
 		
@@ -39,7 +39,7 @@ public class TestSimpleGame {
 	
 	// AC 4.2: Red Player valid move on empty cell (simple game)
 	@Test
-	public void testSimpleGame_RedValidMove_Accepted() {
+	public void testSimpleMove_RedValidMove_Accepted() {
 		simpleGame.makeMove(0, 0);
 		assertEquals(SosGame.PlayerTurn.RED, simpleGame.getTurn());
 		
@@ -51,7 +51,7 @@ public class TestSimpleGame {
 
 	// [GPT] AC 4.3: Illegal move on occupied cell (simple game)
 	@Test
-	public void testSimpleGame_MoveOnOccupiedCell_Rejected() {
+	public void testSimpleMove_MoveOnOccupiedCell_Rejected() {
 		// Blue makes valid move first
 		simpleGame.makeMove(0, 0);
 		assertEquals(SosGame.PlayerTurn.RED, simpleGame.getTurn());
@@ -69,7 +69,7 @@ public class TestSimpleGame {
 	
 	// AC 4.4: Illegal move outside the board (simple game)
 	@Test
-	public void testSimpleGame_MoveOutsideBoardRow_Rejected() {
+	public void testSimpleMove_MoveOutsideBoardRow_Rejected() {
 		assertEquals(SosGame.PlayerTurn.BLUE, simpleGame.getTurn());
 		
 		try {
@@ -83,7 +83,7 @@ public class TestSimpleGame {
 	}
 	
 	@Test
-	public void testSimpleGame_MoveOutsideBoardColumn_Rejected() {
+	public void testSimpleMove_MoveOutsideBoardColumn_Rejected() {
 		assertEquals(SosGame.PlayerTurn.BLUE, simpleGame.getTurn());
 		
 		try {
