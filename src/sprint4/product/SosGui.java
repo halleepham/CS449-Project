@@ -35,13 +35,14 @@ public class SosGui extends Application {
 	private Pane lineOverlayPane;
 	private VBox bluePlayerPane;
 	private VBox redPlayerPane;
-	private ToggleGroup rbGroupGameMode;
-	private ToggleGroup rbGroupBlueType;
-	private ToggleGroup rbGroupRedType;
 	private ToggleGroup rbGroupBlueMoves;
 	private ToggleGroup rbGroupRedMoves;
 	private RadioButton rbSimpleGame;
 	private RadioButton rbGeneralGame;
+	private RadioButton rbBlueHuman;
+	private RadioButton rbBlueComputer;
+	private RadioButton rbRedHuman;
+	private RadioButton rbRedComputer;
 	private RadioButton rbBlueS;
 	private RadioButton rbBlueO;
 	private RadioButton rbRedS;
@@ -76,7 +77,7 @@ public class SosGui extends Application {
 		
 		rbSimpleGame = new RadioButton("Simple Game");
 		rbGeneralGame = new RadioButton("General Game");
-		rbGroupGameMode  = new ToggleGroup();
+		ToggleGroup rbGroupGameMode  = new ToggleGroup();
 		rbSimpleGame.setToggleGroup(rbGroupGameMode);
 		rbGeneralGame.setToggleGroup(rbGroupGameMode);
 		rbSimpleGame.setSelected(true);
@@ -101,10 +102,9 @@ public class SosGui extends Application {
 		lblBlue.setTextFill(Color.BLUE);
 		lblBlue.setFont(Font.font(24));
 		
-		rbGroupBlueType = new ToggleGroup();
-		RadioButton rbBlueHuman = new RadioButton("Human");
-		RadioButton rbBlueComputer = new RadioButton("Computer");
-		rbBlueComputer.setDisable(true);  // Disable Computer button for now
+		ToggleGroup rbGroupBlueType = new ToggleGroup();
+		rbBlueHuman = new RadioButton("Human");
+		rbBlueComputer = new RadioButton("Computer");
 		rbBlueHuman.setToggleGroup(rbGroupBlueType);
 		rbBlueComputer.setToggleGroup(rbGroupBlueType);
 		rbBlueHuman.setSelected(true);
@@ -133,10 +133,9 @@ public class SosGui extends Application {
 		lblRed.setTextFill(Color.RED);
 		lblRed.setFont(Font.font(24));
 		
-		rbGroupRedType = new ToggleGroup();
-		RadioButton rbRedHuman = new RadioButton("Human");
-		RadioButton rbRedComputer = new RadioButton("Computer");
-		rbRedComputer.setDisable(true);  // Disable Computer button for now
+		ToggleGroup rbGroupRedType = new ToggleGroup();
+		rbRedHuman = new RadioButton("Human");
+		rbRedComputer = new RadioButton("Computer");
 		rbRedHuman.setToggleGroup(rbGroupRedType);
 		rbRedComputer.setToggleGroup(rbGroupRedType);
 		rbRedHuman.setSelected(true);
@@ -293,6 +292,7 @@ public class SosGui extends Application {
 		try {
 			int size = getBoardSize();
 			setUpGameMode();
+			setUpPlayers();
 			game.setUpNewBoard(size);
 			setUpBoard(size);
 			
@@ -301,11 +301,6 @@ public class SosGui extends Application {
       rbGeneralGame.setDisable(true);
       txtBoardSize.setDisable(true);
       btnStartGame.setDisable(true);
-      
-			rbBlueS.setDisable(false);
-	    rbBlueO.setDisable(false);
-	    rbRedS.setDisable(false);
-      rbRedO.setDisable(false);
       
       if (rbGeneralGame.isSelected()) {
         buildPointDisplays();
@@ -359,6 +354,23 @@ public class SosGui extends Application {
 		} else {
 			game = new SosGeneralGame();
 		}
+	}
+	
+	public void setUpPlayers() {
+	  rbBlueHuman.setDisable(true);
+	  rbBlueComputer.setDisable(true);
+	  rbRedHuman.setDisable(true);
+	  rbRedComputer.setDisable(true);
+	 
+	  if (rbBlueHuman.isSelected()) {
+	    rbBlueS.setDisable(false);
+	    rbBlueO.setDisable(false);
+	  }
+	  
+	  if (rbRedHuman.isSelected()) {
+	    rbRedS.setDisable(false);
+	    rbRedO.setDisable(false);
+	  }
 	}
 	
 	private void showError(String message) {
