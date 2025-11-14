@@ -14,6 +14,8 @@ public abstract class SosGame {
 		BLUE, RED
 	}
 	
+	protected Player bluePlayer;
+	protected Player redPlayer;
 	protected int totalRows;
 	protected int totalColumns;
 	protected char blueMove;
@@ -25,7 +27,7 @@ public abstract class SosGame {
   protected int redPoints;
   protected ArrayList<SosLine> sosLines;
 	
-	public abstract void makeMove(int row, int col) throws Exception;
+	public abstract void makeMove(int row, int col);
 	
 	public abstract void updateGameState(PlayerTurn turn, int row, int column);
 	
@@ -39,6 +41,12 @@ public abstract class SosGame {
 		redMove = 'S';
 		turn = PlayerTurn.BLUE;
 		sosLines = new ArrayList<SosLine>();
+	}
+	
+	public void setUpPlayers(Player blue, Player red) {
+	  bluePlayer = blue;
+	  redPlayer = red;
+	  
 	}
 	
 	public void setUpNewBoard(int size) {
@@ -57,6 +65,15 @@ public abstract class SosGame {
 		}
 		
 		currentGameState = GameState.PLAYING;
+	}
+	
+	public void requestMoveFromPlayer() {
+	  Player currentPlayer = (turn == PlayerTurn.BLUE) ? bluePlayer : redPlayer;
+	  
+	  if (currentPlayer instanceof ComputerPlayer) {
+	    int[] move = currentPlayer.selectMove(this);
+	    makeMove(move[0], move[1]);
+	  }
 	}
 	
 	public void validateMove(int row, int col) {

@@ -156,6 +156,7 @@ public class SosGui extends Application {
 	}
 	
 	public void buildInfoPane() {
+	  //TODO: refactor from sprint 3 feedback
 		BorderPane infoPane = new BorderPane();
 		infoPane.setStyle("-fx-border-color: black");
 		infoPane.setPadding(new Insets(50, 0, 50, 0));
@@ -292,7 +293,7 @@ public class SosGui extends Application {
 		try {
 			int size = getBoardSize();
 			setUpGameMode();
-			setUpPlayers();
+			setPlayers();
 			game.setUpNewBoard(size);
 			setUpBoard(size);
 			
@@ -304,6 +305,13 @@ public class SosGui extends Application {
       
       if (rbGeneralGame.isSelected()) {
         buildPointDisplays();
+      }
+      
+      // TODO: refactor later to avoid repeated calls
+      if(game != null) {
+        game.requestMoveFromPlayer();
+        drawBoard();
+        displayGameStatus();
       }
 			
 		} catch (NumberFormatException e) {
@@ -328,6 +336,15 @@ public class SosGui extends Application {
 	      lblRedPoints.setText(String.valueOf(game.getRedPoints()));
 			}
 			displayGameStatus();
+			
+			// TODO: refactor later to avoid repeated calls
+			if (game != null) {
+			  game.requestMoveFromPlayer();
+			  drawBoard();
+	      drawLines();
+	      displayGameStatus();
+			}
+			
 		} catch (IndexOutOfBoundsException e) {
 			showError("That move is outside the board.");
 		} catch (IllegalStateException e) {
@@ -356,7 +373,10 @@ public class SosGui extends Application {
 		}
 	}
 	
-	public void setUpPlayers() {
+	public void setPlayers() {
+	  Player bluePlayer;
+	  Player redPlayer;
+	  
 	  rbBlueHuman.setDisable(true);
 	  rbBlueComputer.setDisable(true);
 	  rbRedHuman.setDisable(true);
@@ -365,12 +385,20 @@ public class SosGui extends Application {
 	  if (rbBlueHuman.isSelected()) {
 	    rbBlueS.setDisable(false);
 	    rbBlueO.setDisable(false);
+	    bluePlayer = new HumanPlayer();
+	  } else {
+	    bluePlayer = new ComputerPlayer();
 	  }
 	  
 	  if (rbRedHuman.isSelected()) {
 	    rbRedS.setDisable(false);
 	    rbRedO.setDisable(false);
+	    redPlayer = new HumanPlayer();
+	  } else {
+	    redPlayer = new ComputerPlayer();
 	  }
+	  
+	  game.setUpPlayers(bluePlayer, redPlayer);
 	}
 	
 	private void showError(String message) {
