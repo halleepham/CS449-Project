@@ -274,7 +274,7 @@ public class SosGui extends Application {
 			@Override
 			public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
 	            if (newValue != null && game != null) { 
-	            	game.setBlueMove((char) newValue.getUserData());
+	            	game.getBluePlayer().setMove((char) newValue.getUserData());
 	            }
 	        }
 		});
@@ -283,7 +283,7 @@ public class SosGui extends Application {
 			@Override
 			public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
 	            if (newValue != null && game != null) { 
-	            	game.setRedMove((char)newValue.getUserData());
+	            	game.getRedPlayer().setMove((char)newValue.getUserData());
 	            }
 	        }
 		});
@@ -332,8 +332,8 @@ public class SosGui extends Application {
 			drawBoard();
 			drawLines();
 			if (rbGeneralGame.isSelected()) {
-			  lblBluePoints.setText(String.valueOf(game.getBluePoints()));
-	      lblRedPoints.setText(String.valueOf(game.getRedPoints()));
+			  lblBluePoints.setText(String.valueOf(game.getBluePlayer().getPoints()));
+	      lblRedPoints.setText(String.valueOf(game.getRedPlayer().getPoints()));
 			}
 			displayGameStatus();
 			

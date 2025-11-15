@@ -5,6 +5,7 @@ public abstract class Player {
   protected int points;
   
   public Player() {
+    this.move = 'S';
     this.points = 0;
   }
   
@@ -20,8 +21,8 @@ public abstract class Player {
     return points;
   }
   
-  public void setPoints(int points) {
-    this.points = points;
+  public void addPoints(int points) {
+    this.points += points;
   }
   
   public abstract int[] selectMove(SosGame game);

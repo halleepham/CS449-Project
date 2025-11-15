@@ -5,12 +5,10 @@ public class SosSimpleGame extends SosGame {
 	@Override
 	public void makeMove(int row, int col) {
 		validateMove(row, col);
-		char moveLetter = (turn == PlayerTurn.BLUE) ? blueMove : redMove;
-		Cell moveCell = (moveLetter == 'S') ? Cell.S : Cell.O;
-		grid[row][col] = moveCell;
+		grid[row][col] = (getCurrentPlayer().getMove() == 'S') ? Cell.S : Cell.O;
 		
 		updateGameState(turn, row, col);
-		turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
+		switchTurn();
 	}
 
 	@Override

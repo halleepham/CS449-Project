@@ -1,22 +1,18 @@
 package sprint4.product;
 
+
 public class SosGeneralGame extends SosGame {
 
 	@Override
 	public void makeMove(int row, int col) {
 		validateMove(row, col);
-		char moveLetter = (turn == PlayerTurn.BLUE) ? blueMove : redMove;
-		Cell moveCell = (moveLetter == 'S') ? Cell.S : Cell.O;
-		grid[row][col] = moveCell;
+		grid[row][col] = (getCurrentPlayer().getMove() == 'S') ? Cell.S : Cell.O;
 		
-		if (madeSos(row, col) > 0) {
-      if (turn == PlayerTurn.BLUE) {
-        bluePoints += madeSos(row, col);
-      } else {
-        redPoints += madeSos(row, col);
-      }
+		int sosMade = madeSos(row, col);
+		if (sosMade > 0) {
+      getCurrentPlayer().addPoints(sosMade);
     } else {
-      turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
+      switchTurn();
     }
 		updateGameState(turn, row, col);
 	}
@@ -36,15 +32,12 @@ public class SosGeneralGame extends SosGame {
 	
 	@Override
   public boolean hasWon(PlayerTurn turn, int row, int column) {
-    if (turn == PlayerTurn.BLUE && bluePoints > redPoints
-        || turn == PlayerTurn.RED && redPoints > bluePoints) {
-      return true;
-    }
-    return false;
+    return (turn == PlayerTurn.BLUE && bluePlayer.getPoints() > redPlayer.getPoints()
+        || turn == PlayerTurn.RED && redPlayer.getPoints() > bluePlayer.getPoints());
   }
 	
 	@Override
 	public boolean isDraw() {
-		return (bluePoints == redPoints);
+		return (bluePlayer.getPoints() == redPlayer.getPoints());
 	}
 }

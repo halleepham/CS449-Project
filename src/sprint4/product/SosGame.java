@@ -18,13 +18,9 @@ public abstract class SosGame {
 	protected Player redPlayer;
 	protected int totalRows;
 	protected int totalColumns;
-	protected char blueMove;
-	protected char redMove;
 	protected PlayerTurn turn;
 	protected Cell[][] grid;
 	protected GameState currentGameState;
-  protected int bluePoints;
-  protected int redPoints;
   protected ArrayList<SosLine> sosLines;
 	
 	public abstract void makeMove(int row, int col);
@@ -37,8 +33,6 @@ public abstract class SosGame {
 	
 	public SosGame() {
 	  currentGameState = GameState.SETUP;
-		blueMove = 'S';
-		redMove = 'S';
 		turn = PlayerTurn.BLUE;
 		sosLines = new ArrayList<SosLine>();
 	}
@@ -46,7 +40,6 @@ public abstract class SosGame {
 	public void setUpPlayers(Player blue, Player red) {
 	  bluePlayer = blue;
 	  redPlayer = red;
-	  
 	}
 	
 	public void setUpNewBoard(int size) {
@@ -197,7 +190,23 @@ public abstract class SosGame {
     }
     return true;
   }
+  
+  public Player getCurrentPlayer() {
+    return (turn == PlayerTurn.BLUE) ? bluePlayer : redPlayer;
+  }
+  
+  public void switchTurn() {
+    turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
+  }
 	
+  public Player getBluePlayer() {
+    return bluePlayer;
+  }
+  
+  public Player getRedPlayer() {
+    return redPlayer;
+  }
+  
 	public GameState getGameState() {
 		return currentGameState;
 	}
@@ -213,22 +222,6 @@ public abstract class SosGame {
 	public PlayerTurn getTurn() {
 		return turn;
 	}
-	
-	public void setBlueMove(char move) {
-		blueMove = move;
-	}
-	
-	public void setRedMove(char move) {
-		redMove = move;
-	}
-	
-	public int getBluePoints() {
-    return bluePoints;
-  }
-
-  public int getRedPoints() {
-    return redPoints;
-  }
   
   public ArrayList<SosLine> getSosLines(){
     return sosLines;
