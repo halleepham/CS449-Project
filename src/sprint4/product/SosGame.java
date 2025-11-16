@@ -100,7 +100,7 @@ public abstract class SosGame {
     }
     
     ArrayList<SosLine> formedSoses;
-    formedSoses = (move == Cell.O) ? checkOFormed(row, col) : checkSFormed(row, col);
+    formedSoses = (move == Cell.O) ? checkOFormed(grid, row, col) : checkSFormed(grid, row, col);
     
     for (SosLine line : formedSoses) {
       sosLines.add(line);
@@ -108,7 +108,7 @@ public abstract class SosGame {
     return formedSoses.size();
   }
   
-  public ArrayList<SosLine> checkOFormed(int row, int col) {
+  public ArrayList<SosLine> checkOFormed(Cell[][] grid, int row, int col) {
     ArrayList<SosLine> formedLines = new ArrayList<SosLine>();
     
     // Horizontal
@@ -134,7 +134,7 @@ public abstract class SosGame {
     return formedLines;
   }
   
-  public ArrayList<SosLine> checkSFormed(int row, int col) {
+  public ArrayList<SosLine> checkSFormed(Cell[][] grid, int row, int col) {
     ArrayList<SosLine> formedLines = new ArrayList<SosLine>();
 
     // Horizontal right
@@ -221,6 +221,16 @@ public abstract class SosGame {
 	
 	public PlayerTurn getTurn() {
 		return turn;
+	}
+	
+	public Cell[][] getGridCopy(){
+	  Cell[][] copy = new Cell[totalRows][totalColumns];
+	  for (int row = 0; row < totalRows; row++) {
+	    for (int col = 0; col < totalColumns; col++) {
+	      copy[row][col] = grid[row][col];
+	    }
+	  }
+	  return copy;
 	}
   
   public ArrayList<SosLine> getSosLines(){
