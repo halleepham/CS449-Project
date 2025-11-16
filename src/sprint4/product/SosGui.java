@@ -1,6 +1,8 @@
 package sprint4.product;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -24,6 +26,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class SosGui extends Application {
 
@@ -262,7 +265,6 @@ public class SosGui extends Application {
 	    } else if (game.getGameState() == SosGame.GameState.RED_WON) {
 	      showGameResult("Red Player won!");
 	    }
-		  resetGame();
 		}
 	}
 	
@@ -334,7 +336,10 @@ public class SosGui extends Application {
 			}
 			displayGameStatus();
 			
-			handleComputerMove();
+			if (game != null && game.getGameState() == SosGame.GameState.PLAYING
+			    && game.getCurrentPlayer() instanceof ComputerPlayer) {
+			  handleComputerMove();
+			}
 			
 		} catch (IndexOutOfBoundsException e) {
 			showError("That move is outside the board.");
@@ -350,20 +355,29 @@ public class SosGui extends Application {
 	  if (game != null && game.getGameState() == SosGame.GameState.PLAYING) {
 	    Player currentPlayer = game.getCurrentPlayer();
 	    if (currentPlayer instanceof ComputerPlayer) {
-	      int[] move = currentPlayer.selectMove(game);
-	      if (move != null) {
-	        game.performPlayerTurn(move[0], move[1]);
-	        drawBoard();
-	        drawLines();
-	        if (rbGeneralGame.isSelected()) {
-	          lblBluePoints.setText(String.valueOf(game.getBluePlayer().getPoints()));
-	          lblRedPoints.setText(String.valueOf(game.getRedPlayer().getPoints()));
+	      
+	      PauseTransition pause = new PauseTransition(Duration.seconds(1));
+	      pause.setOnFinished(event -> {
+	        int[] move = currentPlayer.selectMove(game);
+	        if (move != null) {
+	          game.performPlayerTurn(move[0], move[1]);
+	          drawBoard();
+	          drawLines();
+	          if (rbGeneralGame.isSelected()) {
+	            lblBluePoints.setText(String.valueOf(game.getBluePlayer().getPoints()));
+	            lblRedPoints.setText(String.valueOf(game.getRedPlayer().getPoints()));
+	          }
+
+	          if (game.getGameState() != SosGame.GameState.PLAYING) {
+	            Platform.runLater(() -> displayGameStatus());
+	            return;
+	          }
+	          if (game.getCurrentPlayer() instanceof ComputerPlayer) {
+	            handleComputerMove();
+	          } 
 	        }
-	        displayGameStatus();
-	        
-	        handleComputerMove();
-	        
-	      }
+	      });
+	      pause.play();
 	    }
 	  }
 	}
