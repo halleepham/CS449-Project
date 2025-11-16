@@ -99,92 +99,85 @@ public abstract class SosGame {
       throw new IllegalStateException("Referenced cell is empty");
     }
     
-    if (move == Cell.O) {
-      return checkOFormed(row, col);
+    ArrayList<SosLine> formedSoses;
+    formedSoses = (move == Cell.O) ? checkOFormed(row, col) : checkSFormed(row, col);
+    
+    for (SosLine line : formedSoses) {
+      sosLines.add(line);
     }
-    return checkSFormed(row, col);
+    return formedSoses.size();
   }
   
-  public int checkOFormed(int row, int col) {
-    int numSosFormed = 0;
+  public ArrayList<SosLine> checkOFormed(int row, int col) {
+    ArrayList<SosLine> formedLines = new ArrayList<SosLine>();
+    
     // Horizontal
     if (col > 0 && col < totalColumns - 1 
         && grid[row][col - 1] == Cell.S && grid[row][col + 1] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row, col - 1, row, col + 1, turn));
+      formedLines.add(new SosLine(row, col - 1, row, col + 1, turn));
     }
     // Vertical
     if (row > 0 && row < totalRows - 1 
         && grid[row - 1][col] == Cell.S && grid[row + 1][col] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row - 1, col, row + 1, col, turn));
+      formedLines.add(new SosLine(row - 1, col, row + 1, col, turn));
     }
     // Diagonal (top left to bottom right)
     if (row - 1 >= 0 && col - 1 >= 0 && row + 1 < totalRows && col + 1 < totalColumns
         && grid[row - 1][col - 1] == Cell.S && grid[row + 1][col + 1] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row - 1, col - 1, row + 1, col + 1, turn));
+      formedLines.add(new SosLine(row - 1, col - 1, row + 1, col + 1, turn));
     }
     // Diagonal (top right to bottom left)
     if (row - 1 >= 0 && col + 1 < totalColumns && row + 1 < totalRows && col - 1 >= 0
         && grid[row - 1][col + 1] == Cell.S && grid[row + 1][col - 1] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row - 1, col + 1, row + 1, col - 1, turn));
+      formedLines.add(new SosLine(row - 1, col + 1, row + 1, col - 1, turn));
     }
-    return numSosFormed;
+    return formedLines;
   }
   
-  public int checkSFormed(int row, int col) {
-    int numSosFormed = 0;
+  public ArrayList<SosLine> checkSFormed(int row, int col) {
+    ArrayList<SosLine> formedLines = new ArrayList<SosLine>();
+
     // Horizontal right
     if (col + 2 < totalColumns 
         && grid[row][col + 1] == Cell.O && grid[row][col + 2] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row, col, row, col + 2, turn));
+      formedLines.add(new SosLine(row, col, row, col + 2, turn));
     }
     // Horizontal left
     if (col - 2 >= 0 
         && grid[row][col - 1] == Cell.O && grid[row][col - 2] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row, col, row, col - 2, turn));
+      formedLines.add(new SosLine(row, col, row, col - 2, turn));
     }
     // Vertical down
     if (row + 2 < totalRows 
         && grid[row + 1][col] == Cell.O && grid[row + 2][col] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row, col, row + 2, col, turn));
+      formedLines.add(new SosLine(row, col, row + 2, col, turn));
     }
     // Vertical up
     if (row - 2 >= 0 
         && grid[row - 1][col] == Cell.O && grid[row - 2][col] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row, col, row - 2, col, turn));
+      formedLines.add(new SosLine(row, col, row - 2, col, turn));
     }
     // Diagonal (top left to bottom right)
     if (row + 2 < totalRows && col + 2 < totalColumns 
         && grid[row + 1][col + 1] == Cell.O && grid[row + 2][col + 2] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row, col, row + 2, col + 2, turn));
+      formedLines.add(new SosLine(row, col, row + 2, col + 2, turn));
     }
     // Diagonal (top right to bottom left)
     if (row + 2 < totalRows && col - 2 >= 0 
         && grid[row + 1][col - 1] == Cell.O && grid[row + 2][col - 2] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row, col, row + 2, col - 2, turn));
+      formedLines.add(new SosLine(row, col, row + 2, col - 2, turn));
     }
     // Diagonal (bottom left to top right)
     if (row - 2 >= 0 && col + 2 < totalColumns 
         && grid[row - 1][col + 1] == Cell.O && grid[row - 2][col + 2] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row, col, row - 2, col + 2, turn));
+      formedLines.add(new SosLine(row, col, row - 2, col + 2, turn));
     }
     // Diagonal (bottom right to top left)
     if (row - 2 >= 0 && col - 2 >= 0 
         && grid[row - 1][col - 1] == Cell.O && grid[row - 2][col - 2] == Cell.S) {
-      numSosFormed++;
-      sosLines.add(new SosLine(row, col, row - 2, col - 2, turn));
+      formedLines.add(new SosLine(row, col, row - 2, col - 2, turn));
     }
-    return numSosFormed;
+    return formedLines;
   }
   
   public boolean isBoardFull() {
