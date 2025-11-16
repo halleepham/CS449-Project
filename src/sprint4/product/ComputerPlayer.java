@@ -1,5 +1,8 @@
 package sprint4.product;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import sprint4.product.SosGame.Cell;
 
 public class ComputerPlayer extends Player {
@@ -10,7 +13,7 @@ public class ComputerPlayer extends Player {
     if (move == null) {
       move = pickSafeMove(game);
       if (move == null) {
-        move = pickFirstEmptyMove(game);
+        move = pickRandomMove(game);
       }
     }
     return move;
@@ -56,15 +59,24 @@ public class ComputerPlayer extends Player {
   }
   
   // temporary logic to pick first empty cell to make sure computer plays works
-  private int[] pickFirstEmptyMove(SosGame game) {
-    for (int row = 0; row < game.getTotalRows(); row++) {
-      for (int col = 0; col < game.getTotalColumns(); col++) {
-        if (game.getCell(row, col) == SosGame.Cell.EMPTY) {
-          return new int[] {row, col};
+  private int[] pickRandomMove(SosGame game) {
+    ArrayList<int[]> emptyCells = new ArrayList<int[]>();
+    
+    for (int row = 0; row < game.getTotalRows(); row ++) {
+      for (int col = 0; col < game.getTotalColumns(); col ++) {
+        if (game.getCell(row, col) == Cell.EMPTY) {
+          emptyCells.add(new int[] {row, col});
         }
       }
     }
-    return null;
+    
+    if (emptyCells.size() == 0) {
+      return null;
+    }
+    
+    this.move = new Random().nextBoolean() ? 'S' : 'O';
+    int[] cell = emptyCells.get(new Random().nextInt(emptyCells.size()));
+    return new int[] {cell[0], cell[1]};
   }
   
   private boolean isMoveSafe(Cell[][] grid, int row, int col, Cell cellType, SosGame game) {
