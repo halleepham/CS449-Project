@@ -248,25 +248,15 @@ public class SosGui extends Application {
 	  }
 	}
 	
-	private void displayGameStatus() {
-		if (game.getGameState() == SosGame.GameState.PLAYING) {
-			if (game.getTurn() == SosGame.PlayerTurn.BLUE) {
-				lblCurrentTurn.setText("Blue");
-				lblCurrentTurn.setTextFill(Color.BLUE);
-			} else {
-				lblCurrentTurn.setText("Red");
-				lblCurrentTurn.setTextFill(Color.RED);
-			}
-		} else {
-		  if (game.getGameState() == SosGame.GameState.DRAW) {
-	      showGameResult("It's a draw!");
-	    } else if (game.getGameState() == SosGame.GameState.BLUE_WON) {
-	      showGameResult("Blue Player won!");
-	    } else if (game.getGameState() == SosGame.GameState.RED_WON) {
-	      showGameResult("Red Player won!");
-	    }
-		}
-	}
+  private void displayGameStatus() {
+    if (game.getGameState() == SosGame.GameState.DRAW) {
+      showGameResult("It's a draw!");
+    } else if (game.getGameState() == SosGame.GameState.BLUE_WON) {
+      showGameResult("Blue Player won!");
+    } else if (game.getGameState() == SosGame.GameState.RED_WON) {
+      showGameResult("Red Player won!");
+    }
+  }
 	
 	private void setUpActions() {
 		btnStartGame.setOnAction(event -> handleStartGame());
@@ -333,6 +323,7 @@ public class SosGui extends Application {
 			if (rbGeneralGame.isSelected()) {
 			  updateScore();
 			}
+			updateTurn();
 			displayGameStatus();
 			
 			if (game != null && game.getGameState() == SosGame.GameState.PLAYING
@@ -365,6 +356,7 @@ public class SosGui extends Application {
 	          if (rbGeneralGame.isSelected()) {
 	            updateScore();
 	          }
+	          updateTurn();
 
 	          if (game.getGameState() != SosGame.GameState.PLAYING) {
 	            Platform.runLater(() -> displayGameStatus());
@@ -430,6 +422,16 @@ public class SosGui extends Application {
     lblBluePoints.setText(String.valueOf(game.getBluePlayer().getPoints()));
     lblRedPoints.setText(String.valueOf(game.getRedPlayer().getPoints()));
   }
+	
+	public void updateTurn() {
+	  if (game.getTurn() == SosGame.PlayerTurn.BLUE) {
+      lblCurrentTurn.setText("Blue");
+      lblCurrentTurn.setTextFill(Color.BLUE);
+    } else {
+      lblCurrentTurn.setText("Red");
+      lblCurrentTurn.setTextFill(Color.RED);
+    }
+	}
 	
 	private void showError(String message) {
 	    Alert alert = new Alert(Alert.AlertType.ERROR);
