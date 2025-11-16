@@ -307,11 +307,8 @@ public class SosGui extends Application {
         buildPointDisplays();
       }
       
-      // TODO: refactor later to avoid repeated calls
-      if(game != null) {
-        game.requestMoveFromPlayer();
-        drawBoard();
-        displayGameStatus();
+      if (game.getCurrentPlayer() instanceof ComputerPlayer) {
+        handleComputerMove();
       }
 			
 		} catch (NumberFormatException e) {
@@ -328,7 +325,7 @@ public class SosGui extends Application {
 			return;
 		}
 		try {
-			game.makeMove(square.getRow(), square.getColumn());
+			game.performPlayerTurn(square.getRow(), square.getColumn());
 			drawBoard();
 			drawLines();
 			if (rbGeneralGame.isSelected()) {
@@ -337,13 +334,7 @@ public class SosGui extends Application {
 			}
 			displayGameStatus();
 			
-			// TODO: refactor later to avoid repeated calls
-			if (game != null) {
-			  game.requestMoveFromPlayer();
-			  drawBoard();
-	      drawLines();
-	      displayGameStatus();
-			}
+			handleComputerMove();
 			
 		} catch (IndexOutOfBoundsException e) {
 			showError("That move is outside the board.");
@@ -353,6 +344,28 @@ public class SosGui extends Application {
 			showError("Unexpected error: " + e.getMessage());
 		}
 		
+	}
+	
+	private void handleComputerMove() {
+	  if (game != null && game.getGameState() == SosGame.GameState.PLAYING) {
+	    Player currentPlayer = game.getCurrentPlayer();
+	    if (currentPlayer instanceof ComputerPlayer) {
+	      int[] move = currentPlayer.selectMove(game);
+	      if (move != null) {
+	        game.performPlayerTurn(move[0], move[1]);
+	        drawBoard();
+	        drawLines();
+	        if (rbGeneralGame.isSelected()) {
+	          lblBluePoints.setText(String.valueOf(game.getBluePlayer().getPoints()));
+	          lblRedPoints.setText(String.valueOf(game.getRedPlayer().getPoints()));
+	        }
+	        displayGameStatus();
+	        
+	        handleComputerMove();
+	        
+	      }
+	    }
+	  }
 	}
 	
 	private int getBoardSize() {
@@ -447,7 +460,11 @@ public class SosGui extends Application {
 			lblValue.setFont(Font.font(24));
 			
 			square = new StackPane(border, lblValue);
-			square.setOnMouseClicked(event -> handleMove(this));
+			square.setOnMouseClicked(event -> {
+			  if (game != null && game.getCurrentPlayer() instanceof HumanPlayer) {
+			    handleMove(this);
+			  }
+			});
 		}
 		
 		public StackPane getSquare() {
