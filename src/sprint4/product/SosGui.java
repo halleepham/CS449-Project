@@ -331,8 +331,7 @@ public class SosGui extends Application {
 			drawBoard();
 			drawLines();
 			if (rbGeneralGame.isSelected()) {
-			  lblBluePoints.setText(String.valueOf(game.getBluePlayer().getPoints()));
-	      lblRedPoints.setText(String.valueOf(game.getRedPlayer().getPoints()));
+			  updateScore();
 			}
 			displayGameStatus();
 			
@@ -364,8 +363,7 @@ public class SosGui extends Application {
 	          drawBoard();
 	          drawLines();
 	          if (rbGeneralGame.isSelected()) {
-	            lblBluePoints.setText(String.valueOf(game.getBluePlayer().getPoints()));
-	            lblRedPoints.setText(String.valueOf(game.getRedPlayer().getPoints()));
+	            updateScore();
 	          }
 
 	          if (game.getGameState() != SosGame.GameState.PLAYING) {
@@ -427,6 +425,11 @@ public class SosGui extends Application {
 	  
 	  game.setUpPlayers(bluePlayer, redPlayer);
 	}
+	
+	public void updateScore() {
+    lblBluePoints.setText(String.valueOf(game.getBluePlayer().getPoints()));
+    lblRedPoints.setText(String.valueOf(game.getRedPlayer().getPoints()));
+  }
 	
 	private void showError(String message) {
 	    Alert alert = new Alert(Alert.AlertType.ERROR);
