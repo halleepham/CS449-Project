@@ -40,20 +40,25 @@ public class ComputerPlayer extends Player {
   
   private int[] pickSafeMove(SosGame game) {
     Cell[][] gridCopy = game.getGridCopy();
+    ArrayList<int[]> safeMoves = new ArrayList<int[]>();
     
     for (int row = 0; row < game.getTotalRows(); row++) {
       for (int col = 0; col < game.getTotalColumns(); col++) {
         if (gridCopy[row][col] == Cell.EMPTY) {
-          if (isMoveSafe(gridCopy, row, col, Cell.S, game)) {
-            this.move = 'S';
-            return new int[] {row, col};
-          }
-          if (isMoveSafe(gridCopy, row, col, Cell.O, game)) {
-            this.move = 'O';
-            return new int[] {row, col};
+          boolean safeS = isMoveSafe(gridCopy, row, col, Cell.S, game);
+          boolean safeO = isMoveSafe(gridCopy, row, col, Cell.O, game);
+          
+          if (safeS) {
+            safeMoves.add(new int[] {row, col, 'S'});
+            safeMoves.add(new int[] {row, col, 'O'});
           }
         }
       }
+    }
+    if (safeMoves.size() > 0) {
+      int[] move = safeMoves.get(new Random().nextInt(safeMoves.size()));
+      this.move = (char) move[2];
+      return new int[] {move[0], move[1]};
     }
     return null;
   }
