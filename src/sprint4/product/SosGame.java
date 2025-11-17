@@ -64,7 +64,7 @@ public abstract class SosGame {
 	  Player currentPlayer = getCurrentPlayer();
 	  int[] move;
 	  
-	  if (currentPlayer instanceof HumanPlayer) {
+	  if (!(currentPlayer instanceof ComputerPlayer)) {
 	    move = new int[] {row, col};
 	  } else {
 	    move = currentPlayer.selectMove(this);
@@ -72,7 +72,6 @@ public abstract class SosGame {
 	      throw new IllegalStateException("Computer player failed to pick a move");
 	    }
 	  }
-	  
 	  makeMove(move[0], move[1]);
 	}
 	

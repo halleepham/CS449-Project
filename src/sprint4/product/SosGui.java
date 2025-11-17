@@ -246,7 +246,7 @@ public class SosGui extends Application {
     if (rbBlueHuman.isSelected()) {
       rbBlueS.setDisable(false);
       rbBlueO.setDisable(false);
-      bluePlayer = new HumanPlayer();
+      bluePlayer = new Player();
     } else {
       bluePlayer = new ComputerPlayer();
     }
@@ -254,7 +254,7 @@ public class SosGui extends Application {
     if (rbRedHuman.isSelected()) {
       rbRedS.setDisable(false);
       rbRedO.setDisable(false);
-      redPlayer = new HumanPlayer();
+      redPlayer = new Player();
     } else {
       redPlayer = new ComputerPlayer();
     }
@@ -472,7 +472,7 @@ public class SosGui extends Application {
 
       square = new StackPane(border, lblValue);
       square.setOnMouseClicked(event -> {
-        if (game != null && game.getCurrentPlayer() instanceof HumanPlayer) {
+        if (game != null && !(game.getCurrentPlayer() instanceof ComputerPlayer)) {
           handleMove(this);
         }
       });

@@ -1,6 +1,6 @@
 package sprint4.product;
 
-public abstract class Player {
+public class Player {
   protected char move;
   protected int points;
   
@@ -25,5 +25,7 @@ public abstract class Player {
     this.points += points;
   }
   
-  public abstract int[] selectMove(SosGame game);
+  public int[] selectMove(SosGame game) {
+    return null;
+  }
 }
