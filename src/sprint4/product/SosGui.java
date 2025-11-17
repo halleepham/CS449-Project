@@ -413,13 +413,8 @@ public class SosGui extends Application {
   }
 
   public void updateTurn() {
-    if (game.getTurn() == SosGame.PlayerTurn.BLUE) {
-      lblCurrentTurn.setText("Blue");
-      lblCurrentTurn.setTextFill(Color.BLUE);
-    } else {
-      lblCurrentTurn.setText("Red");
-      lblCurrentTurn.setTextFill(Color.RED);
-    }
+    lblCurrentTurn.setText(game.getTurn() == SosGame.PlayerTurn.BLUE ? "Blue" : "Red");
+    lblCurrentTurn.setTextFill(game.getTurn() == SosGame.PlayerTurn.BLUE ? Color.BLUE : Color.RED);
   }
   
   public void refreshUI() {
