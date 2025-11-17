@@ -94,72 +94,71 @@ public class SosGui extends Application {
 		layout.setTop(settingsPane);
 	}
 	
-	public void buildPlayerPanes() {
-		// Blue player pane
-		bluePlayerPane = new VBox(15);
-		bluePlayerPane.setStyle("-fx-border-color: black");
-		bluePlayerPane.setPadding(new Insets(0, 100, 0, 100));
-		bluePlayerPane.setAlignment(Pos.CENTER);
-		
-		Label lblBlue = new Label("Blue Player");
-		lblBlue.setTextFill(Color.BLUE);
-		lblBlue.setFont(Font.font(24));
-		
-		ToggleGroup rbGroupBlueType = new ToggleGroup();
-		rbBlueHuman = new RadioButton("Human");
-		rbBlueComputer = new RadioButton("Computer");
-		rbBlueHuman.setToggleGroup(rbGroupBlueType);
-		rbBlueComputer.setToggleGroup(rbGroupBlueType);
-		rbBlueHuman.setSelected(true);
-		
-		rbGroupBlueMoves = new ToggleGroup();
-		rbBlueS = new RadioButton("S");
-		rbBlueO = new RadioButton("O");
-		rbBlueS.setDisable(true);
-		rbBlueO.setDisable(true);
-		rbBlueS.setUserData('S');
-		rbBlueO.setUserData('O');
-		rbBlueS.setToggleGroup(rbGroupBlueMoves);
-		rbBlueO.setToggleGroup(rbGroupBlueMoves);
-		rbBlueS.setSelected(true);
-		
-		bluePlayerPane.getChildren().addAll(lblBlue, rbBlueHuman, rbBlueS, rbBlueO, rbBlueComputer);
-		layout.setLeft(bluePlayerPane);
-		
-		// Red player pane
-		redPlayerPane = new VBox(15);
-		redPlayerPane.setStyle("-fx-border-color: black");
-		redPlayerPane.setPadding(new Insets(0, 100, 0, 100));
-		redPlayerPane.setAlignment(Pos.CENTER);
-		
-		Label lblRed = new Label("Red Player");
-		lblRed.setTextFill(Color.RED);
-		lblRed.setFont(Font.font(24));
-		
-		ToggleGroup rbGroupRedType = new ToggleGroup();
-		rbRedHuman = new RadioButton("Human");
-		rbRedComputer = new RadioButton("Computer");
-		rbRedHuman.setToggleGroup(rbGroupRedType);
-		rbRedComputer.setToggleGroup(rbGroupRedType);
-		rbRedHuman.setSelected(true);
-		
-		rbGroupRedMoves = new ToggleGroup();
-		rbRedS = new RadioButton("S");
-		rbRedO = new RadioButton("O");
-		rbRedS.setDisable(true);
+	private void buildBluePlayerPane() {
+    bluePlayerPane = new VBox(15);
+    bluePlayerPane.setStyle("-fx-border-color: black");
+    bluePlayerPane.setPadding(new Insets(0, 100, 0, 100));
+    bluePlayerPane.setAlignment(Pos.CENTER);
+    
+    Label lblBlue = new Label("Blue Player");
+    lblBlue.setTextFill(Color.BLUE);
+    lblBlue.setFont(Font.font(24));
+    
+    ToggleGroup rbGroupBlueType = new ToggleGroup();
+    rbBlueHuman = new RadioButton("Human");
+    rbBlueComputer = new RadioButton("Computer");
+    rbBlueHuman.setToggleGroup(rbGroupBlueType);
+    rbBlueComputer.setToggleGroup(rbGroupBlueType);
+    rbBlueHuman.setSelected(true);
+    
+    rbGroupBlueMoves = new ToggleGroup();
+    rbBlueS = new RadioButton("S");
+    rbBlueO = new RadioButton("O");
+    rbBlueS.setDisable(true);
+    rbBlueO.setDisable(true);
+    rbBlueS.setUserData('S');
+    rbBlueO.setUserData('O');
+    rbBlueS.setToggleGroup(rbGroupBlueMoves);
+    rbBlueO.setToggleGroup(rbGroupBlueMoves);
+    rbBlueS.setSelected(true);
+    
+    bluePlayerPane.getChildren().addAll(lblBlue, rbBlueHuman, rbBlueS, rbBlueO, rbBlueComputer);
+    layout.setLeft(bluePlayerPane);
+	}
+	
+	private void buildRedPlayerPane() {
+	  redPlayerPane = new VBox(15);
+    redPlayerPane.setStyle("-fx-border-color: black");
+    redPlayerPane.setPadding(new Insets(0, 100, 0, 100));
+    redPlayerPane.setAlignment(Pos.CENTER);
+    
+    Label lblRed = new Label("Red Player");
+    lblRed.setTextFill(Color.RED);
+    lblRed.setFont(Font.font(24));
+    
+    ToggleGroup rbGroupRedType = new ToggleGroup();
+    rbRedHuman = new RadioButton("Human");
+    rbRedComputer = new RadioButton("Computer");
+    rbRedHuman.setToggleGroup(rbGroupRedType);
+    rbRedComputer.setToggleGroup(rbGroupRedType);
+    rbRedHuman.setSelected(true);
+    
+    rbGroupRedMoves = new ToggleGroup();
+    rbRedS = new RadioButton("S");
+    rbRedO = new RadioButton("O");
+    rbRedS.setDisable(true);
     rbRedO.setDisable(true);
-		rbRedS.setUserData('S');
-		rbRedO.setUserData('O');
-		rbRedS.setToggleGroup(rbGroupRedMoves);
-		rbRedO.setToggleGroup(rbGroupRedMoves);
-		rbRedS.setSelected(true);
-		
-		redPlayerPane.getChildren().addAll(lblRed, rbRedHuman, rbRedS, rbRedO, rbRedComputer);
-		layout.setRight(redPlayerPane);
+    rbRedS.setUserData('S');
+    rbRedO.setUserData('O');
+    rbRedS.setToggleGroup(rbGroupRedMoves);
+    rbRedO.setToggleGroup(rbGroupRedMoves);
+    rbRedS.setSelected(true);
+    
+    redPlayerPane.getChildren().addAll(lblRed, rbRedHuman, rbRedS, rbRedO, rbRedComputer);
+    layout.setRight(redPlayerPane);
 	}
 	
 	public void buildInfoPane() {
-	  //TODO: refactor from sprint 3 feedback
 		BorderPane infoPane = new BorderPane();
 		infoPane.setStyle("-fx-border-color: black");
 		infoPane.setPadding(new Insets(50, 0, 50, 0));
@@ -453,7 +452,8 @@ public class SosGui extends Application {
 	private void resetGame() {
 	  game = null;
 	  buildSettingsPane();
-    buildPlayerPanes();
+	  buildBluePlayerPane();
+	  buildRedPlayerPane();
     buildInfoPane();
     layout.setCenter(new GridPane());
     setUpActions();
