@@ -66,7 +66,6 @@ public class ComputerPlayer extends Player {
     return null;
   }
 
-  // temporary logic to pick first empty cell to make sure computer plays works
   private int[] pickRandomMove(SosGame game) {
     ArrayList<int[]> emptyCells = new ArrayList<int[]>();
 

@@ -71,7 +71,7 @@ public class SosGui extends Application {
     primaryStage.setScene(scene);
     primaryStage.show();
   }
-  
+
   private void resetGame() {
     game = null;
     buildSettingsPane();
@@ -225,7 +225,7 @@ public class SosGui extends Application {
     StackPane boardStackPane = new StackPane(boardPane, lineOverlayPane);
     layout.setCenter(boardStackPane);
   }
-  
+
   public void setUpGameMode() {
     if (rbSimpleGame.isSelected()) {
       game = new SosSimpleGame();
@@ -284,7 +284,7 @@ public class SosGui extends Application {
       }
     });
   }
-  
+
   private int getBoardSize() {
     String input = txtBoardSize.getText().trim();
     int size = Integer.parseInt(input);
@@ -347,7 +347,6 @@ public class SosGui extends Application {
     } catch (Exception e) {
       showError("Unexpected error: " + e.getMessage());
     }
-
   }
 
   private void handleComputerMove() {
@@ -375,7 +374,7 @@ public class SosGui extends Application {
       }
     }
   }
-  
+
   private void drawBoard() {
     for (int row = 0; row < game.getTotalRows(); row++) {
       for (int col = 0; col < game.getTotalColumns(); col++) {
@@ -404,7 +403,7 @@ public class SosGui extends Application {
       lineOverlayPane.getChildren().add(line);
     }
   }
-  
+
   public void updateScore() {
     if (rbGeneralGame.isSelected()) {
       lblBluePoints.setText(String.valueOf(game.getBluePlayer().getPoints()));
@@ -416,7 +415,7 @@ public class SosGui extends Application {
     lblCurrentTurn.setText(game.getTurn() == SosGame.PlayerTurn.BLUE ? "Blue" : "Red");
     lblCurrentTurn.setTextFill(game.getTurn() == SosGame.PlayerTurn.BLUE ? Color.BLUE : Color.RED);
   }
-  
+
   public void refreshUI() {
     drawBoard();
     drawLines();

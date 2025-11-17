@@ -6,7 +6,7 @@ public class SosLine {
   private int endRow;
   private int endColumn;
   private SosGame.PlayerTurn player;
-  
+
   public SosLine(int startRow, int startColumn, int endRow, int endColumn, SosGame.PlayerTurn player) {
     this.startRow = startRow;
     this.startColumn = startColumn;
