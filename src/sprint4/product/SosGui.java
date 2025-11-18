@@ -82,7 +82,7 @@ public class SosGui extends Application {
     setUpActions();
   }
 
-  public void buildSettingsPane() {
+  private void buildSettingsPane() {
     HBox settingsPane = new HBox(20);
     settingsPane.setStyle("-fx-border-color: black");
     settingsPane.setPadding(new Insets(20, 0, 20, 0));
@@ -168,7 +168,7 @@ public class SosGui extends Application {
     layout.setRight(redPlayerPane);
   }
 
-  public void buildInfoPane() {
+  private void buildInfoPane() {
     BorderPane infoPane = new BorderPane();
     infoPane.setStyle("-fx-border-color: black");
     infoPane.setPadding(new Insets(50, 0, 50, 0));
@@ -193,7 +193,7 @@ public class SosGui extends Application {
     layout.setBottom(infoPane);
   }
 
-  public void buildPointDisplays() {
+  private void buildPointDisplays() {
     lblBluePoints = new Label("0");
     bluePlayerPane.getChildren().addAll(new Label("Points: "), lblBluePoints);
 
@@ -201,7 +201,7 @@ public class SosGui extends Application {
     redPlayerPane.getChildren().addAll(new Label("Points: "), lblRedPoints);
   }
 
-  public void setUpBoard(int size) {
+  private void setUpBoard(int size) {
     int width = BOARD_PIXEL_SIZE / size;
     GridPane boardPane = new GridPane();
     boardPane.setStyle("-fx-border-color: black");
@@ -226,7 +226,7 @@ public class SosGui extends Application {
     layout.setCenter(boardStackPane);
   }
 
-  public void setUpGameMode() {
+  private void setUpGameMode() {
     if (rbSimpleGame.isSelected()) {
       game = new SosSimpleGame();
     } else {
@@ -234,7 +234,7 @@ public class SosGui extends Application {
     }
   }
 
-  public void setPlayers() {
+  private void setPlayers() {
     Player bluePlayer;
     Player redPlayer;
 
@@ -326,7 +326,7 @@ public class SosGui extends Application {
     }
   }
 
-  public void handleMove(Square square) {
+  private void handleMove(Square square) {
     if (game == null) {
       return;
     }
@@ -404,14 +404,14 @@ public class SosGui extends Application {
     }
   }
 
-  public void updateScore() {
+  private void updateScore() {
     if (rbGeneralGame.isSelected()) {
       lblBluePoints.setText(String.valueOf(game.getBluePlayer().getPoints()));
       lblRedPoints.setText(String.valueOf(game.getRedPlayer().getPoints()));
     }
   }
 
-  public void updateTurn() {
+  private void updateTurn() {
     lblCurrentTurn.setText(game.getTurn() == SosGame.PlayerTurn.BLUE ? "Blue" : "Red");
     lblCurrentTurn.setTextFill(game.getTurn() == SosGame.PlayerTurn.BLUE ? Color.BLUE : Color.RED);
   }
