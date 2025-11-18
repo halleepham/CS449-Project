@@ -40,7 +40,7 @@ public class TestComputerPlayer {
     simpleGame.setUpNewBoard(3);
     simpleGame.setUpPlayers(computer, human);
     assertEquals(PlayerTurn.BLUE, simpleGame.getTurn());
-    
+
     simpleGame.performPlayerTurn(0, 0);
     boolean hasMoved = false;
     for (int r = 0; r < simpleGame.getTotalRows(); r++) {
@@ -78,24 +78,25 @@ public class TestComputerPlayer {
   public void testSimpleGame_Computer_SafeMove() {
     simpleGame.setUpNewBoard(3);
     simpleGame.setUpPlayers(computer, human);
-    
-    simpleGame.makeMove(0, 0);
-    simpleGame.makeMove(0, 1);
+
+    simpleGame.makeMove(1, 0);
+    human.setMove('O');
+    simpleGame.makeMove(0, 2);
     int[] move = computer.selectMove(simpleGame);
     simpleGame.performPlayerTurn(0, 0);
-    
+
     // Doesn't make either of the two moves that sets up for SOS
-    assertFalse(move[0] == 1 && (move[1] == 1 || move[1] == 0));
-    assertNotEquals(Cell.O, simpleGame.getCell(1, 0));
+    assertFalse(move[0] == 1 && move[1] == 1 && simpleGame.getCell(1, 1) == Cell.O);
+    assertFalse(move[0] == 1 && move[1] == 2 && simpleGame.getCell(1, 1) == Cell.S);
     assertEquals(PlayerTurn.RED, simpleGame.getTurn());
   }
-  
+
   // AC 8.4: A random move by a computer in a simple game
   @Test
   public void testSimpleGame_Computer_RandomMove() {
     simpleGame.setUpNewBoard(4);
     simpleGame.setUpPlayers(computer, human);
-    
+
     for (int r = 0; r < 3; r++) {
       for (int c = 0; c < 4; c++) {
         simpleGame.makeMove(r, c);
@@ -105,11 +106,87 @@ public class TestComputerPlayer {
     simpleGame.makeMove(3, 3);
     int[] move = computer.selectMove(simpleGame);
     simpleGame.performPlayerTurn(0, 0);
-    
+
     assertTrue(move[0] == 3 && (move[1] == 1 || move[1] == 2));
     assertEquals(PlayerTurn.RED, simpleGame.getTurn());
   }
-  
-  
-  
+
+  // AC 9.1: Computer is Blue Player and makes first move general game
+  @Test
+  public void testGeneralGame_ComputerFirstMove_RandomMove() {
+    generalGame.setUpNewBoard(3);
+    generalGame.setUpPlayers(computer, human);
+    assertEquals(PlayerTurn.BLUE, simpleGame.getTurn());
+
+    generalGame.performPlayerTurn(0, 0);
+    boolean hasMoved = false;
+    for (int r = 0; r < generalGame.getTotalRows(); r++) {
+      for (int c = 0; c < generalGame.getTotalColumns(); c++) {
+        if (generalGame.getCell(r, c) != Cell.EMPTY) {
+          hasMoved = true;
+        }
+      }
+    }
+
+    assertTrue(hasMoved);
+    assertEquals(PlayerTurn.RED, generalGame.getTurn());
+  }
+
+  // AC 9.2: Sos move by computer in general game
+  @Test
+  public void testGeneralGame_Computer_SosMove() {
+    generalGame.setUpNewBoard(3);
+    generalGame.setUpPlayers(computer, human);
+
+    generalGame.makeMove(0, 0);
+    generalGame.makeMove(2, 2);
+    assertEquals(PlayerTurn.BLUE, generalGame.getTurn());
+    int[] move = computer.selectMove(generalGame);
+    generalGame.performPlayerTurn(0, 0);
+
+    assertEquals(1, move[0]);
+    assertEquals(1, move[1]);
+    assertEquals(Cell.O, generalGame.getCell(1, 1));
+    assertEquals(GameState.PLAYING, generalGame.getGameState());
+    assertEquals(PlayerTurn.BLUE, generalGame.getTurn());
+  }
+
+  // AC 9.3: A safe move by a computer in a general game
+  @Test
+  public void testGeneralGame_Computer_SafeMove() {
+    generalGame.setUpNewBoard(3);
+    generalGame.setUpPlayers(computer, human);
+
+    generalGame.makeMove(1, 0);
+    human.setMove('O');
+    generalGame.makeMove(0, 2);
+    int[] move = computer.selectMove(generalGame);
+    generalGame.performPlayerTurn(0, 0);
+
+    // Doesn't make either of the two moves that sets up for SOS
+    assertFalse(move[0] == 1 && move[1] == 1 && generalGame.getCell(1, 1) == Cell.O);
+    assertFalse(move[0] == 1 && move[1] == 2 && generalGame.getCell(1, 1) == Cell.S);
+    assertEquals(PlayerTurn.RED, generalGame.getTurn());
+  }
+
+  // AC 9.4: A random move by a computer in a general game
+  @Test
+  public void testGeneralGame_Computer_RandomMove() {
+    simpleGame.setUpNewBoard(4);
+    simpleGame.setUpPlayers(computer, human);
+
+    for (int r = 0; r < 3; r++) {
+      for (int c = 0; c < 4; c++) {
+        simpleGame.makeMove(r, c);
+      }
+    }
+    simpleGame.makeMove(3, 0);
+    simpleGame.makeMove(3, 3);
+    int[] move = computer.selectMove(simpleGame);
+    simpleGame.performPlayerTurn(0, 0);
+
+    assertTrue(move[0] == 3 && (move[1] == 1 || move[1] == 2));
+    assertEquals(PlayerTurn.RED, simpleGame.getTurn());
+  }
+
 }
