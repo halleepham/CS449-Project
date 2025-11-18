@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import sprint4.product.ComputerPlayer;
 import sprint4.product.Player;
-import sprint4.product.SosGame;
 import sprint4.product.SosGame.Cell;
 import sprint4.product.SosGame.GameState;
 import sprint4.product.SosGame.PlayerTurn;
@@ -188,5 +187,4 @@ public class TestComputerPlayer {
     assertTrue(move[0] == 3 && (move[1] == 1 || move[1] == 2));
     assertEquals(PlayerTurn.RED, simpleGame.getTurn());
   }
-
 }
