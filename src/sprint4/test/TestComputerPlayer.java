@@ -6,7 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import sprint4.product.ComputerPlayer;
 import sprint4.product.Player;
 import sprint4.product.SosGame.Cell;
 import sprint4.product.SosGame.GameState;
@@ -191,4 +190,89 @@ public class TestComputerPlayer {
     assertTrue(move[0] == 3 && (move[1] == 1 || move[1] == 2));
     assertEquals(PlayerTurn.RED, generalGame.getTurn());
   }
+
+  // Tests not directly related to AC
+  @Test
+  public void testCompleteSimpleGame_HumanBlue_ComputerRed() {
+    simpleGame.setUpNewBoard(3);
+    simpleGame.setUpPlayers('H', 'C');
+
+    while (simpleGame.getGameState() == GameState.PLAYING) {
+      if (simpleGame.getTurn() == PlayerTurn.BLUE) {
+        boolean moved = false;
+        for (int r = 0; r < simpleGame.getTotalRows() && !moved; r++) {
+          for (int c = 0; c < simpleGame.getTotalColumns() && !moved; c++) {
+            if (simpleGame.getCell(r, c) == Cell.EMPTY) {
+              simpleGame.performPlayerTurn(r, c);
+              moved = true;
+            }
+          }
+        }
+      } else {
+        int[] move = simpleGame.getCurrentPlayer().selectMove(simpleGame);
+        simpleGame.performPlayerTurn(move[0], move[1]);
+      }
+    }
+
+    assertTrue(simpleGame.getGameState() == GameState.BLUE_WON || simpleGame.getGameState() == GameState.RED_WON
+        || simpleGame.getGameState() == GameState.DRAW);
+  }
+
+  @Test
+  public void testCompleteGeneralGame_ComputerBlue_HumanRed() {
+    generalGame.setUpPlayers('C', 'R');
+    generalGame.setUpNewBoard(3);
+
+    generalGame.getRedPlayer().setMove('O');
+
+    while (generalGame.getGameState() == GameState.PLAYING) {
+      if (generalGame.getTurn() == PlayerTurn.BLUE) {
+        int[] move = generalGame.getBluePlayer().selectMove(generalGame);
+        generalGame.performPlayerTurn(move[0], move[1]);
+      } else {
+        boolean moved = false;
+        for (int r = 0; r < generalGame.getTotalRows() && !moved; r++) {
+          for (int c = 0; c < generalGame.getTotalColumns() && !moved; c++) {
+            if (generalGame.getCell(r, c) == Cell.EMPTY) {
+              generalGame.performPlayerTurn(r, c);
+              moved = true;
+            }
+          }
+        }
+      }
+    }
+
+    assertTrue(generalGame.getGameState() == GameState.BLUE_WON || generalGame.getGameState() == GameState.RED_WON
+        || generalGame.getGameState() == GameState.DRAW);
+  }
+
+  @Test
+  public void testCompleteSimpleGame_ComputerVsComputer() {
+    simpleGame.setUpPlayers('C', 'C');
+    simpleGame.setUpNewBoard(3);
+
+    while (simpleGame.getGameState() == GameState.PLAYING) {
+      int[] move = simpleGame.getCurrentPlayer().selectMove(simpleGame);
+      simpleGame.performPlayerTurn(move[0], move[1]);
+    }
+
+    assertTrue(simpleGame.getGameState() == GameState.BLUE_WON || simpleGame.getGameState() == GameState.RED_WON
+        || simpleGame.getGameState() == GameState.DRAW);
+  }
+
+  
+  @Test
+  public void testCompleteGeneralGame_ComputerVsComputer() {
+    generalGame.setUpPlayers('C', 'C');
+   generalGame.setUpNewBoard(3);
+
+      while (generalGame.getGameState() == GameState.PLAYING) {
+          int[] move = generalGame.getCurrentPlayer().selectMove(generalGame);
+          generalGame.performPlayerTurn(move[0], move[1]);
+      }
+
+      assertTrue(generalGame.getGameState() == GameState.BLUE_WON || generalGame.getGameState() == GameState.RED_WON
+          || generalGame.getGameState() == GameState.DRAW);
+  }
+
 }
