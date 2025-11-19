@@ -17,7 +17,7 @@ public class SosGeneralGame extends SosGame {
   }
 
   @Override
-  public void updateGameState(PlayerTurn turn, int row, int column) {
+  protected void updateGameState(PlayerTurn turn, int row, int column) {
     if (isBoardFull()) {
       if (isDraw()) {
         currentGameState = GameState.DRAW;
@@ -30,13 +30,13 @@ public class SosGeneralGame extends SosGame {
   }
 
   @Override
-  public boolean hasWon(PlayerTurn turn, int row, int column) {
+  protected boolean hasWon(PlayerTurn turn, int row, int column) {
     return (turn == PlayerTurn.BLUE && bluePlayer.getPoints() > redPlayer.getPoints()
         || turn == PlayerTurn.RED && redPlayer.getPoints() > bluePlayer.getPoints());
   }
 
   @Override
-  public boolean isDraw() {
+  protected boolean isDraw() {
     return (bluePlayer.getPoints() == redPlayer.getPoints());
   }
 }

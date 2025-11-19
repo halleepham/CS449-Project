@@ -12,7 +12,7 @@ public class SosSimpleGame extends SosGame {
   }
 
   @Override
-  public void updateGameState(PlayerTurn turn, int row, int column) {
+  protected void updateGameState(PlayerTurn turn, int row, int column) {
     if (hasWon(turn, row, column)) {
       currentGameState = (turn == PlayerTurn.BLUE) ? GameState.BLUE_WON : GameState.RED_WON;
     } else if (isDraw()) {
@@ -21,12 +21,12 @@ public class SosSimpleGame extends SosGame {
   }
 
   @Override
-  public boolean hasWon(PlayerTurn turn, int row, int column) {
+  protected boolean hasWon(PlayerTurn turn, int row, int column) {
     return (madeSos(row, column) > 0);
   }
 
   @Override
-  public boolean isDraw() {
+  protected boolean isDraw() {
     return isBoardFull();
   }
 }

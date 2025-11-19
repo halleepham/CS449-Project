@@ -27,11 +27,11 @@ public abstract class SosGame {
 
   public abstract void makeMove(int row, int col);
 
-  public abstract void updateGameState(PlayerTurn turn, int row, int column);
+  protected abstract void updateGameState(PlayerTurn turn, int row, int column);
 
-  public abstract boolean hasWon(PlayerTurn turn, int row, int column);
+  protected abstract boolean hasWon(PlayerTurn turn, int row, int column);
 
-  public abstract boolean isDraw();
+  protected abstract boolean isDraw();
 
   public SosGame() {
     currentGameState = GameState.SETUP;
