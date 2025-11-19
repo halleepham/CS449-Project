@@ -235,8 +235,8 @@ public class SosGui extends Application {
   }
 
   private void setPlayers() {
-    Player bluePlayer;
-    Player redPlayer;
+    char bluePlayer;
+    char redPlayer;
 
     rbBlueHuman.setDisable(true);
     rbBlueComputer.setDisable(true);
@@ -246,17 +246,17 @@ public class SosGui extends Application {
     if (rbBlueHuman.isSelected()) {
       rbBlueS.setDisable(false);
       rbBlueO.setDisable(false);
-      bluePlayer = new Player();
+      bluePlayer = 'H';
     } else {
-      bluePlayer = new ComputerPlayer();
+      bluePlayer = 'C';
     }
 
     if (rbRedHuman.isSelected()) {
       rbRedS.setDisable(false);
       rbRedO.setDisable(false);
-      redPlayer = new Player();
+      redPlayer = 'H';
     } else {
-      redPlayer = new ComputerPlayer();
+      redPlayer = 'C';
     }
 
     game.setUpPlayers(bluePlayer, redPlayer);
@@ -416,7 +416,7 @@ public class SosGui extends Application {
     lblCurrentTurn.setTextFill(game.getTurn() == SosGame.PlayerTurn.BLUE ? Color.BLUE : Color.RED);
   }
 
-  public void refreshUI() {
+  private void refreshUI() {
     drawBoard();
     drawLines();
     updateScore();

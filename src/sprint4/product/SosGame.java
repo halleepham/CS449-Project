@@ -39,9 +39,9 @@ public abstract class SosGame {
     sosLines = new ArrayList<SosLine>();
   }
 
-  public void setUpPlayers(Player blue, Player red) {
-    bluePlayer = blue;
-    redPlayer = red;
+  public void setUpPlayers(char blue, char red) {
+    bluePlayer = (blue == 'H') ? new Player() : new ComputerPlayer();
+    redPlayer = (red == 'H') ? new Player() : new ComputerPlayer(); 
   }
 
   public void setUpNewBoard(int size) {
