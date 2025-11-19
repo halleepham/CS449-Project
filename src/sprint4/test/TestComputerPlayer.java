@@ -18,15 +18,11 @@ public class TestComputerPlayer {
 
   private SosSimpleGame simpleGame;
   private SosGeneralGame generalGame;
-  private ComputerPlayer computer;
-  private Player human;
 
   @Before
   public void setUp() throws Exception {
     simpleGame = new SosSimpleGame();
     generalGame = new SosGeneralGame();
-    computer = new ComputerPlayer();
-    human = new Player();
   }
 
   @After
@@ -37,7 +33,7 @@ public class TestComputerPlayer {
   @Test
   public void testSimpleGame_ComputerFirstMove_RandomMove() {
     simpleGame.setUpNewBoard(3);
-    simpleGame.setUpPlayers(computer, human);
+    simpleGame.setUpPlayers('C', 'H');
     assertEquals(PlayerTurn.BLUE, simpleGame.getTurn());
 
     simpleGame.performPlayerTurn(0, 0);
@@ -58,7 +54,8 @@ public class TestComputerPlayer {
   @Test
   public void testSimpleGame_Computer_WinningMove() {
     simpleGame.setUpNewBoard(3);
-    simpleGame.setUpPlayers(computer, human);
+    simpleGame.setUpPlayers('C', 'H');
+    Player computer = simpleGame.getBluePlayer();
 
     simpleGame.makeMove(0, 0);
     simpleGame.makeMove(0, 2);
@@ -76,7 +73,9 @@ public class TestComputerPlayer {
   @Test
   public void testSimpleGame_Computer_SafeMove() {
     simpleGame.setUpNewBoard(3);
-    simpleGame.setUpPlayers(computer, human);
+    simpleGame.setUpPlayers('C', 'H');
+    Player computer = simpleGame.getBluePlayer();
+    Player human = simpleGame.getRedPlayer();
 
     simpleGame.makeMove(1, 0);
     human.setMove('O');
@@ -94,7 +93,8 @@ public class TestComputerPlayer {
   @Test
   public void testSimpleGame_Computer_RandomMove() {
     simpleGame.setUpNewBoard(4);
-    simpleGame.setUpPlayers(computer, human);
+    simpleGame.setUpPlayers('C', 'H');
+    Player computer = simpleGame.getBluePlayer();
 
     for (int r = 0; r < 3; r++) {
       for (int c = 0; c < 4; c++) {
@@ -114,8 +114,8 @@ public class TestComputerPlayer {
   @Test
   public void testGeneralGame_ComputerFirstMove_RandomMove() {
     generalGame.setUpNewBoard(3);
-    generalGame.setUpPlayers(computer, human);
-    assertEquals(PlayerTurn.BLUE, simpleGame.getTurn());
+    generalGame.setUpPlayers('C', 'H');
+    assertEquals(PlayerTurn.BLUE, generalGame.getTurn());
 
     generalGame.performPlayerTurn(0, 0);
     boolean hasMoved = false;
@@ -135,7 +135,8 @@ public class TestComputerPlayer {
   @Test
   public void testGeneralGame_Computer_SosMove() {
     generalGame.setUpNewBoard(3);
-    generalGame.setUpPlayers(computer, human);
+    generalGame.setUpPlayers('C', 'H');
+    Player computer = generalGame.getBluePlayer();
 
     generalGame.makeMove(0, 0);
     generalGame.makeMove(2, 2);
@@ -154,7 +155,9 @@ public class TestComputerPlayer {
   @Test
   public void testGeneralGame_Computer_SafeMove() {
     generalGame.setUpNewBoard(3);
-    generalGame.setUpPlayers(computer, human);
+    generalGame.setUpPlayers('C', 'H');
+    Player computer = generalGame.getBluePlayer();
+    Player human = generalGame.getRedPlayer();
 
     generalGame.makeMove(1, 0);
     human.setMove('O');
@@ -171,20 +174,21 @@ public class TestComputerPlayer {
   // AC 9.4: A random move by a computer in a general game
   @Test
   public void testGeneralGame_Computer_RandomMove() {
-    simpleGame.setUpNewBoard(4);
-    simpleGame.setUpPlayers(computer, human);
+    generalGame.setUpNewBoard(4);
+    generalGame.setUpPlayers('C', 'H');
+    Player computer = generalGame.getBluePlayer();
 
     for (int r = 0; r < 3; r++) {
       for (int c = 0; c < 4; c++) {
-        simpleGame.makeMove(r, c);
+        generalGame.makeMove(r, c);
       }
     }
-    simpleGame.makeMove(3, 0);
-    simpleGame.makeMove(3, 3);
-    int[] move = computer.selectMove(simpleGame);
-    simpleGame.performPlayerTurn(0, 0);
+    generalGame.makeMove(3, 0);
+    generalGame.makeMove(3, 3);
+    int[] move = computer.selectMove(generalGame);
+    generalGame.performPlayerTurn(0, 0);
 
     assertTrue(move[0] == 3 && (move[1] == 1 || move[1] == 2));
-    assertEquals(PlayerTurn.RED, simpleGame.getTurn());
+    assertEquals(PlayerTurn.RED, generalGame.getTurn());
   }
 }
