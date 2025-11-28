@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -56,6 +57,8 @@ public class SosGui extends Application {
   private Label lblRedPoints;
   private Button btnStartGame;
   private Button btnNewGame;
+  private Button btnReplay;
+  private CheckBox chkRecordGame;
 
   @Override
   public void start(Stage primaryStage) {
@@ -172,6 +175,13 @@ public class SosGui extends Application {
     BorderPane infoPane = new BorderPane();
     infoPane.setStyle("-fx-border-color: black");
     infoPane.setPadding(new Insets(50, 0, 50, 0));
+    
+    VBox recordGamePane = new VBox();
+    recordGamePane.setPadding(new Insets(0, 100, 0, 100));
+    recordGamePane.setAlignment(Pos.CENTER);
+    chkRecordGame = new CheckBox("Record Game");
+    recordGamePane.getChildren().add(chkRecordGame);
+    infoPane.setLeft(recordGamePane);
 
     HBox turnStatusPane = new HBox();
     turnStatusPane.setAlignment(Pos.CENTER);
@@ -183,11 +193,13 @@ public class SosGui extends Application {
     turnStatusPane.getChildren().addAll(lblTurn, lblCurrentTurn);
     infoPane.setCenter(turnStatusPane);
 
-    VBox gameButtonsPane = new VBox();
+    VBox gameButtonsPane = new VBox(20);
     gameButtonsPane.setPadding(new Insets(0, 100, 0, 100));
     gameButtonsPane.setAlignment(Pos.CENTER);
+    btnReplay = new Button("Replay");
     btnNewGame = new Button("New Game");
-    gameButtonsPane.getChildren().add(btnNewGame);
+    btnReplay.setDisable(true);
+    gameButtonsPane.getChildren().addAll(btnReplay, btnNewGame);
     infoPane.setRight(gameButtonsPane);
 
     layout.setBottom(infoPane);
@@ -448,6 +460,7 @@ public class SosGui extends Application {
     gameResult.setContentText(message);
     gameResult.setGraphic(null);
     gameResult.showAndWait();
+    btnReplay.setDisable(false);
   }
 
   public class Square {
