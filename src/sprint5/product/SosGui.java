@@ -1,5 +1,7 @@
 package sprint5.product;
 
+import java.io.FileNotFoundException;
+
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -32,6 +34,7 @@ import javafx.util.Duration;
 public class SosGui extends Application {
 
   private static final int BOARD_PIXEL_SIZE = 450;
+  private GameRecorder gameRecorder;
   static private SosGame game;
 
   private Square[][] squares;
@@ -320,10 +323,14 @@ public class SosGui extends Application {
       rbGeneralGame.setDisable(true);
       txtBoardSize.setDisable(true);
       btnStartGame.setDisable(true);
+      chkRecordGame.setDisable(true);
 
       if (rbGeneralGame.isSelected()) {
         buildPointDisplays();
       }
+      
+      gameRecorder = new GameRecorder();
+      gameRecorder.startRecording(chkRecordGame.isSelected());
 
       if (game.getCurrentPlayer() instanceof ComputerPlayer) {
         handleComputerMove();
@@ -343,6 +350,7 @@ public class SosGui extends Application {
       return;
     }
     try {
+      gameRecorder.recordMove(game.getTurn(), game.getCurrentPlayer().getMove(), square.getRow(), square.getColumn());
       game.performPlayerTurn(square.getRow(), square.getColumn());
       refreshUI();
       displayGameStatus();
@@ -370,6 +378,7 @@ public class SosGui extends Application {
         pause.setOnFinished(event -> {
           int[] move = currentPlayer.selectMove(game);
           if (move != null) {
+            gameRecorder.recordMove(game.getTurn(), game.getCurrentPlayer().getMove(), move[0], move[1]);
             game.performPlayerTurn(move[0], move[1]);
             refreshUI();
 
@@ -436,12 +445,20 @@ public class SosGui extends Application {
   }
 
   private void displayGameStatus() {
+    if (game.getGameState() == SosGame.GameState.PLAYING) {
+      return;
+    }
     if (game.getGameState() == SosGame.GameState.DRAW) {
       showGameResult("It's a draw!");
     } else if (game.getGameState() == SosGame.GameState.BLUE_WON) {
       showGameResult("Blue Player won!");
     } else if (game.getGameState() == SosGame.GameState.RED_WON) {
       showGameResult("Red Player won!");
+    }
+    try {
+      gameRecorder.saveGameToFile();
+    } catch (FileNotFoundException e) {
+      showError(e.getMessage());
     }
   }
 
