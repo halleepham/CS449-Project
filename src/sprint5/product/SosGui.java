@@ -280,6 +280,7 @@ public class SosGui extends Application {
   private void setUpActions() {
     btnStartGame.setOnAction(event -> handleStartGame());
     btnNewGame.setOnAction(event -> resetGame());
+    btnReplay.setOnAction(event -> handleReplay());
 
     rbGroupBlueMoves.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
       @Override
@@ -388,6 +389,10 @@ public class SosGui extends Application {
       }
     });
     pause.play();
+  }
+  
+  private void handleReplay() {
+    //TODO: refresh UI with blank board and simulate game with recorded moves
   }
 
   private void drawBoard() {
