@@ -351,7 +351,7 @@ public class SosGui extends Application {
     }
     try {
       gameRecorder.recordMove(game.getTurn(), game.getCurrentPlayer().getMove(), square.getRow(), square.getColumn());
-      game.performPlayerTurn(square.getRow(), square.getColumn());
+      game.makeMove(square.getRow(), square.getColumn());
       refreshUI();
       displayGameStatus();
 
@@ -370,30 +370,24 @@ public class SosGui extends Application {
   }
 
   private void handleComputerMove() {
-    if (game != null && game.getGameState() == SosGame.GameState.PLAYING) {
-      Player currentPlayer = game.getCurrentPlayer();
-      if (currentPlayer instanceof ComputerPlayer) {
+    PauseTransition pause = new PauseTransition(Duration.seconds(1));
+    pause.setOnFinished(event -> {
+      int[] move = game.getCurrentPlayer().selectMove(game);
+      if (move != null) {
+        gameRecorder.recordMove(game.getTurn(), game.getCurrentPlayer().getMove(), move[0], move[1]);
+        game.makeMove(move[0], move[1]);
+        refreshUI();
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        pause.setOnFinished(event -> {
-          int[] move = currentPlayer.selectMove(game);
-          if (move != null) {
-            gameRecorder.recordMove(game.getTurn(), game.getCurrentPlayer().getMove(), move[0], move[1]);
-            game.performPlayerTurn(move[0], move[1]);
-            refreshUI();
-
-            if (game.getGameState() != SosGame.GameState.PLAYING) {
-              Platform.runLater(() -> displayGameStatus());
-              return;
-            }
-            if (game.getCurrentPlayer() instanceof ComputerPlayer) {
-              handleComputerMove();
-            }
-          }
-        });
-        pause.play();
+        if (game.getGameState() != SosGame.GameState.PLAYING) {
+          Platform.runLater(() -> displayGameStatus());
+          return;
+        }
+        if (game.getCurrentPlayer() instanceof ComputerPlayer) {
+          handleComputerMove();
+        }
       }
-    }
+    });
+    pause.play();
   }
 
   private void drawBoard() {

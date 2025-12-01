@@ -62,21 +62,6 @@ public abstract class SosGame {
     currentGameState = GameState.PLAYING;
   }
 
-  public void performPlayerTurn(int row, int col) {
-    Player currentPlayer = getCurrentPlayer();
-    int[] move;
-
-    if (!(currentPlayer instanceof ComputerPlayer)) {
-      move = new int[] { row, col };
-    } else {
-      move = currentPlayer.selectMove(this);
-      if (move == null) {
-        throw new IllegalStateException("Computer player failed to pick a move");
-      }
-    }
-    makeMove(move[0], move[1]);
-  }
-
   public void validateMove(int row, int col) {
     if (row < 0 || row >= totalRows || col < 0 || col >= totalColumns) {
       throw new IndexOutOfBoundsException("Move is outside the board's boundaries.");
