@@ -331,7 +331,7 @@ public class SosGui extends Application {
       }
       
       gameRecorder = new GameRecorder();
-      gameRecorder.startRecording(chkRecordGame.isSelected());
+      gameRecorder.startRecording(chkRecordGame.isSelected(), size, rbSimpleGame.isSelected() ? "SIMPLE" : "GENERAL");
 
       if (game.getCurrentPlayer() instanceof ComputerPlayer) {
         handleComputerMove();
@@ -393,6 +393,12 @@ public class SosGui extends Application {
   
   private void handleReplay() {
     //TODO: refresh UI with blank board and simulate game with recorded moves
+    // start new game with recorded size and mode
+    // set up regular Players()
+    // loop through moves
+      // set Player move and call makeMove()
+      // refreshUI
+    //displayGameStatus()
   }
 
   private void drawBoard() {

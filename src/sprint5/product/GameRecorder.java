@@ -12,10 +12,18 @@ public class GameRecorder {
   
   private boolean isRecordingEnabled;
   private ArrayList<Move> moves;
+  private int boardSize;
+  private String mode;
   
-  public void startRecording(boolean isRecordingSelected) {
+  public GameRecorder() {
+    moves = new ArrayList<Move>();
+  }
+  
+  public void startRecording(boolean isRecordingSelected, int boardSize, String mode) {
     this.isRecordingEnabled = isRecordingSelected;
-    this.moves = new ArrayList<Move>();
+    moves.clear();
+    this.boardSize = boardSize;
+    this.mode = mode;
   }
   
   public void recordMove(PlayerTurn player, char letter, int row, int col) {
@@ -26,13 +34,23 @@ public class GameRecorder {
   
   public void saveGameToFile() throws FileNotFoundException {
     PrintWriter writer = new PrintWriter("GameRecording.txt");
-    for (Move move : moves) {
-      writer.println(move.toString());
-    }
+    saveSettingsToFile(writer);
+    saveMovesToFile(writer);
     writer.close();
   }
   
-  public ArrayList<Move> loadGameFromFile() throws FileNotFoundException{
+  private void saveSettingsToFile(PrintWriter pw) {
+    pw.println("BOARD_SIZE=" + boardSize);
+    pw.println("MODE=" + mode);
+  }
+  
+  private void saveMovesToFile(PrintWriter pw) {
+    for (Move move : moves) {
+      pw.println(move.toString());
+    }
+  }
+  
+  public ArrayList<Move> loadMovesFromFile() throws FileNotFoundException{
     Scanner gameFile = new Scanner(new File("GameRecording.txt"));
     ArrayList<Move> loadedMoves = new ArrayList<Move>();
     String move; 
@@ -50,6 +68,21 @@ public class GameRecorder {
     }
     gameFile.close();
     return loadedMoves;
+  }
+  
+  public int loadBoardSizeFromFile() throws FileNotFoundException {
+    Scanner gameFile = new Scanner(new File("GameRecording.txt"));
+    String line = gameFile.nextLine();
+    gameFile.close();
+    return Integer.parseInt(line.split("=")[1]);
+  }
+  
+  public String loadModeFromFile() throws FileNotFoundException {
+    Scanner gameFile = new Scanner(new File("GameRecording.txt"));
+    gameFile.nextLine();
+    String line = gameFile.nextLine();
+    gameFile.close();
+    return line.split("=")[1];
   }
   
   public class Move{
