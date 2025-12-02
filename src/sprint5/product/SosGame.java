@@ -38,10 +38,13 @@ public abstract class SosGame {
     turn = PlayerTurn.BLUE;
     sosLines = new ArrayList<SosLine>();
   }
-
-  public void setUpPlayers(char blue, char red) {
-    bluePlayer = (blue == 'H') ? new Player() : new ComputerPlayer();
-    redPlayer = (red == 'H') ? new Player() : new ComputerPlayer(); 
+  
+  public void setBluePlayer(char playerType) {
+    bluePlayer = (playerType == 'H') ? new Player() : new ComputerPlayer();
+  }
+  
+  public void setRedPlayer(char playerType) {
+    redPlayer = (playerType == 'H') ? new Player() : new ComputerPlayer();
   }
 
   public void setUpNewBoard(int size) {

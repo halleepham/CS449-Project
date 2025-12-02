@@ -1,6 +1,7 @@
 package sprint5.product;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
@@ -30,6 +31,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import sprint5.product.GameRecorder.Move;
 
 public class SosGui extends Application {
 
@@ -241,42 +243,51 @@ public class SosGui extends Application {
     layout.setCenter(boardStackPane);
   }
 
-  private void setUpGameMode() {
-    if (rbSimpleGame.isSelected()) {
+  private void setUpGameMode(String gameMode) {
+    if (gameMode.equals("SIMPLE")) {
       game = new SosSimpleGame();
     } else {
       game = new SosGeneralGame();
     }
   }
-
-  private void setPlayers() {
-    char bluePlayer;
-    char redPlayer;
-
+  
+  private void setBluePlayer(char blue) {
     rbBlueHuman.setDisable(true);
     rbBlueComputer.setDisable(true);
-    rbRedHuman.setDisable(true);
-    rbRedComputer.setDisable(true);
-
-    if (rbBlueHuman.isSelected()) {
+    
+    if (blue == 'H') {
       rbBlueS.setDisable(false);
       rbBlueO.setDisable(false);
-      bluePlayer = 'H';
-    } else {
-      bluePlayer = 'C';
     }
-
-    if (rbRedHuman.isSelected()) {
+    game.setBluePlayer(blue);
+  }
+  
+  private void setRedPlayer(char red) {
+    rbRedHuman.setDisable(true);
+    rbRedComputer.setDisable(true);
+    
+    if (red == 'H') {
       rbRedS.setDisable(false);
       rbRedO.setDisable(false);
-      redPlayer = 'H';
-    } else {
-      redPlayer = 'C';
     }
-
-    game.setUpPlayers(bluePlayer, redPlayer);
+    game.setRedPlayer(red);
   }
 
+  private char getSelectedBluePlayer() {
+    if (rbBlueHuman.isSelected()) {
+      return 'H';
+    } else {
+      return 'C';
+    }
+  }
+  
+  private char getSelectedRedPlayer() {
+    if (rbRedHuman.isSelected()) {
+      return 'H';
+    } else {
+      return 'C';
+    }
+  }
   private void setUpActions() {
     btnStartGame.setOnAction(event -> handleStartGame());
     btnNewGame.setOnAction(event -> resetGame());
@@ -310,12 +321,18 @@ public class SosGui extends Application {
     }
     return size;
   }
+  
+  private String getGameMode() {
+    return rbSimpleGame.isSelected() ? "SIMPLE" : "GENERAL";
+  }
 
   private void handleStartGame() {
     try {
       int size = getBoardSize();
-      setUpGameMode();
-      setPlayers();
+      String mode = getGameMode();
+      setUpGameMode(mode);
+      setBluePlayer(getSelectedBluePlayer());
+      setRedPlayer(getSelectedRedPlayer());
       game.setUpNewBoard(size);
       setUpBoard(size);
 
@@ -331,7 +348,7 @@ public class SosGui extends Application {
       }
       
       gameRecorder = new GameRecorder();
-      gameRecorder.startRecording(chkRecordGame.isSelected(), size, rbSimpleGame.isSelected() ? "SIMPLE" : "GENERAL");
+      gameRecorder.startRecording(chkRecordGame.isSelected(), size, mode);
 
       if (game.getCurrentPlayer() instanceof ComputerPlayer) {
         handleComputerMove();
@@ -399,6 +416,7 @@ public class SosGui extends Application {
       // set Player move and call makeMove()
       // refreshUI
     //displayGameStatus()
+    
   }
 
   private void drawBoard() {

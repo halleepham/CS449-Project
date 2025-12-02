@@ -56,6 +56,9 @@ public class GameRecorder {
     String move; 
     String[] fields;
     
+    gameFile.nextLine();
+    gameFile.nextLine();
+    
     while (gameFile.hasNext()) {
       move = gameFile.nextLine();
       fields = move.split(",");
@@ -96,6 +99,22 @@ public class GameRecorder {
       this.letter = letter;
       this.row = row;
       this.column = column;
+    }
+
+    public PlayerTurn getPlayer() {
+      return player;
+    }
+
+    public char getLetter() {
+      return letter;
+    }
+
+    public int getRow() {
+      return row;
+    }
+
+    public int getColumn() {
+      return column;
     }
 
     @Override
