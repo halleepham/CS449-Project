@@ -416,7 +416,45 @@ public class SosGui extends Application {
       // set Player move and call makeMove()
       // refreshUI
     //displayGameStatus()
+    try {
+      btnReplay.setDisable(true);
+      int recordedSize = gameRecorder.loadBoardSizeFromFile();
+      String recordedMode = gameRecorder.loadModeFromFile();
+      ArrayList<Move> recordedMoves = gameRecorder.loadMovesFromFile();
+      
+      setUpGameMode(recordedMode);
+      setBluePlayer('H');
+      setRedPlayer('H');
+      game.setUpNewBoard(recordedSize);
+      setUpBoard(recordedSize);
+      
+      if (recordedMode.equals("GENERAL")) {
+        buildPointDisplays();
+      }
+      refreshUI();
+      replayMove(recordedMoves, 0);
+      
+      
+    } catch (FileNotFoundException e) {
+      showError(e.getMessage());
+    }
     
+  }
+  
+  private void replayMove(ArrayList<Move> moves, int index) {
+    if (index >= moves.size()) {
+      Platform.runLater(() -> displayGameStatus());
+      return;
+    }
+    Move move = moves.get(index);
+    PauseTransition pause = new PauseTransition(Duration.seconds(1));
+    pause.setOnFinished(event -> {
+      game.getCurrentPlayer().setMove(move.getLetter());
+      game.makeMove(move.getRow(), move.getColumn());
+      refreshUI();
+      replayMove(moves, index + 1);
+    });
+    pause.play();
   }
 
   private void drawBoard() {
