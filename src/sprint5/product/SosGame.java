@@ -88,79 +88,70 @@ public abstract class SosGame {
       throw new IllegalStateException("Referenced cell is empty");
     }
 
-    ArrayList<SosLine> formedSoses;
-    formedSoses = (move == Cell.O) ? checkOFormed(grid, row, col) : checkSFormed(grid, row, col);
+    ArrayList<SosLine> formedSoses = (move == Cell.O) ? checkOFormed(grid, row, col) : checkSFormed(grid, row, col);
 
-    for (SosLine line : formedSoses) {
-      sosLines.add(line);
-    }
+    sosLines.addAll(formedSoses);
     return formedSoses.size();
   }
 
   public ArrayList<SosLine> checkOFormed(Cell[][] grid, int row, int col) {
     ArrayList<SosLine> formedLines = new ArrayList<SosLine>();
-
-    // Horizontal
-    if (col > 0 && col < totalColumns - 1 && grid[row][col - 1] == Cell.S && grid[row][col + 1] == Cell.S) {
-      formedLines.add(new SosLine(row, col - 1, row, col + 1, turn));
-    }
-    // Vertical
-    if (row > 0 && row < totalRows - 1 && grid[row - 1][col] == Cell.S && grid[row + 1][col] == Cell.S) {
-      formedLines.add(new SosLine(row - 1, col, row + 1, col, turn));
-    }
-    // Diagonal (top left to bottom right)
-    if (row - 1 >= 0 && col - 1 >= 0 && row + 1 < totalRows && col + 1 < totalColumns
-        && grid[row - 1][col - 1] == Cell.S && grid[row + 1][col + 1] == Cell.S) {
-      formedLines.add(new SosLine(row - 1, col - 1, row + 1, col + 1, turn));
-    }
-    // Diagonal (top right to bottom left)
-    if (row - 1 >= 0 && col + 1 < totalColumns && row + 1 < totalRows && col - 1 >= 0
-        && grid[row - 1][col + 1] == Cell.S && grid[row + 1][col - 1] == Cell.S) {
-      formedLines.add(new SosLine(row - 1, col + 1, row + 1, col - 1, turn));
+    
+    for (int[] direction : O_DIRECTIONS) {
+      int r1 = row - direction[0];
+      int c1 = col - direction[1];
+      int r2 = row + direction[0];
+      int c2 = col + direction[1];
+      
+      if (inBounds(r1, c1) && inBounds(r2, c2)
+          && grid[r1][c1] == Cell.S
+          && grid[r2][c2] == Cell.S) {
+        formedLines.add(new SosLine(r1, c1, r2, c2, turn));
+      }
     }
     return formedLines;
   }
 
   public ArrayList<SosLine> checkSFormed(Cell[][] grid, int row, int col) {
     ArrayList<SosLine> formedLines = new ArrayList<SosLine>();
-
-    // Horizontal right
-    if (col + 2 < totalColumns && grid[row][col + 1] == Cell.O && grid[row][col + 2] == Cell.S) {
-      formedLines.add(new SosLine(row, col, row, col + 2, turn));
-    }
-    // Horizontal left
-    if (col - 2 >= 0 && grid[row][col - 1] == Cell.O && grid[row][col - 2] == Cell.S) {
-      formedLines.add(new SosLine(row, col, row, col - 2, turn));
-    }
-    // Vertical down
-    if (row + 2 < totalRows && grid[row + 1][col] == Cell.O && grid[row + 2][col] == Cell.S) {
-      formedLines.add(new SosLine(row, col, row + 2, col, turn));
-    }
-    // Vertical up
-    if (row - 2 >= 0 && grid[row - 1][col] == Cell.O && grid[row - 2][col] == Cell.S) {
-      formedLines.add(new SosLine(row, col, row - 2, col, turn));
-    }
-    // Diagonal (top left to bottom right)
-    if (row + 2 < totalRows && col + 2 < totalColumns && grid[row + 1][col + 1] == Cell.O
-        && grid[row + 2][col + 2] == Cell.S) {
-      formedLines.add(new SosLine(row, col, row + 2, col + 2, turn));
-    }
-    // Diagonal (top right to bottom left)
-    if (row + 2 < totalRows && col - 2 >= 0 && grid[row + 1][col - 1] == Cell.O && grid[row + 2][col - 2] == Cell.S) {
-      formedLines.add(new SosLine(row, col, row + 2, col - 2, turn));
-    }
-    // Diagonal (bottom left to top right)
-    if (row - 2 >= 0 && col + 2 < totalColumns && grid[row - 1][col + 1] == Cell.O
-        && grid[row - 2][col + 2] == Cell.S) {
-      formedLines.add(new SosLine(row, col, row - 2, col + 2, turn));
-    }
-    // Diagonal (bottom right to top left)
-    if (row - 2 >= 0 && col - 2 >= 0 && grid[row - 1][col - 1] == Cell.O && grid[row - 2][col - 2] == Cell.S) {
-      formedLines.add(new SosLine(row, col, row - 2, col - 2, turn));
+    
+    for (int[] direction : S_DIRECTIONS) {
+      int r1 = row + direction[0];
+      int c1 = col + direction[1];
+      int r2 = row + (2 * direction[0]);
+      int c2 = col + (2 * direction[1]);
+      
+      if (inBounds(r1, c1) && inBounds(r2, c2)
+          && grid[r1][c1] == Cell.O
+          && grid[r2][c2] == Cell.S) {
+        formedLines.add(new SosLine(row, col, r2, c2, turn));
+      }
     }
     return formedLines;
   }
-
+  
+  private boolean inBounds(int r, int c) {
+    return r >= 0 && r < totalRows && c >=0 && c < totalColumns;
+  }
+  
+  private static final int[][] S_DIRECTIONS = { 
+      { 0, 1 }, // right
+      { 1, 0 }, // down
+      { 0, -1 }, // left
+      { -1, 0 }, // up
+      { 1, 1 }, // diagonal down-right
+      { 1, -1 }, // diagonal down-left
+      { -1, 1 }, // diagonal up-right
+      { -1, -1 } // diagonal up-left
+  };
+  
+  private static final int[][] O_DIRECTIONS = {
+      { 0, 1 }, // horizontal
+      { 1, 0 }, // vertical
+      { 1, 1 }, // diagonal down-right
+      { 1, -1 } // diagonal down-left
+  };
+  
   public boolean isBoardFull() {
     for (int row = 0; row < totalRows; ++row) {
       for (int col = 0; col < totalColumns; ++col) {
