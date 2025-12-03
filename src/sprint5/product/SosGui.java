@@ -89,6 +89,13 @@ public class SosGui extends Application {
     layout.setCenter(new GridPane());
     setUpActions();
   }
+  
+  private RadioButton createRadio(String text, ToggleGroup group, boolean selected) {
+    RadioButton rb = new RadioButton(text);
+    rb.setToggleGroup(group);
+    rb.setSelected(selected);
+    return rb;
+  }
 
   private void buildSettingsPane() {
     HBox settingsPane = new HBox(20);
@@ -96,12 +103,9 @@ public class SosGui extends Application {
     settingsPane.setPadding(new Insets(20, 0, 20, 0));
     settingsPane.setAlignment(Pos.CENTER);
 
-    rbSimpleGame = new RadioButton("Simple Game");
-    rbGeneralGame = new RadioButton("General Game");
     ToggleGroup rbGroupGameMode = new ToggleGroup();
-    rbSimpleGame.setToggleGroup(rbGroupGameMode);
-    rbGeneralGame.setToggleGroup(rbGroupGameMode);
-    rbSimpleGame.setSelected(true);
+    rbSimpleGame = createRadio("Simple Game", rbGroupGameMode, true);
+    rbGeneralGame = createRadio("General Game", rbGroupGameMode, false);
 
     Label lblBoardSize = new Label("Board size: ");
     txtBoardSize = new TextField();
@@ -123,22 +127,16 @@ public class SosGui extends Application {
     lblBlue.setFont(Font.font(24));
 
     ToggleGroup rbGroupBlueType = new ToggleGroup();
-    rbBlueHuman = new RadioButton("Human");
-    rbBlueComputer = new RadioButton("Computer");
-    rbBlueHuman.setToggleGroup(rbGroupBlueType);
-    rbBlueComputer.setToggleGroup(rbGroupBlueType);
-    rbBlueHuman.setSelected(true);
+    rbBlueHuman = createRadio("Human", rbGroupBlueType, true);
+    rbBlueComputer = createRadio("Computer", rbGroupBlueType, false);
 
     rbGroupBlueMoves = new ToggleGroup();
-    rbBlueS = new RadioButton("S");
-    rbBlueO = new RadioButton("O");
+    rbBlueS = createRadio("S", rbGroupBlueMoves, true);
+    rbBlueO = createRadio("O", rbGroupBlueMoves, false);
     rbBlueS.setDisable(true);
     rbBlueO.setDisable(true);
     rbBlueS.setUserData('S');
     rbBlueO.setUserData('O');
-    rbBlueS.setToggleGroup(rbGroupBlueMoves);
-    rbBlueO.setToggleGroup(rbGroupBlueMoves);
-    rbBlueS.setSelected(true);
 
     bluePlayerPane.getChildren().addAll(lblBlue, rbBlueHuman, rbBlueS, rbBlueO, rbBlueComputer);
     layout.setLeft(bluePlayerPane);
@@ -155,22 +153,16 @@ public class SosGui extends Application {
     lblRed.setFont(Font.font(24));
 
     ToggleGroup rbGroupRedType = new ToggleGroup();
-    rbRedHuman = new RadioButton("Human");
-    rbRedComputer = new RadioButton("Computer");
-    rbRedHuman.setToggleGroup(rbGroupRedType);
-    rbRedComputer.setToggleGroup(rbGroupRedType);
-    rbRedHuman.setSelected(true);
+    rbRedHuman = createRadio("Human", rbGroupRedType, true);
+    rbRedComputer = createRadio("Computer", rbGroupRedType, false);
 
     rbGroupRedMoves = new ToggleGroup();
-    rbRedS = new RadioButton("S");
-    rbRedO = new RadioButton("O");
+    rbRedS = createRadio("S", rbGroupRedMoves, true);
+    rbRedO = createRadio("O", rbGroupRedMoves, false);
     rbRedS.setDisable(true);
     rbRedO.setDisable(true);
     rbRedS.setUserData('S');
     rbRedO.setUserData('O');
-    rbRedS.setToggleGroup(rbGroupRedMoves);
-    rbRedO.setToggleGroup(rbGroupRedMoves);
-    rbRedS.setSelected(true);
 
     redPlayerPane.getChildren().addAll(lblRed, rbRedHuman, rbRedS, rbRedO, rbRedComputer);
     layout.setRight(redPlayerPane);
@@ -409,13 +401,6 @@ public class SosGui extends Application {
   }
   
   private void handleReplay() {
-    //TODO: refresh UI with blank board and simulate game with recorded moves
-    // start new game with recorded size and mode
-    // set up regular Players()
-    // loop through moves
-      // set Player move and call makeMove()
-      // refreshUI
-    //displayGameStatus()
     try {
       btnReplay.setDisable(true);
       int recordedSize = gameRecorder.loadBoardSizeFromFile();
@@ -427,18 +412,12 @@ public class SosGui extends Application {
       setRedPlayer('H');
       game.setUpNewBoard(recordedSize);
       setUpBoard(recordedSize);
-      
-      if (recordedMode.equals("GENERAL")) {
-        buildPointDisplays();
-      }
       refreshUI();
       replayMove(recordedMoves, 0);
-      
-      
+     
     } catch (FileNotFoundException e) {
       showError(e.getMessage());
     }
-    
   }
   
   private void replayMove(ArrayList<Move> moves, int index) {
@@ -538,7 +517,9 @@ public class SosGui extends Application {
     gameResult.setContentText(message);
     gameResult.setGraphic(null);
     gameResult.showAndWait();
-    btnReplay.setDisable(false);
+    if (chkRecordGame.isSelected()) {
+      btnReplay.setDisable(false);
+    }
   }
 
   public class Square {
