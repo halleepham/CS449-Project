@@ -37,7 +37,7 @@ public class SosGui extends Application {
 
   private static final int BOARD_PIXEL_SIZE = 450;
   private GameRecorder gameRecorder;
-  static private SosGame game;
+  private SosGame game;
 
   private Square[][] squares;
   private BorderPane layout;
@@ -89,13 +89,6 @@ public class SosGui extends Application {
     layout.setCenter(new GridPane());
     setUpActions();
   }
-  
-  private RadioButton createRadio(String text, ToggleGroup group, boolean selected) {
-    RadioButton rb = new RadioButton(text);
-    rb.setToggleGroup(group);
-    rb.setSelected(selected);
-    return rb;
-  }
 
   private void buildSettingsPane() {
     HBox settingsPane = new HBox(20);
@@ -122,9 +115,7 @@ public class SosGui extends Application {
     bluePlayerPane.setPadding(new Insets(0, 100, 0, 100));
     bluePlayerPane.setAlignment(Pos.CENTER);
 
-    Label lblBlue = new Label("Blue Player");
-    lblBlue.setTextFill(Color.BLUE);
-    lblBlue.setFont(Font.font(24));
+    Label lblBlue = createLabel("Blue Player", Color.BLUE);
 
     ToggleGroup rbGroupBlueType = new ToggleGroup();
     rbBlueHuman = createRadio("Human", rbGroupBlueType, true);
@@ -148,9 +139,7 @@ public class SosGui extends Application {
     redPlayerPane.setPadding(new Insets(0, 100, 0, 100));
     redPlayerPane.setAlignment(Pos.CENTER);
 
-    Label lblRed = new Label("Red Player");
-    lblRed.setTextFill(Color.RED);
-    lblRed.setFont(Font.font(24));
+    Label lblRed = createLabel("Red Player", Color.RED);
 
     ToggleGroup rbGroupRedType = new ToggleGroup();
     rbRedHuman = createRadio("Human", rbGroupRedType, true);
@@ -182,11 +171,8 @@ public class SosGui extends Application {
 
     HBox turnStatusPane = new HBox();
     turnStatusPane.setAlignment(Pos.CENTER);
-    Label lblTurn = new Label("Current Turn: ");
-    lblTurn.setFont(Font.font(24));
-    lblCurrentTurn = new Label("Blue");
-    lblCurrentTurn.setFont(Font.font(24));
-    lblCurrentTurn.setTextFill(Color.BLUE);
+    Label lblTurn = createLabel("Current Turn: ", Color.BLACK);
+    lblCurrentTurn = createLabel("Blue", Color.BLUE);
     turnStatusPane.getChildren().addAll(lblTurn, lblCurrentTurn);
     infoPane.setCenter(turnStatusPane);
 
@@ -203,11 +189,13 @@ public class SosGui extends Application {
   }
 
   private void buildPointDisplays() {
-    lblBluePoints = new Label("0");
-    bluePlayerPane.getChildren().addAll(new Label("Points: "), lblBluePoints);
+    if (getGameMode() == "GENERAL") {
+      lblBluePoints = new Label("0");
+      bluePlayerPane.getChildren().addAll(new Label("Points: "), lblBluePoints);
 
-    lblRedPoints = new Label("0");
-    redPlayerPane.getChildren().addAll(new Label("Points: "), lblRedPoints);
+      lblRedPoints = new Label("0");
+      redPlayerPane.getChildren().addAll(new Label("Points: "), lblRedPoints);
+    }
   }
 
   private void setUpBoard(int size) {
@@ -233,6 +221,44 @@ public class SosGui extends Application {
 
     StackPane boardStackPane = new StackPane(boardPane, lineOverlayPane);
     layout.setCenter(boardStackPane);
+  }
+  
+  private void setUpActions() {
+    btnStartGame.setOnAction(event -> handleStartGame());
+    btnNewGame.setOnAction(event -> resetGame());
+    btnReplay.setOnAction(event -> handleReplay());
+
+    rbGroupBlueMoves.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+      @Override
+      public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+        if (newValue != null && game != null) {
+          game.getBluePlayer().setMove((char) newValue.getUserData());
+        }
+      }
+    });
+
+    rbGroupRedMoves.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+      @Override
+      public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+        if (newValue != null && game != null) {
+          game.getRedPlayer().setMove((char) newValue.getUserData());
+        }
+      }
+    });
+  }
+  
+  private RadioButton createRadio(String text, ToggleGroup group, boolean selected) {
+    RadioButton rb = new RadioButton(text);
+    rb.setToggleGroup(group);
+    rb.setSelected(selected);
+    return rb;
+  }
+  
+  private Label createLabel(String text, Color color) {
+    Label lbl = new Label(text);
+    lbl.setTextFill(color);
+    lbl.setFont(Font.font(24));
+    return lbl;
   }
 
   private void setUpGameMode(String gameMode) {
@@ -265,6 +291,20 @@ public class SosGui extends Application {
     game.setRedPlayer(red);
   }
 
+  private int getBoardSize() {
+    String input = txtBoardSize.getText().trim();
+    int size = Integer.parseInt(input);
+
+    if (size < 3 || size > 10) {
+      throw new IllegalArgumentException("Board size must be between 3 and 10");
+    }
+    return size;
+  }
+  
+  private String getGameMode() {
+    return rbSimpleGame.isSelected() ? "SIMPLE" : "GENERAL";
+  }
+  
   private char getSelectedBluePlayer() {
     if (rbBlueHuman.isSelected()) {
       return 'H';
@@ -280,43 +320,6 @@ public class SosGui extends Application {
       return 'C';
     }
   }
-  private void setUpActions() {
-    btnStartGame.setOnAction(event -> handleStartGame());
-    btnNewGame.setOnAction(event -> resetGame());
-    btnReplay.setOnAction(event -> handleReplay());
-
-    rbGroupBlueMoves.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-      @Override
-      public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-        if (newValue != null && game != null) {
-          game.getBluePlayer().setMove((char) newValue.getUserData());
-        }
-      }
-    });
-
-    rbGroupRedMoves.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-      @Override
-      public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-        if (newValue != null && game != null) {
-          game.getRedPlayer().setMove((char) newValue.getUserData());
-        }
-      }
-    });
-  }
-
-  private int getBoardSize() {
-    String input = txtBoardSize.getText().trim();
-    int size = Integer.parseInt(input);
-
-    if (size < 3 || size > 10) {
-      throw new IllegalArgumentException("Board size must be between 3 and 10");
-    }
-    return size;
-  }
-  
-  private String getGameMode() {
-    return rbSimpleGame.isSelected() ? "SIMPLE" : "GENERAL";
-  }
 
   private void handleStartGame() {
     try {
@@ -328,16 +331,8 @@ public class SosGui extends Application {
       game.setUpNewBoard(size);
       setUpBoard(size);
 
-      // Disable controls in settings pane
-      rbSimpleGame.setDisable(true);
-      rbGeneralGame.setDisable(true);
-      txtBoardSize.setDisable(true);
-      btnStartGame.setDisable(true);
-      chkRecordGame.setDisable(true);
-
-      if (rbGeneralGame.isSelected()) {
-        buildPointDisplays();
-      }
+      disableSettings();
+      buildPointDisplays();
       
       gameRecorder = new GameRecorder();
       gameRecorder.startRecording(chkRecordGame.isSelected(), size, mode);
@@ -520,6 +515,14 @@ public class SosGui extends Application {
     if (chkRecordGame.isSelected()) {
       btnReplay.setDisable(false);
     }
+  }
+  
+  private void disableSettings() {
+    rbSimpleGame.setDisable(true);
+    rbGeneralGame.setDisable(true);
+    txtBoardSize.setDisable(true);
+    btnStartGame.setDisable(true);
+    chkRecordGame.setDisable(true);
   }
 
   public class Square {
