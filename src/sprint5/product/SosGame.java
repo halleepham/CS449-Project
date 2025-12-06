@@ -15,16 +15,40 @@ public abstract class SosGame {
   public enum PlayerTurn {
     BLUE, RED
   }
+  
+  public enum GameMode {
+    SIMPLE, GENERAL
+  }
+  
+  private static final int[][] S_DIRECTIONS = { 
+      { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 },
+      { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 }
+  };
+  
+  private static final int[][] O_DIRECTIONS = {
+      { 0, 1 }, { 1, 0 }, { 1, 1 }, { 1, -1 }
+  };
 
-  protected Player bluePlayer;
-  protected Player redPlayer;
   protected int totalRows;
   protected int totalColumns;
+  protected Player bluePlayer;
+  protected Player redPlayer;
   protected PlayerTurn turn;
   protected Cell[][] grid;
   protected GameState currentGameState;
   protected ArrayList<SosLine> sosLines;
+  
+  public SosGame() {
+    currentGameState = GameState.SETUP;
+    turn = PlayerTurn.BLUE;
+    sosLines = new ArrayList<SosLine>();
+  }
 
+  /*
+   * ===================================== 
+   * ABSTRACT METHODS
+   * =====================================
+   */
   public abstract void makeMove(int row, int col);
 
   protected abstract void updateGameState(PlayerTurn turn, int row, int column);
@@ -32,21 +56,12 @@ public abstract class SosGame {
   protected abstract boolean hasWon(PlayerTurn turn, int row, int column);
 
   protected abstract boolean isDraw();
-
-  public SosGame() {
-    currentGameState = GameState.SETUP;
-    turn = PlayerTurn.BLUE;
-    sosLines = new ArrayList<SosLine>();
-  }
   
-  public void setBluePlayer(char playerType) {
-    bluePlayer = (playerType == 'H') ? new Player() : new ComputerPlayer();
-  }
-  
-  public void setRedPlayer(char playerType) {
-    redPlayer = (playerType == 'H') ? new Player() : new ComputerPlayer();
-  }
-
+  /*
+   * ===================================== 
+   * BOARD SETUP AND VALIDATION
+   * =====================================
+   */
   public void setUpNewBoard(int size) {
     if (size < 3 || size > 10) {
       throw new IllegalArgumentException("Board size must be between 3 and 10");
@@ -74,14 +89,11 @@ public abstract class SosGame {
     }
   }
 
-  public Cell getCell(int row, int col) {
-    if (row >= 0 && row < totalRows && col >= 0 && col < totalColumns) {
-      return grid[row][col];
-    } else {
-      return null;
-    }
-  }
-
+  /*
+   * ===================================== 
+   * SOS LOGIC
+   * =====================================
+   */
   public int madeSos(int row, int col) {
     Cell move = grid[row][col];
     if (move == null || move == Cell.EMPTY) {
@@ -130,28 +142,6 @@ public abstract class SosGame {
     return formedLines;
   }
   
-  private boolean inBounds(int r, int c) {
-    return r >= 0 && r < totalRows && c >=0 && c < totalColumns;
-  }
-  
-  private static final int[][] S_DIRECTIONS = { 
-      { 0, 1 }, // right
-      { 1, 0 }, // down
-      { 0, -1 }, // left
-      { -1, 0 }, // up
-      { 1, 1 }, // diagonal down-right
-      { 1, -1 }, // diagonal down-left
-      { -1, 1 }, // diagonal up-right
-      { -1, -1 } // diagonal up-left
-  };
-  
-  private static final int[][] O_DIRECTIONS = {
-      { 0, 1 }, // horizontal
-      { 1, 0 }, // vertical
-      { 1, 1 }, // diagonal down-right
-      { 1, -1 } // diagonal down-left
-  };
-  
   public boolean isBoardFull() {
     for (int row = 0; row < totalRows; ++row) {
       for (int col = 0; col < totalColumns; ++col) {
@@ -162,15 +152,49 @@ public abstract class SosGame {
     }
     return true;
   }
+  
+  /*
+   * ===================================== 
+   * TURN AND PLAYER MANAGEMENT
+   * =====================================
+   */
+  public void switchTurn() {
+    turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
+  }
+  
+  public void setBluePlayer(char playerType) {
+    bluePlayer = (playerType == 'H') ? new Player() : new ComputerPlayer();
+  }
+  
+  public void setRedPlayer(char playerType) {
+    redPlayer = (playerType == 'H') ? new Player() : new ComputerPlayer();
+  }
 
   public Player getCurrentPlayer() {
     return (turn == PlayerTurn.BLUE) ? bluePlayer : redPlayer;
   }
-
-  public void switchTurn() {
-    turn = (turn == PlayerTurn.BLUE) ? PlayerTurn.RED : PlayerTurn.BLUE;
+  
+  /*
+   * ===================================== 
+   * GETTERS
+   * =====================================
+   */
+  public Cell getCell(int row, int col) {
+    if (row >= 0 && row < totalRows && col >= 0 && col < totalColumns) {
+      return grid[row][col];
+    } else {
+      return null;
+    }
+  }
+  
+  public int getTotalRows() {
+    return totalRows;
   }
 
+  public int getTotalColumns() {
+    return totalColumns;
+  }
+  
   public Player getBluePlayer() {
     return bluePlayer;
   }
@@ -179,22 +203,18 @@ public abstract class SosGame {
     return redPlayer;
   }
 
-  public GameState getGameState() {
-    return currentGameState;
-  }
-
-  public int getTotalRows() {
-    return totalRows;
-  }
-
-  public int getTotalColumns() {
-    return totalColumns;
-  }
-
   public PlayerTurn getTurn() {
     return turn;
   }
-
+  
+  public GameState getGameState() {
+    return currentGameState;
+  }
+  
+  public ArrayList<SosLine> getSosLines() {
+    return sosLines;
+  }
+  
   public Cell[][] getGridCopy() {
     Cell[][] copy = new Cell[totalRows][totalColumns];
     for (int row = 0; row < totalRows; row++) {
@@ -204,8 +224,13 @@ public abstract class SosGame {
     }
     return copy;
   }
-
-  public ArrayList<SosLine> getSosLines() {
-    return sosLines;
+  
+  /*
+   * ===================================== 
+   * HELPER METHODS
+   * =====================================
+   */
+  private boolean inBounds(int r, int c) {
+    return r >= 0 && r < totalRows && c >=0 && c < totalColumns;
   }
 }
