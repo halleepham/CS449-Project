@@ -32,10 +32,13 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import sprint5.product.GameRecorder.Move;
+import sprint5.product.SosGame.Cell;
 
 public class SosGui extends Application {
 
+  public enum GameMode { SIMPLE, GENERAL }
   private static final int BOARD_PIXEL_SIZE = 450;
+  
   private GameRecorder gameRecorder;
   private SosGame game;
 
@@ -83,10 +86,11 @@ public class SosGui extends Application {
   private void handleStartGame() {
     try {
       int size = getBoardSize();
-      String mode = getGameMode();
+      GameMode mode = getGameMode();
       setUpGameMode(mode);
       setBluePlayer(getSelectedBluePlayer());
       setRedPlayer(getSelectedRedPlayer());
+      disablePlayerSelection();
       game.setUpNewBoard(size);
       setUpBoard(size);
 
@@ -158,7 +162,7 @@ public class SosGui extends Application {
     try {
       btnReplay.setDisable(true);
       int recordedSize = gameRecorder.loadBoardSizeFromFile();
-      String recordedMode = gameRecorder.loadModeFromFile();
+      GameMode recordedMode = gameRecorder.loadModeFromFile();
       ArrayList<Move> recordedMoves = gameRecorder.loadMovesFromFile();
       
       setUpGameMode(recordedMode);
@@ -214,12 +218,12 @@ public class SosGui extends Application {
     });
   }
   
-  private String getGameMode() {
-    return rbSimpleGame.isSelected() ? "SIMPLE" : "GENERAL";
+  private GameMode getGameMode() {
+    return rbSimpleGame.isSelected() ? GameMode.SIMPLE : GameMode.GENERAL;
   }
   
-  private void setUpGameMode(String gameMode) {
-    if (gameMode.equals("SIMPLE")) {
+  private void setUpGameMode(GameMode gameMode) {
+    if (gameMode == GameMode.SIMPLE) {
       game = new SosSimpleGame();
     } else {
       game = new SosGeneralGame();
@@ -262,39 +266,23 @@ public class SosGui extends Application {
   }
   
   private char getSelectedBluePlayer() {
-    if (rbBlueHuman.isSelected()) {
-      return 'H';
-    } else {
-      return 'C';
-    }
+    return rbBlueHuman.isSelected() ? 'H' : 'C';
   }
   
   private void setBluePlayer(char blue) {
-    rbBlueHuman.setDisable(true);
-    rbBlueComputer.setDisable(true);
-    
     if (blue == 'H') {
-      rbBlueS.setDisable(false);
-      rbBlueO.setDisable(false);
+      setDisableBlueMoveSelection(false);
     }
     game.setBluePlayer(blue);
   }
   
   private char getSelectedRedPlayer() {
-    if (rbRedHuman.isSelected()) {
-      return 'H';
-    } else {
-      return 'C';
-    }
+    return rbRedHuman.isSelected() ? 'H' : 'C';
   }
   
   private void setRedPlayer(char red) {
-    rbRedHuman.setDisable(true);
-    rbRedComputer.setDisable(true);
-    
     if (red == 'H') {
-      rbRedS.setDisable(false);
-      rbRedO.setDisable(false);
+      setDisableRedMoveSelection(false);
     }
     game.setRedPlayer(red);
   }
@@ -310,15 +298,13 @@ public class SosGui extends Application {
   }
   
   private void drawBoard() {
+    String value;
+    Cell cell;
     for (int row = 0; row < game.getTotalRows(); row++) {
       for (int col = 0; col < game.getTotalColumns(); col++) {
-        if (game.getCell(row, col) == SosGame.Cell.S) {
-          squares[row][col].setValue("S");
-        } else if (game.getCell(row, col) == SosGame.Cell.O) {
-          squares[row][col].setValue("O");
-        } else {
-          squares[row][col].setValue("");
-        }
+        cell = game.getCell(row, col);
+        value = (cell == Cell.EMPTY) ? "" : cell.name();
+        squares[row][col].setValue(value);
       }
     }
   }
@@ -402,6 +388,23 @@ public class SosGui extends Application {
     btnStartGame.setDisable(true);
     chkRecordGame.setDisable(true);
   }
+  
+  private void setDisableBlueMoveSelection(boolean disable) {
+    rbBlueS.setDisable(disable);
+    rbBlueO.setDisable(disable);
+  }
+  
+  private void setDisableRedMoveSelection(boolean disable) {
+    rbRedS.setDisable(disable);
+    rbRedO.setDisable(disable);
+  }
+  
+  private void disablePlayerSelection() {
+    rbBlueHuman.setDisable(true);
+    rbBlueComputer.setDisable(true);
+    rbRedHuman.setDisable(true);
+    rbRedComputer.setDisable(true);
+  }
 
   private void buildSettingsPane() {
     HBox settingsPane = new HBox(20);
@@ -437,8 +440,7 @@ public class SosGui extends Application {
     rbGroupBlueMoves = new ToggleGroup();
     rbBlueS = createRadio("S", rbGroupBlueMoves, true);
     rbBlueO = createRadio("O", rbGroupBlueMoves, false);
-    rbBlueS.setDisable(true);
-    rbBlueO.setDisable(true);
+    setDisableBlueMoveSelection(true);
     rbBlueS.setUserData('S');
     rbBlueO.setUserData('O');
 
@@ -461,8 +463,7 @@ public class SosGui extends Application {
     rbGroupRedMoves = new ToggleGroup();
     rbRedS = createRadio("S", rbGroupRedMoves, true);
     rbRedO = createRadio("O", rbGroupRedMoves, false);
-    rbRedS.setDisable(true);
-    rbRedO.setDisable(true);
+    setDisableRedMoveSelection(true);
     rbRedS.setUserData('S');
     rbRedO.setUserData('O');
 
@@ -502,7 +503,7 @@ public class SosGui extends Application {
   }
 
   private void buildPointDisplays() {
-    if (getGameMode() == "GENERAL") {
+    if (getGameMode() == GameMode.GENERAL) {
       lblBluePoints = new Label("0");
       bluePlayerPane.getChildren().addAll(new Label("Points: "), lblBluePoints);
 

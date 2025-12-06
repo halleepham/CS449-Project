@@ -7,19 +7,20 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import sprint5.product.SosGame.PlayerTurn;
+import sprint5.product.SosGui.GameMode;
 
 public class GameRecorder {
   
   private boolean isRecordingEnabled;
   private ArrayList<Move> moves;
   private int boardSize;
-  private String mode;
+  private GameMode mode;
   
   public GameRecorder() {
     moves = new ArrayList<Move>();
   }
   
-  public void startRecording(boolean isRecordingSelected, int boardSize, String mode) {
+  public void startRecording(boolean isRecordingSelected, int boardSize, GameMode mode) {
     this.isRecordingEnabled = isRecordingSelected;
     moves.clear();
     this.boardSize = boardSize;
@@ -33,10 +34,12 @@ public class GameRecorder {
   }
   
   public void saveGameToFile() throws FileNotFoundException {
-    PrintWriter writer = new PrintWriter("GameRecording.txt");
-    saveSettingsToFile(writer);
-    saveMovesToFile(writer);
-    writer.close();
+    if (isRecordingEnabled) {
+      PrintWriter writer = new PrintWriter("GameRecording.txt");
+      saveSettingsToFile(writer);
+      saveMovesToFile(writer);
+      writer.close();
+    }
   }
   
   private void saveSettingsToFile(PrintWriter pw) {
@@ -80,12 +83,12 @@ public class GameRecorder {
     return Integer.parseInt(line.split("=")[1]);
   }
   
-  public String loadModeFromFile() throws FileNotFoundException {
+  public GameMode loadModeFromFile() throws FileNotFoundException {
     Scanner gameFile = new Scanner(new File("GameRecording.txt"));
     gameFile.nextLine();
     String line = gameFile.nextLine();
     gameFile.close();
-    return line.split("=")[1];
+    return GameMode.valueOf(line.split("=")[1]);
   }
   
   public class Move{

@@ -22,7 +22,6 @@ public class SosLine {
   public int getStartColumn() {
     return startColumn;
   }
-
   public int getEndRow() {
     return endRow;
   }
