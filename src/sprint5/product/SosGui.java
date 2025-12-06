@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,7 +15,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -32,7 +29,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import sprint5.product.GameRecorder.Move;
-import sprint5.product.SosGame.Cell;
 
 public class SosGui extends Application {
 
@@ -92,6 +88,7 @@ public class SosGui extends Application {
     try {
       int size = getBoardSize();
       GameMode mode = getGameMode();
+      
       setUpGameMode(mode);
       setBluePlayer(getSelectedBluePlayer());
       setRedPlayer(getSelectedRedPlayer());
@@ -125,6 +122,7 @@ public class SosGui extends Application {
     try {
       gameRecorder.recordMove(game.getTurn(), game.getCurrentPlayer().getMove(), square.getRow(), square.getColumn());
       game.makeMove(square.getRow(), square.getColumn());
+      
       refreshUI();
       displayGameStatus();
 
@@ -173,6 +171,7 @@ public class SosGui extends Application {
       setUpGameMode(recordedMode);
       setBluePlayer('H');
       setRedPlayer('H');
+      
       game.setUpNewBoard(recordedSize);
       setUpBoard(recordedSize);
       refreshUI();
@@ -209,21 +208,15 @@ public class SosGui extends Application {
     btnNewGame.setOnAction(event -> resetGame());
     btnReplay.setOnAction(event -> handleReplay());
 
-    rbGroupBlueMoves.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-      @Override
-      public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-        if (newValue != null && game != null) {
-          game.getBluePlayer().setMove((char) newValue.getUserData());
-        }
+    rbGroupBlueMoves.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+      if (newVal != null && game != null) {
+        game.getBluePlayer().setMove((char) newVal.getUserData());
       }
     });
 
-    rbGroupRedMoves.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-      @Override
-      public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-        if (newValue != null && game != null) {
-          game.getRedPlayer().setMove((char) newValue.getUserData());
-        }
+    rbGroupRedMoves.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+      if (newVal != null && game != null) {
+        game.getRedPlayer().setMove((char) newVal.getUserData());
       }
     });
   }
@@ -234,9 +227,7 @@ public class SosGui extends Application {
    * =====================================
    */
   private int getBoardSize() {
-    String input = txtBoardSize.getText().trim();
-    int size = Integer.parseInt(input);
-
+    int size = Integer.parseInt(txtBoardSize.getText().trim());
     if (size < 3 || size > 10) {
       throw new IllegalArgumentException("Board size must be between 3 and 10");
     }
@@ -261,8 +252,6 @@ public class SosGui extends Application {
     lineOverlayPane = new Pane();
     lineOverlayPane.setPadding(new Insets(30));
     lineOverlayPane.setPickOnBounds(false);
-    lineOverlayPane.setMinSize(boardPane.getMinWidth(), boardPane.getMinHeight());
-    lineOverlayPane.setMaxSize(boardPane.getMaxWidth(), boardPane.getMaxHeight());
 
     StackPane boardStackPane = new StackPane(boardPane, lineOverlayPane);
     layout.setCenter(boardStackPane);
@@ -273,11 +262,7 @@ public class SosGui extends Application {
   }
 
   private void setUpGameMode(GameMode gameMode) {
-    if (gameMode == GameMode.SIMPLE) {
-      game = new SosSimpleGame();
-    } else {
-      game = new SosGeneralGame();
-    }
+    game = (gameMode == GameMode.SIMPLE) ? new SosSimpleGame() : new SosGeneralGame();
   }
 
   private void refreshUI() {
@@ -289,11 +274,11 @@ public class SosGui extends Application {
 
   private void drawBoard() {
     String value;
-    Cell cell;
+    SosGame.Cell cell;
     for (int row = 0; row < game.getTotalRows(); row++) {
       for (int col = 0; col < game.getTotalColumns(); col++) {
         cell = game.getCell(row, col);
-        value = (cell == Cell.EMPTY) ? "" : cell.name();
+        value = (cell == SosGame.Cell.EMPTY) ? "" : cell.name();
         squares[row][col].setValue(value);
       }
     }
@@ -302,6 +287,7 @@ public class SosGui extends Application {
   private void drawLines() {
     lineOverlayPane.getChildren().clear();
     int width = squares[0][0].getWidth();
+    
     for (SosLine sos : game.getSosLines()) {
       Line line = new Line(squares[sos.getStartRow()][sos.getStartColumn()].getSquare().getLayoutX() + (width / 2),
           squares[sos.getStartRow()][sos.getStartColumn()].getSquare().getLayoutY() + (width / 2),
@@ -500,13 +486,13 @@ public class SosGui extends Application {
     if (game.getGameState() == SosGame.GameState.PLAYING) {
       return;
     }
-    if (game.getGameState() == SosGame.GameState.DRAW) {
-      showGameResult("It's a draw!");
-    } else if (game.getGameState() == SosGame.GameState.BLUE_WON) {
-      showGameResult("Blue Player won!");
-    } else if (game.getGameState() == SosGame.GameState.RED_WON) {
-      showGameResult("Red Player won!");
+    switch (game.getGameState()) {
+      case DRAW -> showGameResult("It's a draw!");
+      case BLUE_WON -> showGameResult("Blue Player won!");
+      case RED_WON -> showGameResult("Red Player won!");
+      default -> {}
     }
+
     try {
       gameRecorder.saveGameToFile();
     } catch (FileNotFoundException e) {
