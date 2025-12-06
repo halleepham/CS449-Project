@@ -20,22 +20,35 @@ public class ComputerPlayer extends Player {
   }
 
   private int[] pickSosMove(SosGame game) {
-    // TODO: Change to pick the move that makes the most soses
     Cell[][] gridCopy = game.getGridCopy();
+    int maxSosCount = 0;
+    int[] bestMove = null;
+    char bestLetter = 'S';
+    
     for (int row = 0; row < game.getTotalRows(); row++) {
       for (int col = 0; col < game.getTotalColumns(); col++) {
         if (game.getCell(row, col) == Cell.EMPTY) {
-          if (!game.checkOFormed(gridCopy, row, col).isEmpty()) {
-            this.move = 'O';
-            return new int[] { row, col };
-          } else if (!game.checkSFormed(gridCopy, row, col).isEmpty()) {
-            this.move = 'S';
-            return new int[] { row, col };
+          
+          ArrayList<SosLine> oFormed = game.checkOFormed(gridCopy, row, col);
+          if (!oFormed.isEmpty() && oFormed.size() > maxSosCount) {
+            maxSosCount = oFormed.size();
+            bestMove = new int[] { row, col };
+            bestLetter = 'O';
+          }
+          
+          ArrayList<SosLine> sFormed = game.checkSFormed(gridCopy, row, col);
+          if (!sFormed.isEmpty() && sFormed.size() > maxSosCount) {
+            maxSosCount = sFormed.size();
+            bestMove = new int[] { row, col };
+            bestLetter = 'S';
           }
         }
       }
     }
-    return null;
+    if (bestMove != null) {
+      this.move = bestLetter;
+    }
+    return bestMove;
   }
 
   private int[] pickSafeMove(SosGame game) {
