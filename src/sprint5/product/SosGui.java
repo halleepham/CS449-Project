@@ -38,7 +38,7 @@ public class SosGui extends Application {
 
   public enum GameMode { SIMPLE, GENERAL }
   private static final int BOARD_PIXEL_SIZE = 450;
-  
+
   private GameRecorder gameRecorder;
   private SosGame game;
 
@@ -82,7 +82,12 @@ public class SosGui extends Application {
     primaryStage.setScene(scene);
     primaryStage.show();
   }
-  
+
+  /*
+   * ===================================== 
+   * CONTROLLER METHODS
+   * =====================================
+   */
   private void handleStartGame() {
     try {
       int size = getBoardSize();
@@ -96,7 +101,7 @@ public class SosGui extends Application {
 
       disableSettings();
       buildPointDisplays();
-      
+
       gameRecorder = new GameRecorder();
       gameRecorder.startRecording(chkRecordGame.isSelected(), size, mode);
 
@@ -157,14 +162,14 @@ public class SosGui extends Application {
     });
     pause.play();
   }
-  
+
   private void handleReplay() {
     try {
       btnReplay.setDisable(true);
       int recordedSize = gameRecorder.loadBoardSizeFromFile();
       GameMode recordedMode = gameRecorder.loadModeFromFile();
       ArrayList<Move> recordedMoves = gameRecorder.loadMovesFromFile();
-      
+
       setUpGameMode(recordedMode);
       setBluePlayer('H');
       setRedPlayer('H');
@@ -172,12 +177,12 @@ public class SosGui extends Application {
       setUpBoard(recordedSize);
       refreshUI();
       replayMove(recordedMoves, 0);
-     
+
     } catch (FileNotFoundException e) {
       showError(e.getMessage());
     }
   }
-  
+
   private void replayMove(ArrayList<Move> moves, int index) {
     if (index >= moves.size()) {
       Platform.runLater(() -> displayGameStatus());
@@ -193,7 +198,12 @@ public class SosGui extends Application {
     });
     pause.play();
   }
-  
+
+  /*
+   * =====================================
+   * UI EVENT SETUP
+   * =====================================
+   */
   private void setUpActions() {
     btnStartGame.setOnAction(event -> handleStartGame());
     btnNewGame.setOnAction(event -> resetGame());
@@ -217,19 +227,12 @@ public class SosGui extends Application {
       }
     });
   }
-  
-  private GameMode getGameMode() {
-    return rbSimpleGame.isSelected() ? GameMode.SIMPLE : GameMode.GENERAL;
-  }
-  
-  private void setUpGameMode(GameMode gameMode) {
-    if (gameMode == GameMode.SIMPLE) {
-      game = new SosSimpleGame();
-    } else {
-      game = new SosGeneralGame();
-    }
-  }
-  
+
+  /*
+   * =====================================
+   * BOARD SETUP AND UI REFRESH
+   * =====================================
+   */
   private int getBoardSize() {
     String input = txtBoardSize.getText().trim();
     int size = Integer.parseInt(input);
@@ -239,7 +242,7 @@ public class SosGui extends Application {
     }
     return size;
   }
-  
+
   private void setUpBoard(int size) {
     int width = BOARD_PIXEL_SIZE / size;
     GridPane boardPane = new GridPane();
@@ -264,39 +267,26 @@ public class SosGui extends Application {
     StackPane boardStackPane = new StackPane(boardPane, lineOverlayPane);
     layout.setCenter(boardStackPane);
   }
-  
-  private char getSelectedBluePlayer() {
-    return rbBlueHuman.isSelected() ? 'H' : 'C';
+
+  private GameMode getGameMode() {
+    return rbSimpleGame.isSelected() ? GameMode.SIMPLE : GameMode.GENERAL;
   }
-  
-  private void setBluePlayer(char blue) {
-    if (blue == 'H') {
-      setDisableBlueMoveSelection(false);
+
+  private void setUpGameMode(GameMode gameMode) {
+    if (gameMode == GameMode.SIMPLE) {
+      game = new SosSimpleGame();
+    } else {
+      game = new SosGeneralGame();
     }
-    game.setBluePlayer(blue);
   }
-  
-  private char getSelectedRedPlayer() {
-    return rbRedHuman.isSelected() ? 'H' : 'C';
+
+  private void refreshUI() {
+    drawBoard();
+    drawLines();
+    updateScore();
+    updateTurn();
   }
-  
-  private void setRedPlayer(char red) {
-    if (red == 'H') {
-      setDisableRedMoveSelection(false);
-    }
-    game.setRedPlayer(red);
-  }
-  
-  private void resetGame() {
-    game = null;
-    buildSettingsPane();
-    buildBluePlayerPane();
-    buildRedPlayerPane();
-    buildInfoPane();
-    layout.setCenter(new GridPane());
-    setUpActions();
-  }
-  
+
   private void drawBoard() {
     String value;
     Cell cell;
@@ -336,74 +326,48 @@ public class SosGui extends Application {
     lblCurrentTurn.setTextFill(game.getTurn() == SosGame.PlayerTurn.BLUE ? Color.BLUE : Color.RED);
   }
 
-  private void refreshUI() {
-    drawBoard();
-    drawLines();
-    updateScore();
-    updateTurn();
-  }
-  
-  private void displayGameStatus() {
-    if (game.getGameState() == SosGame.GameState.PLAYING) {
-      return;
-    }
-    if (game.getGameState() == SosGame.GameState.DRAW) {
-      showGameResult("It's a draw!");
-    } else if (game.getGameState() == SosGame.GameState.BLUE_WON) {
-      showGameResult("Blue Player won!");
-    } else if (game.getGameState() == SosGame.GameState.RED_WON) {
-      showGameResult("Red Player won!");
-    }
-    try {
-      gameRecorder.saveGameToFile();
-    } catch (FileNotFoundException e) {
-      showError(e.getMessage());
-    }
+  /*
+   * =====================================
+   * PLAYER TYPE HELPERS
+   * =====================================
+   */
+
+  private char getSelectedBluePlayer() {
+    return rbBlueHuman.isSelected() ? 'H' : 'C';
   }
 
-  private void showError(String message) {
-    Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle("Invalid Input");
-    alert.setHeaderText(null);
-    alert.setContentText(message);
-    alert.showAndWait();
+  private void setBluePlayer(char blue) {
+    if (blue == 'H') {
+      setDisableBlueMoveSelection(false);
+    }
+    game.setBluePlayer(blue);
   }
 
-  private void showGameResult(String message) {
-    Alert gameResult = new Alert(Alert.AlertType.INFORMATION);
-    gameResult.setTitle("Game Over");
-    gameResult.setHeaderText(null);
-    gameResult.setContentText(message);
-    gameResult.setGraphic(null);
-    gameResult.showAndWait();
-    if (chkRecordGame.isSelected()) {
-      btnReplay.setDisable(false);
+  private char getSelectedRedPlayer() {
+    return rbRedHuman.isSelected() ? 'H' : 'C';
+  }
+
+  private void setRedPlayer(char red) {
+    if (red == 'H') {
+      setDisableRedMoveSelection(false);
     }
+    game.setRedPlayer(red);
   }
-  
-  private void disableSettings() {
-    rbSimpleGame.setDisable(true);
-    rbGeneralGame.setDisable(true);
-    txtBoardSize.setDisable(true);
-    btnStartGame.setDisable(true);
-    chkRecordGame.setDisable(true);
-  }
-  
-  private void setDisableBlueMoveSelection(boolean disable) {
-    rbBlueS.setDisable(disable);
-    rbBlueO.setDisable(disable);
-  }
-  
-  private void setDisableRedMoveSelection(boolean disable) {
-    rbRedS.setDisable(disable);
-    rbRedO.setDisable(disable);
-  }
-  
-  private void disablePlayerSelection() {
-    rbBlueHuman.setDisable(true);
-    rbBlueComputer.setDisable(true);
-    rbRedHuman.setDisable(true);
-    rbRedComputer.setDisable(true);
+
+  /*
+   * =====================================
+   * FULL UI CONSTRUCTION
+   * =====================================
+   */
+
+  private void resetGame() {
+    game = null;
+    buildSettingsPane();
+    buildBluePlayerPane();
+    buildRedPlayerPane();
+    buildInfoPane();
+    layout.setCenter(new GridPane());
+    setUpActions();
   }
 
   private void buildSettingsPane() {
@@ -475,7 +439,7 @@ public class SosGui extends Application {
     BorderPane infoPane = new BorderPane();
     infoPane.setStyle("-fx-border-color: black");
     infoPane.setPadding(new Insets(50, 0, 50, 0));
-    
+
     VBox recordGamePane = new VBox();
     recordGamePane.setPadding(new Insets(0, 100, 0, 100));
     recordGamePane.setAlignment(Pos.CENTER);
@@ -512,18 +476,87 @@ public class SosGui extends Application {
     }
   }
 
+  /*
+   * =====================================
+   * UTILITY METHODS
+   * =====================================
+   */
+
   private RadioButton createRadio(String text, ToggleGroup group, boolean selected) {
     RadioButton rb = new RadioButton(text);
     rb.setToggleGroup(group);
     rb.setSelected(selected);
     return rb;
   }
-  
+
   private Label createLabel(String text, Color color) {
     Label lbl = new Label(text);
     lbl.setTextFill(color);
     lbl.setFont(Font.font(24));
     return lbl;
+  }
+
+  private void displayGameStatus() {
+    if (game.getGameState() == SosGame.GameState.PLAYING) {
+      return;
+    }
+    if (game.getGameState() == SosGame.GameState.DRAW) {
+      showGameResult("It's a draw!");
+    } else if (game.getGameState() == SosGame.GameState.BLUE_WON) {
+      showGameResult("Blue Player won!");
+    } else if (game.getGameState() == SosGame.GameState.RED_WON) {
+      showGameResult("Red Player won!");
+    }
+    try {
+      gameRecorder.saveGameToFile();
+    } catch (FileNotFoundException e) {
+      showError(e.getMessage());
+    }
+  }
+
+  private void disableSettings() {
+    rbSimpleGame.setDisable(true);
+    rbGeneralGame.setDisable(true);
+    txtBoardSize.setDisable(true);
+    btnStartGame.setDisable(true);
+    chkRecordGame.setDisable(true);
+  }
+
+  private void setDisableBlueMoveSelection(boolean disable) {
+    rbBlueS.setDisable(disable);
+    rbBlueO.setDisable(disable);
+  }
+
+  private void setDisableRedMoveSelection(boolean disable) {
+    rbRedS.setDisable(disable);
+    rbRedO.setDisable(disable);
+  }
+
+  private void disablePlayerSelection() {
+    rbBlueHuman.setDisable(true);
+    rbBlueComputer.setDisable(true);
+    rbRedHuman.setDisable(true);
+    rbRedComputer.setDisable(true);
+  }
+
+  private void showError(String message) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Invalid Input");
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
+  }
+
+  private void showGameResult(String message) {
+    Alert gameResult = new Alert(Alert.AlertType.INFORMATION);
+    gameResult.setTitle("Game Over");
+    gameResult.setHeaderText(null);
+    gameResult.setContentText(message);
+    gameResult.setGraphic(null);
+    gameResult.showAndWait();
+    if (chkRecordGame.isSelected()) {
+      btnReplay.setDisable(false);
+    }
   }
 
   public class Square {
